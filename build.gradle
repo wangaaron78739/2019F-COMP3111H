@@ -23,7 +23,7 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
-mainClassName = 'sample.Main'
+mainClassName = 'arena.ui.Main'
 
 repositories {
     mavenCentral()

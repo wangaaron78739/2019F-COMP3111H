@@ -1,4 +1,4 @@
-package sample;
+package arena.ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,12 +10,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/arena.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Tower Defence");
-        primaryStage.setScene(new Scene(root, 600, 480));
+        primaryStage.setScene(new Scene(root, 680, 480));
         primaryStage.show();
-        MyController appController = (MyController)loader.getController();
+        ArenaUI appController = loader.getController();
         appController.createArena();
     }
 
