@@ -39,14 +39,21 @@ public class ArenaUIUtils {
         InputStream is = ArenaUIUtils.class.getResourceAsStream(path);
         ImageView iv = new ImageView(new Image(is));
         iv.setFitHeight(ArenaUI.GRID_HEIGHT);
-        iv.setFitWidth(ArenaUI.GRID_HEIGHT);
+        iv.setFitWidth(ArenaUI.GRID_WIDTH);
         return iv;
     }
 
     public static ImageView setIcon(Image i) {
         ImageView iv = new ImageView(i);
         iv.setFitHeight(ArenaUI.GRID_HEIGHT);
-        iv.setFitWidth(ArenaUI.GRID_HEIGHT);
+        iv.setFitWidth(ArenaUI.GRID_WIDTH);
+        return iv;
+    }
+
+    public static ImageView setIcon(Image i, int height, int width) {
+        ImageView iv = new ImageView(i);
+        iv.setFitHeight(height);
+        iv.setFitWidth(width);
         return iv;
     }
 }

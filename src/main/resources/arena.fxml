@@ -33,7 +33,7 @@
                                 onAction="#simulateStart" text="Simulate"/>
                         <Button fx:id="buttonPlay" layoutX="6.0" layoutY="108.0" mnemonicParsing="false"
                                 onAction="#play" text="Play"/>
-                        <Label fx:id="labelBasicTower" layoutX="17.0" layoutY="250.0" minWidth="160" minHeight="35"
+                        <Label fx:id="labelBasicTower" layoutX="17.0" layoutY="290.0" minWidth="160" minHeight="35"
                                style="-fx-border-color: black;-fx-alignment: center;" text="Basic Tower">
                             <opaqueInsets>
                                 <Insets/>
@@ -53,7 +53,7 @@
                                 <Insets right="10.0"/>
                             </padding>
                         </Label>
-                        <Label fx:id="labelIceTower" layoutX="17.0" layoutY="290.0" minWidth="160" minHeight="35"
+                        <Label fx:id="labelIceTower" layoutX="17.0" layoutY="330.0" minWidth="160" minHeight="35"
                                style="-fx-border-color: black;-fx-alignment: center;" text="Ice Tower">
                             <graphic>
                                 <ImageView fitWidth="30" fitHeight="25">
@@ -70,7 +70,7 @@
                                 <Insets right="10.0"/>
                             </padding>
                         </Label>
-                        <Label fx:id="labelCatapult" layoutX="17.0" layoutY="330.0" minWidth="160" minHeight="35"
+                        <Label fx:id="labelCatapult" layoutX="17.0" layoutY="370.0" minWidth="160" minHeight="35"
                                style="-fx-border-color: black;-fx-alignment: center;" text="Catapult">
                             <graphic>
                                 <ImageView fitWidth="30" fitHeight="25">
@@ -87,7 +87,7 @@
                                 <Insets right="10.0"/>
                             </padding>
                         </Label>
-                        <Label fx:id="labelLaserTower" layoutX="17.0" layoutY="370.0" minWidth="160" minHeight="35"
+                        <Label fx:id="labelLaserTower" layoutX="17.0" layoutY="410.0" minWidth="160" minHeight="35"
                                style="-fx-border-color: black;-fx-alignment: center;" text="Laser Tower">
                             <graphic>
                                 <ImageView fitWidth="30" fitHeight="25">
@@ -104,7 +104,11 @@
                                 <Insets right="10.0"/>
                             </padding>
                         </Label>
-                        <Label layoutX="17.0" layoutY="200.0" text="Money: "/>
+                        <Label fx:id="labelResource" layoutX="17.0" layoutY="200.0" text="Money: "/>
+                        <Button fx:id="buttonDeleteTower" layoutX="17.0" layoutY="260.0" mnemonicParsing="false"
+                                onAction="#deleteActiveTower" text="Delete"/>
+                        <Button fx:id="buttonUpgradeTower" layoutX="100.0" layoutY="260.0" mnemonicParsing="false"
+                                onAction="#upgradeActiveTower" text="Upgrade"/>
                     </children>
                     <padding>
                         <Insets left="10.0"/>

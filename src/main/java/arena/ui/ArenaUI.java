@@ -1,12 +1,11 @@
 package arena.ui;
 
 import arena.logic.Arena;
+import arena.logic.Resource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -17,7 +16,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import tower.Projectile;
+import monster.Monster;
 import tower.Tower;
 
 import java.util.ArrayList;
@@ -31,6 +30,12 @@ public class ArenaUI {
 
     @FXML
     private Button buttonPlay;
+
+    @FXML
+    private Button buttonUpgradeTower;
+
+    @FXML
+    private Button buttonDeleteTower;
 
     @FXML
     private AnchorPane paneArena;
@@ -48,6 +53,9 @@ public class ArenaUI {
     private Label labelLaserTower;
 
     @FXML
+    private Label labelResource;
+
+    @FXML
     private static ArrayList<Label> labelProjectiles = new ArrayList<Label>();
 
     @FXML
@@ -62,10 +70,15 @@ public class ArenaUI {
     static final int INITIAL_RESOURCE_NUM = 400;
     static final int UPDATE_INTERVAL = 50;
 
+    static final int MONSTER_HEIGHT = 15;
+    static final int MONSTER_WIDTH = 15;
+
     private static Arena arena = null;
     private static Label grids[][] = new Label[MAX_V_NUM_GRID][MAX_H_NUM_GRID]; //the grids on arena
     static int x = 100;
     static int y = 100;
+    static int activeCellX = -1;
+    static int activeCellY = -1;
     /**
      * A dummy function to show how button click works
      */
@@ -74,7 +87,7 @@ public class ArenaUI {
         //TODO:
         System.out.println("Play button clicked");
 
-        arena.addProjectile(x+= 50,y+= 50);
+        arena.addMonster(x+= 10,y+= 10, "Fox");
     }
 
     /**
@@ -97,7 +110,7 @@ public class ArenaUI {
                 newLabel.setMaxWidth(GRID_WIDTH);
                 newLabel.setMinHeight(GRID_HEIGHT);
                 newLabel.setMaxHeight(GRID_HEIGHT);
-                newLabel.setId(String.format("label x:%d,y:%d", i, j));
+                newLabel.setId(String.format("label x:%d,y:%d", j, i));
                 newLabel.setStyle("-fx-border-color: black;");
                 grids[i][j] = newLabel;
                 paneArena.getChildren().addAll(newLabel);
@@ -111,10 +124,11 @@ public class ArenaUI {
     }
 
     private void startUpdateUILoop() {
-        Timeline timer = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+        Timeline timer = new Timeline(new KeyFrame(Duration.millis(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 updateUI();
+                Arena.nextFrame();
             }
         }));
         timer.setCycleCount(Timeline.INDEFINITE);
@@ -131,38 +145,38 @@ public class ArenaUI {
                 if (tower != null) {
                                 switch (tower.getType()) {
                 case "BasicTower":
-                    grids[i][j].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/basicTower.png")));
+                    grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/basicTower.png")));
                     break;
                 case "Catapult":
-                    grids[i][j].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/catapult.png"))));
+                    grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/catapult.png"))));
                     break;
                 case "IceTower":
-                    grids[i][j].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/iceTower.png"))));
+                    grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/iceTower.png"))));
                     break;
                 case "LaserTower":
-                    grids[i][j].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/laserTower.png")));
+                    grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/laserTower.png")));
                     break;
             }
                 } else {
-                    grids[i][j].setGraphic(null);
+                    grids[j][i].setGraphic(null);
                 }
             }
-        //PROJECTILE
-        if (Arena.getProjectileNum() < labelProjectiles.size()) {
-            while (Arena.getProjectileNum() < labelProjectiles.size()) {
-                paneArena.getChildren().remove(labelProjectiles.get(0));
-                labelProjectiles.remove(0);
-            }
-        } else if (Arena.getProjectileNum() > labelProjectiles.size()) {
-            while (Arena.getProjectileNum() > labelProjectiles.size()) {
-                Label l = new Label("Proj");
-                labelProjectiles.add(l);
-                paneArena.getChildren().add(l);
-            }
-        }
+        //PROJECTILE TODO:
+//        if (Arena.getProjectileNum() < labelProjectiles.size()) {
+//            while (Arena.getProjectileNum() < labelProjectiles.size()) {
+//                paneArena.getChildren().remove(labelProjectiles.get(0));
+//                labelProjectiles.remove(0);
+//            }
+//        } else if (Arena.getProjectileNum() > labelProjectiles.size()) {
+//            while (Arena.getProjectileNum() > labelProjectiles.size()) {
+//                Label l = new Label("Proj");
+//                labelProjectiles.add(l);
+//                paneArena.getChildren().add(l);
+//            }
+//        }
         for (int i=0;i<labelProjectiles.size();i++) {
-            labelProjectiles.get(i).setLayoutX(Arena.getProjectiles().get(i).getXPos());
-            labelProjectiles.get(i).setLayoutY(Arena.getProjectiles().get(i).getXPos());
+//            labelProjectiles.get(i).setLayoutX(Arena.getProjectiles().get(i).getXPos());
+//            labelProjectiles.get(i).setLayoutY(Arena.getProjectiles().get(i).getXPos());
         }
         //MONSTER
         if (Arena.getMonsterNum() < labelMonsters.size()) {
@@ -173,22 +187,65 @@ public class ArenaUI {
         } else if (Arena.getMonsterNum() > labelMonsters.size()) {
             while (Arena.getMonsterNum() > labelMonsters.size()) {
                 Label l = new Label();
+                l.setMinWidth(MONSTER_WIDTH);
+                l.setMaxWidth(MONSTER_WIDTH);
+                l.setMinHeight(MONSTER_HEIGHT);
+                l.setMaxHeight(MONSTER_HEIGHT);
                 labelMonsters.add(l);
                 paneArena.getChildren().add(l);
             }
         }
         for (int i=0;i<labelMonsters.size();i++) {
-            labelMonsters.get(i).setLayoutX(Arena.getMonsters().get(i).getXPos());
-            labelMonsters.get(i).setLayoutY(Arena.getMonsters().get(i).getYPos());
+            Monster m = Arena.getMonsters().get(i);
+            Label l = labelMonsters.get(i);
+            l.setLayoutX(m.getXPos()-MONSTER_WIDTH/2);
+            l.setLayoutY(m.getYPos()-MONSTER_HEIGHT/2);
+            switch (m.getType()) {
+                case "Fox":
+                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/fox.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    break;
+                case "Penguin":
+                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/penguin.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    break;
+                case "Unicorn":
+                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/unicorn.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + m);
+            }
         }
         //RESOURCE
+        labelResource.setText(String.format("Money: %d", Resource.getResourceAmount()));
     }
 
     @FXML
     private void simulateStart() {
-        arena.getProjectiles().remove(0);
+        //TODO:
+        arena.getMonsters().remove(0);
     }
 
+    @FXML
+    private void deleteActiveTower() {
+        if (activeCellX != -1 && activeCellY != -1) {
+            Arena.deleteTowerAt(activeCellX,activeCellY);
+        }
+    }
+
+    @FXML
+    private void upgradeActiveTower() {
+        if (activeCellX != -1 && activeCellY != -1) {
+            Arena.upgradeTowerAt(activeCellX,activeCellY);
+        }
+    }
+
+    private void setActiveCell(int x,int y) {
+        if (activeCellX != -1 && activeCellY != -1) {
+            grids[activeCellY][activeCellX].setStyle("-fx-border-color: black;");
+        }
+        activeCellX = x;
+        activeCellY = y;
+        grids[y][x].setStyle("-fx-border-color: orange;");
+    }
     /**
      * A function that demo how drag and drop works
      */
@@ -197,8 +254,9 @@ public class ArenaUI {
         for (Label label : tower) {
             label.setOnDragDetected(new DragEventHandler(label));
         }
-        for (Label[] row : grids) {
-            for (Label cell : row) {
+        for (int i=0;i<grids.length;i++) {
+            for (int j=0;j<grids.length;j++) {
+                Label cell = grids[j][i];
                 cell.setOnDragDropped(new DragDroppedEventHandler());
 
                 cell.setOnDragOver((event) -> {
@@ -225,9 +283,14 @@ public class ArenaUI {
                     event.consume();
                 });
                 cell.setOnDragExited((event) -> {
-                    /* mouse moved away, remove the graphical cues */
                     cell.setStyle("-fx-border-color: black;");
-//                    System.out.println("Exit");
+                    event.consume();
+                });
+
+                int finalI = i;
+                int finalJ = j;
+                cell.setOnMouseClicked((event) -> {
+                    setActiveCell(finalI, finalJ);
                     event.consume();
                 });
             }

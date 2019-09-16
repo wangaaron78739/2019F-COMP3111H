@@ -52,4 +52,8 @@ public class Tower {
     public String getType() {
         return type;
     }
+
+    public void upgrade() {
+        System.out.printf("Upgraded %s at (%d,%d)\n", type, x,y);
+    }
 }

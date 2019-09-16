@@ -1,18 +1,27 @@
 package arena.logic;
 
 public class Resource {
-    private static int amount;
+    private static int resourceAmount;
 
 
     public Resource(int initAmount) {
-        amount = initAmount;
+        resourceAmount = initAmount;
     }
 
-    public static int getAmount() {
-        return amount;
+    public static int getResourceAmount() {
+        return resourceAmount;
     }
-
-    public static void setAmount(int amount) {
-        Resource.amount = amount;
+    public static boolean deductAmount(int amount) {
+        if (canDeductAmount(amount)) {
+            resourceAmount -= amount;
+            return true;
+        }
+        return false;
+    }
+    public static boolean canDeductAmount(int am) {
+        return resourceAmount >= am;
+    }
+    public static void setResourceAmount(int resourceAmount) {
+        Resource.resourceAmount = resourceAmount;
     }
 }
