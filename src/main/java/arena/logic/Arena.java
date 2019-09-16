@@ -1,6 +1,7 @@
 package arena.logic;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import monster.*;
 import tower.*;
@@ -46,12 +47,58 @@ public class Arena {
 //        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",proj.getTowerSource(),proj.getXStart(),proj.getYStart(),mon.getType(),mon.getYPos(),mon.getYPos());
 //    }
 
-    private void logMonsterCreator(Monster mon) {
+    private void logMonsterCreated(Monster mon) {
         System.out.printf("%s:%d generated\n",mon.getType(),mon.getMaxHP());
     }
 
     private boolean buildTowerPathValid(int x, int y) {
+        boolean[][] reachable = new boolean[GRID_HEIGHT][GRID_WIDTH];
+        class Cell {
+            int _x; int _y;
+            Cell(int _x, int _y) {this._x = _x; this._y = _y;}
+            ArrayList<Cell> adjCells() {
+                ArrayList<Cell> result = new ArrayList<Cell>();
+                if (_x>0 && !reachable[_y][_x-1]) {
+                    if (Arena.getTower(_x-1,_y) == null && !(_x == x && _y == y)) {
+                        result.add(new Cell(_x-1,_y));
+                    }
+                }
+                if (_y>0 && !reachable[_y-1][_x]) {
+                    if (Arena.getTower(_x,_y-1) == null && !(_x == x && _y == y)) {
+                        result.add(new Cell(_x,_y-1));
+                    }
+                }
+                if (_x<MAX_H_NUM_GRID-1 && !reachable[_y][_x+1]) {
+                    if (Arena.getTower(_x+1,_y) == null && !(_x == x && _y == y)) {
+                        result.add(new Cell(_x+1,_y));
+                    }
+                }
+                if (_y<MAX_H_NUM_GRID-1 && !reachable[_y+1][_x]) {
+                    if (Arena.getTower(_x,_y+1) == null && !(_x == x && _y == y)) {
+                        result.add(new Cell(_x,_y+1));
+                    }
+                }
+                return result;
+            }
+        };
         //TODO:
+        LinkedList<Cell> cellsToVisit = new LinkedList<>();
+        Cell endZone = new Cell(MAX_H_NUM_GRID-1,MAX_V_NUM_GRID-1);
+        cellsToVisit.add(endZone);
+        while (cellsToVisit.size() > 0) {
+            Cell c = cellsToVisit.get(0);
+            reachable[c._y][c._x] = true;
+            cellsToVisit.remove(0);
+            cellsToVisit.addAll(c.adjCells());
+        }
+        for (Monster m: monsters) {
+            System.out.println(m);
+            int m_y = m.getYPos() / GRID_HEIGHT;
+            int m_x = m.getXPos() / GRID_WIDTH;
+            assert(m_y >= 0 && m_y < MAX_V_NUM_GRID);
+            assert(m_x >= 0 && m_x < MAX_H_NUM_GRID);
+            if (!reachable[m_y][m_x]) return false;
+        }
         return true;
     }
 
@@ -95,7 +142,7 @@ public class Arena {
     private int monsterNumInCell(int x, int y) {
         int total = 0;
         for (Monster m : monsters) {
-            if (m.getYPos() / GRID_WIDTH == x && m.getYPos() / GRID_HEIGHT == y) {
+            if (m.getXPos() / GRID_WIDTH == x && m.getYPos() / GRID_HEIGHT == y) {
                 total++;
             }
         }

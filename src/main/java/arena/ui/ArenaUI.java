@@ -67,7 +67,7 @@ public class ArenaUI {
     static final int GRID_HEIGHT = 40;
     static final int MAX_H_NUM_GRID = 12;
     static final int MAX_V_NUM_GRID = 12;
-    static final int INITIAL_RESOURCE_NUM = 400;
+    static final int INITIAL_RESOURCE_NUM = 400000;
     static final int UPDATE_INTERVAL = 50;
 
     static final int MONSTER_HEIGHT = 15;
@@ -103,15 +103,21 @@ public class ArenaUI {
         for (int j = 0; j < MAX_V_NUM_GRID; j++)
             for (int i = 0; i < MAX_H_NUM_GRID; i++) {
                 Label newLabel = new Label();
-                newLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
                 newLabel.setLayoutX(j * GRID_WIDTH);
                 newLabel.setLayoutY(i * GRID_HEIGHT);
                 newLabel.setMinWidth(GRID_WIDTH);
                 newLabel.setMaxWidth(GRID_WIDTH);
                 newLabel.setMinHeight(GRID_HEIGHT);
                 newLabel.setMaxHeight(GRID_HEIGHT);
+                if (i == MAX_H_NUM_GRID-1 && j == MAX_V_NUM_GRID-1) {
+                    newLabel.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                    newLabel.setStyle("-fx-border-color: red;-fx-alignment: center;-fx-text-fill: red;");
+                    newLabel.setText("End\nZone");
+                }else {
+                    newLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+                    newLabel.setStyle("-fx-border-color: black;");
+                }
                 newLabel.setId(String.format("label x:%d,y:%d", j, i));
-                newLabel.setStyle("-fx-border-color: black;");
                 grids[i][j] = newLabel;
                 paneArena.getChildren().addAll(newLabel);
             }
