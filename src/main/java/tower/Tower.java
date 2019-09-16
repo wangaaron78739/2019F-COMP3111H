@@ -56,4 +56,7 @@ public class Tower {
     public void upgrade() {
         System.out.printf("Upgraded %s at (%d,%d)\n", type, x,y);
     }
+    public void shoot() {
+
+    }
 }

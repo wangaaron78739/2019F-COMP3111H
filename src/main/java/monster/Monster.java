@@ -1,37 +1,46 @@
 package monster;
 
+import arena.logic.Arena;
+
 public class Monster {
-    private int xPos;
-    private int yPos;
+    private float xPx;
+    private float yPx;
     private int HP;
     private int speed;
     private final int maxHP;
     private final String type;
     private static int monsterNum;
 
-    public Monster(int x, int y, int speed, int maxHP, String type) {
-        this.xPos = x;
-        this.yPos = y;
+    public Monster(float x, float y, int speed, int maxHP, String type) {
+        this.xPx = x;
+        this.yPx = y;
         this.HP = maxHP;
         this.speed = speed;
         this.maxHP = maxHP;
         this.type = type;
     }
 
-    public int getXPos() {
-        return xPos;
+    public float getXPx() {
+        return xPx;
     }
 
-    public void setXPos(int xPos) {
-        this.xPos = xPos;
+    public void setXPx(int xPx) {
+        this.xPx = xPx;
     }
 
-    public int getYPos() {
-        return yPos;
+    public float getYPx() {
+        return yPx;
     }
 
-    public void setYPos(int yPos) {
-        this.yPos = yPos;
+    public int getXGrid() {
+        return (int)(xPx/ Arena.GRID_WIDTH) ;
+    }
+
+    public int getYGrid() {
+        return (int)(yPx/ Arena.GRID_HEIGHT) ;
+    }
+    public void setYPx(int yPx) {
+        this.yPx = yPx;
     }
 
     public int getHP() {
@@ -48,5 +57,9 @@ public class Monster {
 
     public int getMaxHP() {
         return maxHP;
+    }
+
+    public void move() {
+
     }
 }

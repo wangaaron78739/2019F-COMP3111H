@@ -1,6 +1,8 @@
 package arena.logic;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import monster.*;
@@ -8,27 +10,29 @@ import tower.*;
 
 public class Arena {
 
-    private static int ARENA_WIDTH;
-    private static int ARENA_HEIGHT;
-    private static int MAX_H_NUM_GRID;
-    private static int MAX_V_NUM_GRID;
-    private static int GRID_WIDTH;
-    private static int GRID_HEIGHT;
-    private static int INITIAL_RESOURCE_NUM;
-    private static int UPDATE_INTERVAL;
+    public static int ARENA_WIDTH;
+    public static int ARENA_HEIGHT;
+    public static int MAX_H_NUM_GRID;
+    public static int MAX_V_NUM_GRID;
+    public static int GRID_WIDTH;
+    public static int GRID_HEIGHT;
+    public static int INITIAL_RESOURCE_NUM;
+    public static int UPDATE_INTERVAL;
 
-    private static GridCell grid[][];
-    private static ArrayList<LaserProjectile> projectiles = new ArrayList<LaserProjectile>();
-    private static ArrayList<Monster> monsters = new ArrayList<Monster>();
+    private static String towerBuilt[][];
+//    private static ArrayList<LaserProjectile> projectiles = new ArrayList<LaserProjectile>();
+    private static LinkedList<Monster> monsters = new LinkedList<Monster>();
+    private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Resource resource;
+
+    private static int FrameCount = 0;
 
     public void initArena() {
         resource = new Resource(INITIAL_RESOURCE_NUM);
-        grid = new GridCell[GRID_HEIGHT][GRID_WIDTH];
-        for (int i = 0; i < MAX_V_NUM_GRID; i++)
-            for (int j = 0; j < MAX_H_NUM_GRID; j++) {
-                grid[i][j] = new GridCell(i, j);
-            }
+        towerBuilt = new String[GRID_HEIGHT][GRID_WIDTH];
+        for (String[] row: towerBuilt) {
+            Arrays.fill(row,"");
+        }
     }
 
 
@@ -43,9 +47,9 @@ public class Arena {
         Arena.UPDATE_INTERVAL = UPDATE_INTERVAL;
     }
 
-//    private void logAttack(LaserProjectile proj, Monster mon) {
-//        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",proj.getTowerSource(),proj.getXStart(),proj.getYStart(),mon.getType(),mon.getYPos(),mon.getYPos());
-//    }
+    private void logAttack(Tower tower, Monster mon) {
+        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower,tower.getX(),tower.getY(),mon.getType(),mon.getYPx(),mon.getYPx());
+    }
 
     private void logMonsterCreated(Monster mon) {
         System.out.printf("%s:%d generated\n",mon.getType(),mon.getMaxHP());
@@ -59,22 +63,22 @@ public class Arena {
             ArrayList<Cell> adjCells() {
                 ArrayList<Cell> result = new ArrayList<Cell>();
                 if (_x>0 && !reachable[_y][_x-1]) {
-                    if (Arena.getTower(_x-1,_y) == null && !(_x == x && _y == y)) {
+                    if (!towerBuilt(_x-1,_y) && !(_x == x && _y == y)) {
                         result.add(new Cell(_x-1,_y));
                     }
                 }
                 if (_y>0 && !reachable[_y-1][_x]) {
-                    if (Arena.getTower(_x,_y-1) == null && !(_x == x && _y == y)) {
+                    if (!towerBuilt(_x,_y-1) && !(_x == x && _y == y)) {
                         result.add(new Cell(_x,_y-1));
                     }
                 }
                 if (_x<MAX_H_NUM_GRID-1 && !reachable[_y][_x+1]) {
-                    if (Arena.getTower(_x+1,_y) == null && !(_x == x && _y == y)) {
+                    if (!towerBuilt(_x+1,_y) && !(_x == x && _y == y)) {
                         result.add(new Cell(_x+1,_y));
                     }
                 }
                 if (_y<MAX_H_NUM_GRID-1 && !reachable[_y+1][_x]) {
-                    if (Arena.getTower(_x,_y+1) == null && !(_x == x && _y == y)) {
+                    if (!towerBuilt(_x,_y+1) && !(_x == x && _y == y)) {
                         result.add(new Cell(_x,_y+1));
                     }
                 }
@@ -93,8 +97,8 @@ public class Arena {
         }
         for (Monster m: monsters) {
             System.out.println(m);
-            int m_y = m.getYPos() / GRID_HEIGHT;
-            int m_x = m.getXPos() / GRID_WIDTH;
+            int m_x = m.getXGrid();
+            int m_y = m.getYGrid();
             assert(m_y >= 0 && m_y < MAX_V_NUM_GRID);
             assert(m_x >= 0 && m_x < MAX_H_NUM_GRID);
             if (!reachable[m_y][m_x]) return false;
@@ -103,17 +107,25 @@ public class Arena {
     }
 
     public static Tower getTower(int x, int y) {
-        if (grid[y][x].isTowerBuilt()) {
-            return grid[y][x].getTower();
+        if (towerBuilt(x,y)) {
+            for (Tower t: towers) {
+                if (towerIsAt(x,y,t)) return t;
+            }
         }
         return null;
     }
-    public static GridCell getCell(int x, int y) {
-        return grid[y][x];
-    }
 
+    public static boolean towerBuilt(int x, int y) {
+        return !towerBuilt[y][x].equals("");
+    }
+    public static String towerBuiltType(int x, int y) {
+        return towerBuilt[y][x];
+    }
+    public static void setTowerBuilt(int x, int y, String tower) {
+        towerBuilt[y][x] = tower;
+    }
     public boolean buildTower(int x, int y, String towerType) {
-        if (grid[y][x].isTowerBuilt()) return false;
+        if (towerBuilt(x,y)) return false;
         if (monsterNumInCell(x, y) != 0) return false;
         if (!buildTowerPathValid(x, y)) return false;
         Tower tower;
@@ -134,7 +146,8 @@ public class Arena {
                 throw new IllegalStateException("Unexpected value: " + towerType);
         }
         if (!Resource.canDeductAmount(tower.getBuildingCost())) return false;
-        grid[y][x].buildTower(tower);
+        towers.add(tower);
+        setTowerBuilt(x,y,towerType);
         Resource.deductAmount(tower.getBuildingCost());
         return true;
     }
@@ -142,27 +155,27 @@ public class Arena {
     private int monsterNumInCell(int x, int y) {
         int total = 0;
         for (Monster m : monsters) {
-            if (m.getXPos() / GRID_WIDTH == x && m.getYPos() / GRID_HEIGHT == y) {
+            if (m.getXPx() / GRID_WIDTH == x && m.getYPx() / GRID_HEIGHT == y) {
                 total++;
             }
         }
         return total;
     }
 
-    public static GridCell[][] getGrid() {
-        return grid;
-    }
+//    public static ArrayList<LaserProjectile> getProjectiles() {
+//        return projectiles;
+//    }
 
-    public static ArrayList<LaserProjectile> getProjectiles() {
-        return projectiles;
-    }
-
-    public static ArrayList<Monster> getMonsters() {
+    public static LinkedList<Monster> getMonsters() {
         return monsters;
     }
 
     public static Resource getResource() {
         return resource;
+    }
+
+    public static LinkedList<Tower> getTowers() {
+        return towers;
     }
 
 //    public static int getProjectileNum() {
@@ -195,54 +208,38 @@ public class Arena {
         return true;
     }
 
+    static boolean towerIsAt(int x, int y, Tower t) {
+        return t.getX() == x && t.getY() == y;
+    }
+
     public static void deleteTowerAt(int x, int y) {
-        grid[y][x].deleteTower();
+        if (towerBuilt(x,y)) {
+            for (Tower t: towers) {
+                if (towerIsAt(x,y,t)) {
+                    towers.remove(t);
+                    setTowerBuilt(x,y,"");
+                    return;
+                }
+            }
+        }
     }
     public static void upgradeTowerAt(int x, int y) {
-        grid[y][x].upgradeTower();
+        if (towerBuilt(x,y)) {
+            for (Tower t: towers) {
+                if (towerIsAt(x,y,t)) {
+                    t.upgrade();
+                }
+            }
+        }
     }
 
     public static void nextFrame() {
-
-    }
-}
-
-class GridCell {
-    private final int xGrid;
-    private final int yGrid;
-    private Tower tower = null;
-
-    public GridCell(int xGrid, int yGrid) {
-        this.xGrid = xGrid;
-        this.yGrid = yGrid;
-    }
-
-    public boolean isTowerBuilt() {
-        return tower != null;
-    }
-
-    public boolean buildTower(Tower t) {
-        if (tower != null) return false;
-        tower = t;
-        return true;
-    }
-
-    public int getxGrid() {
-        return xGrid;
-    }
-
-    public int getyGrid() {
-        return yGrid;
-    }
-
-    public Tower getTower() {
-        return tower;
-    }
-
-    public void deleteTower() {
-        tower = null;
-    }
-    public void upgradeTower() {
-        if (tower != null) tower.upgrade();
+        FrameCount++;
+        for(Tower t: towers) {
+            t.shoot();
+        }
+        for(Monster m: monsters) {
+            m.move();
+        }
     }
 }

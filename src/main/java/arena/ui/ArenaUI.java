@@ -145,28 +145,26 @@ public class ArenaUI {
     private void updateUI() {
         //TODO:
         //TOWER
-        for (int j = 0; j < MAX_V_NUM_GRID; j++)
-            for (int i = 0; i < MAX_H_NUM_GRID; i++) {
-                Tower tower = Arena.getTower(i,j);
-                if (tower != null) {
-                                switch (tower.getType()) {
-                case "BasicTower":
-                    grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/basicTower.png")));
-                    break;
-                case "Catapult":
-                    grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/catapult.png"))));
-                    break;
-                case "IceTower":
-                    grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/iceTower.png"))));
-                    break;
-                case "LaserTower":
-                    grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/laserTower.png")));
-                    break;
-            }
-                } else {
-                    grids[j][i].setGraphic(null);
+        for (int j = 0;j<MAX_V_NUM_GRID;j++) {
+            for (int i=0;i<MAX_H_NUM_GRID;i++) {
+                switch (Arena.towerBuiltType(i,j)) {
+                    case "BasicTower":
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/basicTower.png")));
+                        break;
+                    case "Catapult":
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/catapult.png"))));
+                        break;
+                    case "IceTower":
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/iceTower.png"))));
+                        break;
+                    case "LaserTower":
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/laserTower.png")));
+                        break;
+                    default:
+                        grids[j][i].setGraphic(null);
                 }
             }
+        }
         //PROJECTILE TODO:
 //        if (Arena.getProjectileNum() < labelProjectiles.size()) {
 //            while (Arena.getProjectileNum() < labelProjectiles.size()) {
@@ -180,10 +178,10 @@ public class ArenaUI {
 //                paneArena.getChildren().add(l);
 //            }
 //        }
-        for (int i=0;i<labelProjectiles.size();i++) {
+//        for (int i=0;i<labelProjectiles.size();i++) {
 //            labelProjectiles.get(i).setLayoutX(Arena.getProjectiles().get(i).getXPos());
 //            labelProjectiles.get(i).setLayoutY(Arena.getProjectiles().get(i).getXPos());
-        }
+//        }
         //MONSTER
         if (Arena.getMonsterNum() < labelMonsters.size()) {
             while (Arena.getMonsterNum() < labelMonsters.size()) {
@@ -204,8 +202,8 @@ public class ArenaUI {
         for (int i=0;i<labelMonsters.size();i++) {
             Monster m = Arena.getMonsters().get(i);
             Label l = labelMonsters.get(i);
-            l.setLayoutX(m.getXPos()-MONSTER_WIDTH/2);
-            l.setLayoutY(m.getYPos()-MONSTER_HEIGHT/2);
+            l.setLayoutX(m.getXPx()-MONSTER_WIDTH/2);
+            l.setLayoutY(m.getYPx()-MONSTER_HEIGHT/2);
             switch (m.getType()) {
                 case "Fox":
                     l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/fox.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
