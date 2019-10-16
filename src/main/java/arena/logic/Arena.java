@@ -1,9 +1,8 @@
 package arena.logic;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Arrays;
 
 import monster.*;
 import tower.*;
@@ -20,7 +19,7 @@ public class Arena {
     public static int UPDATE_INTERVAL;
 
     private static String towerBuilt[][];
-//    private static ArrayList<LaserProjectile> projectiles = new ArrayList<LaserProjectile>();
+//    private static LinkedList<LaserProjectile> projectiles = new LinkedList<LaserProjectile>();
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Resource resource;
@@ -78,8 +77,8 @@ public class Arena {
         class Cell {
             int _x; int _y;
             Cell(int _x, int _y) {this._x = _x; this._y = _y;}
-            ArrayList<Cell> adjCells() {
-                ArrayList<Cell> result = new ArrayList<Cell>();
+            LinkedList<Cell> adjCells() {
+                LinkedList<Cell> result = new LinkedList<Cell>();
                 if (_x>0 && !reachable[_y][_x-1]) {
                     if (!towerBuilt(_x-1,_y) && !(_x == x && _y == y)) {
                         result.add(new Cell(_x-1,_y));
@@ -132,6 +131,7 @@ public class Arena {
      * @return Tower The Tower object in target cell (null if no tower)
      */
     public static Tower getTower(int x, int y) {
+        if (x < 0 || x >=GRID_HEIGHT || y < 0 || y >= GRID_WIDTH) return null;
         if (towerBuilt(x,y)) {
             for (Tower t: towers) {
                 if (towerIsAt(x,y,t)) return t;
@@ -173,6 +173,7 @@ public class Arena {
         if (towerBuilt(x,y)) return false;
         if (monsterNumInCell(x, y) != 0) return false;
         if (!buildTowerPathValid(x, y)) return false;
+        if (x == MAX_H_NUM_GRID-1 && y == MAX_V_NUM_GRID-1) return false;
         Tower tower;
         switch (towerType) {
             case "BasicTower":
@@ -207,7 +208,7 @@ public class Arena {
         return total;
     }
 
-//    public static ArrayList<LaserProjectile> getProjectiles() {
+//    public static LinkedList<LaserProjectile> getProjectiles() {
 //        return projectiles;
 //    }
 
@@ -280,11 +281,11 @@ public class Arena {
 
     public static void nextFrame() {
         FrameCount++;
-        for(Tower t: towers) {
-            t.shoot();
-        }
-        for(Monster m: monsters) {
-            m.move();
-        }
+        towers.forEach(t -> t.shoot());
+        // TODO: Give resource for killing monsters
+        monsters.removeIf(m->m.getHP()<=0);
+        monsters.forEach(m -> m.move());
+
     }
+
 }
