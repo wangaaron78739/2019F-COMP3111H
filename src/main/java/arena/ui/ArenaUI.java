@@ -15,6 +15,8 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import monster.Monster;
 import tower.Tower;
@@ -41,6 +43,9 @@ public class ArenaUI {
     private AnchorPane paneArena;
 
     @FXML
+    private AnchorPane paneInfo;
+
+    @FXML
     private Label labelBasicTower;
 
     @FXML
@@ -56,10 +61,22 @@ public class ArenaUI {
     private Label labelResource;
 
     @FXML
+    private Label labelHovered;
+
+    @FXML
+    private Label labelActive;
+
+    @FXML
     private static ArrayList<Label> labelProjectiles = new ArrayList<Label>();
 
     @FXML
     private static ArrayList<Label> labelMonsters = new ArrayList<Label>();
+
+    @FXML
+    private static Circle hoveredRangeUI = new Circle(0, new Color(0.5,0.7,1,0.5));
+
+    @FXML
+    private static Circle activeRangeUI = new Circle(0, new Color(1,0.5,0,0.5));
 
     static final int ARENA_WIDTH = 480;
     static final int ARENA_HEIGHT = 480;
@@ -67,7 +84,7 @@ public class ArenaUI {
     static final int GRID_HEIGHT = 40;
     static final int MAX_H_NUM_GRID = 12;
     static final int MAX_V_NUM_GRID = 12;
-    static final int INITIAL_RESOURCE_NUM = 400000;
+    static final int INITIAL_RESOURCE_NUM = 100;
     static final int UPDATE_INTERVAL = 50;
 
     static final int MONSTER_HEIGHT = 15;
@@ -79,6 +96,8 @@ public class ArenaUI {
     static int y = 100;
     static int activeCellX = -1;
     static int activeCellY = -1;
+    static int hoveredCellX = -1;
+    static int hoveredCellY = -1;
     /**
      * A dummy function to show how button click works
      */
@@ -99,7 +118,6 @@ public class ArenaUI {
             return;
         arena = new Arena(ARENA_WIDTH, ARENA_HEIGHT, MAX_H_NUM_GRID, MAX_V_NUM_GRID,
                 GRID_WIDTH, GRID_HEIGHT, INITIAL_RESOURCE_NUM, UPDATE_INTERVAL);
-        arena.initArena();
         for (int j = 0; j < MAX_V_NUM_GRID; j++)
             for (int i = 0; i < MAX_H_NUM_GRID; i++) {
                 Label newLabel = new Label();
@@ -121,6 +139,12 @@ public class ArenaUI {
                 grids[i][j] = newLabel;
                 paneArena.getChildren().addAll(newLabel);
             }
+        setHoveredRangeUI(0,0,0);
+            hoveredRangeUI.setMouseTransparent(true);
+        paneArena.getChildren().addAll(hoveredRangeUI);
+        setActiveRangeUI(0,0,0);
+        activeRangeUI.setMouseTransparent(true);
+        paneArena.getChildren().addAll(activeRangeUI);
         setDragAndDrop();
         startUpdateUILoop();
     }
@@ -220,6 +244,24 @@ public class ArenaUI {
         }
         //RESOURCE
         labelResource.setText(String.format("Money: %d", Resource.getResourceAmount()));
+        Tower t = Arena.getTower(activeCellX,activeCellY);
+        if (t != null) {
+            labelActive.setText(String.format("Selected Tower: %s\n Attack: %d\n Cost: %d\n Range: %d",
+                    t.getType(),t.getAttackPower(),t.getBuildingCost(),t.getShootingRange()));
+            buttonUpgradeTower.setVisible(true);
+            buttonDeleteTower.setVisible(true);
+        }else {
+            labelActive.setText("Selected Tower: None");
+            buttonUpgradeTower.setVisible(false);
+            buttonDeleteTower.setVisible(false);
+        }
+        t = Arena.getTower(hoveredCellX,hoveredCellY);
+        if (t != null) {
+            labelHovered.setText(String.format("Hovered Tower: %s\n Attack: %d\n Cost: %d\n Range: %d",
+                    t.getType(),t.getAttackPower(),t.getBuildingCost(),t.getShootingRange()));
+        }else {
+            labelHovered.setText("Hovered Tower: None");
+        }
     }
 
     @FXML
@@ -243,13 +285,62 @@ public class ArenaUI {
     }
 
     private void setActiveCell(int x,int y) {
+        if (x == -1 && y == -1) {
+            setActiveRangeUI(0,0,0);
+            if (activeCellX != -1 && activeCellY != -1)
+                grids[activeCellY][activeCellX].setStyle("-fx-border-color: black;");
+            return;
+        }
         if (activeCellX != -1 && activeCellY != -1) {
             grids[activeCellY][activeCellX].setStyle("-fx-border-color: black;");
+        }
+        Tower t = Arena.getTower(x, y);
+        if (t != null) {
+            setActiveRangeUI(x,y,t.getShootingRange());
+        } else {
+            setActiveRangeUI(0,0,0);
         }
         activeCellX = x;
         activeCellY = y;
         grids[y][x].setStyle("-fx-border-color: orange;");
     }
+
+    private void setHoveredCell(int x,int y) {
+        if (x == -1 && y == -1) {
+            setHoveredRangeUI(0,0,0);
+            if (hoveredCellX != -1 && hoveredCellY != -1)
+                grids[hoveredCellY][hoveredCellX].setStyle("-fx-border-color: black;");
+            return;
+        }
+        if (hoveredCellX != -1 && hoveredCellY != -1) {
+            if (hoveredCellX != activeCellX || hoveredCellY != activeCellY)
+                grids[hoveredCellY][hoveredCellX].setStyle("-fx-border-color: black;");
+        }
+        Tower t = Arena.getTower(x, y);
+        if (t != null) {
+            setHoveredRangeUI(x,y,t.getShootingRange());
+        } else {
+            setHoveredRangeUI(0,0,0);
+        }
+        hoveredCellX = x;
+        hoveredCellY = y;
+        if (x != activeCellX || y != activeCellY) {
+            grids[y][x].setStyle("-fx-border-color: blue;");
+        }
+    }
+
+    private void setHoveredRangeUI(int x, int y, int r) {
+        hoveredRangeUI.setCenterX(x * GRID_WIDTH + GRID_WIDTH/2);
+        hoveredRangeUI.setCenterY(y * GRID_HEIGHT + GRID_HEIGHT/2);
+        hoveredRangeUI.setRadius(r);
+    }
+
+    private void setActiveRangeUI(int x, int y, int r) {
+        activeRangeUI.setCenterX(x * GRID_WIDTH + GRID_WIDTH/2);
+        activeRangeUI.setCenterY(y * GRID_HEIGHT + GRID_HEIGHT/2);
+        activeRangeUI.setRadius(r);
+    }
+
     /**
      * A function that demo how drag and drop works
      */
@@ -258,6 +349,7 @@ public class ArenaUI {
         for (Label label : tower) {
             label.setOnDragDetected(new DragEventHandler(label));
         }
+        paneInfo.setOnMouseEntered(event->setHoveredCell(-1,-1));
         for (int i=0;i<grids.length;i++) {
             for (int j=0;j<grids.length;j++) {
                 Label cell = grids[j][i];
@@ -275,24 +367,27 @@ public class ArenaUI {
                     }
                     event.consume();
                 });
-
+                int finalI = i;
+                int finalJ = j;
+                cell.setOnMouseEntered(event -> {
+                    setHoveredCell(finalI,finalJ);
+                });
                 cell.setOnDragEntered((event) -> {
                     /* the drag-and-drop gesture entered the cell */
 //                    System.out.println("onDragEntered");
                     /* show to the user that it is an actual gesture cell */
-                    if (event.getGestureSource() != cell &&
-                            event.getDragboard().hasString()) {
-                        cell.setStyle("-fx-border-color: blue;");
-                    }
+//                    if (event.getGestureSource() != cell &&
+//                            event.getDragboard().hasString()) {
+//                        cell.setStyle("-fx-border-color: blue;");
+//                    }
                     event.consume();
                 });
-                cell.setOnDragExited((event) -> {
-                    cell.setStyle("-fx-border-color: black;");
-                    event.consume();
-                });
+//                cell.setOnDragExited((event) -> {
+//                    cell.setStyle("-fx-border-color: black;");
+//                    event.consume();
+//                });
 
-                int finalI = i;
-                int finalJ = j;
+
                 cell.setOnMouseClicked((event) -> {
                     setActiveCell(finalI, finalJ);
                     event.consume();
