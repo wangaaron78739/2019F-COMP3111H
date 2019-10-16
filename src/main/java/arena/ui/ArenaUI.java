@@ -84,7 +84,7 @@ public class ArenaUI {
     static final int GRID_HEIGHT = 40;
     static final int MAX_H_NUM_GRID = 12;
     static final int MAX_V_NUM_GRID = 12;
-    static final int INITIAL_RESOURCE_NUM = 400000;
+    static final int INITIAL_RESOURCE_NUM = 100;
     static final int UPDATE_INTERVAL = 50;
 
     static final int MONSTER_HEIGHT = 15;
@@ -118,7 +118,6 @@ public class ArenaUI {
             return;
         arena = new Arena(ARENA_WIDTH, ARENA_HEIGHT, MAX_H_NUM_GRID, MAX_V_NUM_GRID,
                 GRID_WIDTH, GRID_HEIGHT, INITIAL_RESOURCE_NUM, UPDATE_INTERVAL);
-        arena.initArena();
         for (int j = 0; j < MAX_V_NUM_GRID; j++)
             for (int i = 0; i < MAX_H_NUM_GRID; i++) {
                 Label newLabel = new Label();
@@ -249,8 +248,12 @@ public class ArenaUI {
         if (t != null) {
             labelActive.setText(String.format("Selected Tower: %s\n Attack: %d\n Cost: %d\n Range: %d",
                     t.getType(),t.getAttackPower(),t.getBuildingCost(),t.getShootingRange()));
+            buttonUpgradeTower.setVisible(true);
+            buttonDeleteTower.setVisible(true);
         }else {
             labelActive.setText("Selected Tower: None");
+            buttonUpgradeTower.setVisible(false);
+            buttonDeleteTower.setVisible(false);
         }
         t = Arena.getTower(hoveredCellX,hoveredCellY);
         if (t != null) {

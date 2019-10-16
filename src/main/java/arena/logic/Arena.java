@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.Arrays;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import monster.*;
 import tower.*;
 
@@ -15,7 +17,6 @@ public class Arena {
     public static int MAX_V_NUM_GRID;
     public static int GRID_WIDTH;
     public static int GRID_HEIGHT;
-    public static int INITIAL_RESOURCE_NUM;
     public static int UPDATE_INTERVAL;
 
     private static String towerBuilt[][];
@@ -25,14 +26,6 @@ public class Arena {
     private static Resource resource;
 
     private static int FrameCount = 0;
-
-    public void initArena() {
-        resource = new Resource(INITIAL_RESOURCE_NUM);
-        towerBuilt = new String[GRID_HEIGHT][GRID_WIDTH];
-        for (String[] row: towerBuilt) {
-            Arrays.fill(row,"");
-        }
-    }
 
     /**
      * Arena Constructor
@@ -52,15 +45,19 @@ public class Arena {
         Arena.MAX_V_NUM_GRID = MAX_V_NUM_GRID;
         Arena.GRID_WIDTH = GRID_WIDTH;
         Arena.GRID_HEIGHT = GRID_HEIGHT;
-        Arena.INITIAL_RESOURCE_NUM = INITIAL_RESOURCE_NUM;
         Arena.UPDATE_INTERVAL = UPDATE_INTERVAL;
+        resource = new Resource(INITIAL_RESOURCE_NUM);
+        towerBuilt = new String[GRID_HEIGHT][GRID_WIDTH];
+        for (String[] row: towerBuilt) {
+            Arrays.fill(row,"");
+        }
     }
 
-    private void logAttack(Tower tower, Monster mon) {
+    private static void logAttack(Tower tower, Monster mon) {
         System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower,tower.getX(),tower.getY(),mon.getType(),mon.getYPx(),mon.getYPx());
     }
 
-    private void logMonsterCreated(Monster mon) {
+    private static void logMonsterCreated(Monster mon) {
         System.out.printf("%s:%d generated\n",mon.getType(),mon.getMaxHP());
     }
 
@@ -164,16 +161,12 @@ public class Arena {
      * Sets the
      * @param x The x coordinate of the target cell
      * @param y The y coordinate of the target cell
-     * @return String tower typ eo ftower in cell (x,y)
+     * @return String tower type of tower in cell (x,y)
      */
     public static void setTowerBuilt(int x, int y, String tower) {
         towerBuilt[y][x] = tower;
     }
     public boolean buildTower(int x, int y, String towerType) {
-        if (towerBuilt(x,y)) return false;
-        if (monsterNumInCell(x, y) != 0) return false;
-        if (!buildTowerPathValid(x, y)) return false;
-        if (x == MAX_H_NUM_GRID-1 && y == MAX_V_NUM_GRID-1) return false;
         Tower tower;
         switch (towerType) {
             case "BasicTower":
@@ -191,7 +184,17 @@ public class Arena {
             default:
                 throw new IllegalStateException("Unexpected value: " + towerType);
         }
-        if (!Resource.canDeductAmount(tower.getBuildingCost())) return false;
+        if (!Resource.canDeductAmount(tower.getBuildingCost())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setTitle("Not Enough Resources");
+            alert.setHeaderText("You do not have enough resources.");
+            alert.showAndWait();
+            return false;
+        }
+        if (towerBuilt(x,y)) return false;
+        if (monsterNumInCell(x, y) != 0) return false;
+        if (!buildTowerPathValid(x, y)) return false;
+        if (x == MAX_H_NUM_GRID-1 && y == MAX_V_NUM_GRID-1) return false;
         towers.add(tower);
         setTowerBuilt(x,y,towerType);
         Resource.deductAmount(tower.getBuildingCost());
@@ -238,19 +241,22 @@ public class Arena {
         if (Arena.getTower(x/GRID_WIDTH,y/GRID_HEIGHT) != null) {
             return false;
         }
+        Monster m;
         switch (monster) {
             case "Fox":
-                monsters.add(new Fox(x,y));
+                m = new Fox(x,y);
                 break;
             case "Penguin":
-                monsters.add(new Penguin(x,y));
+                m = new Penguin(x,y);
                 break;
             case "Unicorn":
-                monsters.add(new Unicorn(x,y));
+                m = new Unicorn(x,y);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + monster);
         }
+        logMonsterCreated(m);
+        monsters.add(m);
         return true;
     }
 
