@@ -35,7 +35,17 @@ public class Arena {
         }
     }
 
-
+    /**
+     * Arena Constructor
+     * @param ARENA_WIDTH The width of the arena width in pixels
+     * @param ARENA_HEIGHT The height of the arena width in pixels
+     * @param MAX_H_NUM_GRID The number of grid cells in each row of the arena
+     * @param MAX_V_NUM_GRID The number of grid cells in each column of the arena
+     * @param GRID_WIDTH The width of each grid cell in pixels
+     * @param GRID_HEIGHT The height of each grid cell in pixels
+     * @param INITIAL_RESOURCE_NUM The initial amount of resource
+     * @param UPDATE_INTERVAL The update interval of the game in ms
+     */
     public Arena(int ARENA_WIDTH, int ARENA_HEIGHT, int MAX_H_NUM_GRID, int MAX_V_NUM_GRID, int GRID_WIDTH, int GRID_HEIGHT, int INITIAL_RESOURCE_NUM, int UPDATE_INTERVAL) {
         Arena.ARENA_WIDTH = ARENA_WIDTH;
         Arena.ARENA_HEIGHT = ARENA_HEIGHT;
@@ -55,6 +65,14 @@ public class Arena {
         System.out.printf("%s:%d generated\n",mon.getType(),mon.getMaxHP());
     }
 
+    /**
+     * Method to check whether building a tower in cel (x,y) is valid,
+     * taking into account whether there's a tower or monster in that cell and if
+     * building the tower will block off the end zone
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     * @return true iff a tower can be built in the target cell
+     */
     private boolean buildTowerPathValid(int x, int y) {
         boolean[][] reachable = new boolean[GRID_HEIGHT][GRID_WIDTH];
         class Cell {
@@ -106,6 +124,13 @@ public class Arena {
         return true;
     }
 
+    /**
+     * Returns the Tower object in the cell (x,y), returns null if no tower is
+     * built in that cell
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     * @return Tower The Tower object in target cell (null if no tower)
+     */
     public static Tower getTower(int x, int y) {
         if (towerBuilt(x,y)) {
             for (Tower t: towers) {
@@ -115,12 +140,32 @@ public class Arena {
         return null;
     }
 
+    /**
+     * Checks whether the there is a tower in cell (x,y)
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     * @return boolean Returns true iff there a tower in the target cell
+     */
     public static boolean towerBuilt(int x, int y) {
         return !towerBuilt[y][x].equals("");
     }
+
+    /**
+     * Returns the tower type of the tower in cell (x,y)
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     * @return String tower typ eo ftower in cell (x,y)
+     */
     public static String towerBuiltType(int x, int y) {
         return towerBuilt[y][x];
     }
+
+    /**
+     * Sets the
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     * @return String tower typ eo ftower in cell (x,y)
+     */
     public static void setTowerBuilt(int x, int y, String tower) {
         towerBuilt[y][x] = tower;
     }
