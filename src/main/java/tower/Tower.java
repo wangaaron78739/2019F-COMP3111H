@@ -17,14 +17,18 @@ public class Tower {
     private final String type;
     private final int x;
     private final int y;
+    private final int cooldown;
+    private int prevShot = 0;
+    private int upgradeCost = buildingCost;
 
-    public Tower(int attackPower, int buildingCost, int shootingRange, int x, int y, String type) {
+    public Tower(int attackPower, int buildingCost, int shootingRange, int cooldown, int x, int y, String type) {
         this.attackPower = attackPower;
         this.buildingCost = buildingCost;
         this.shootingRange = shootingRange;
         this.x = x;
         this.y = y;
         this.type = type;
+        this.cooldown = cooldown;
     }
 
     public int getAttackPower() {
@@ -64,13 +68,20 @@ public class Tower {
     }
 
     public void upgrade() {
-        System.out.printf("Upgraded %s at (%d,%d)\n", type, x,y);
+        //TODO: just change stats
     }
+
+    public int getUpgradeCost() {
+        return upgradeCost;
+    }
+
+
     public void shoot() {
+        if (Arena.getFrameCount()-prevShot < cooldown) return;
       if(Arena.getMonsterNum() > 0){
     	  HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     	  for(Monster m: Arena.getMonsters()){
-    		  double distance = Math.hypot(m.getXPx() - this.x, m.getYPx() - this.y);
+    		  double distance = Math.hypot(m.getXPx() - this.x*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2, m.getYPx() - this.y*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2);
     		  if(distance <= shootingRange)
     		  map.put(m, distance);
     	  }
@@ -87,16 +98,19 @@ public class Tower {
          Map.Entry<Monster, Double> element = iter.next();
          Monster target = element.getKey();
          double distance = element.getValue();
-         do{
-        	 if(iter.hasNext()){
-        		 element = iter.next();
-        		 if(element.getValue() == distance)
-        			 if(element.getKey().getYPx()<target.getYPx())
-        				 target=element.getKey();		 
-        	 }
-         }while(element.getValue() == distance);	 
+         //TODO: Stuck in this while loop
+//         do{
+//        	 if(iter.hasNext()){
+//        		 element = iter.next();
+//        		 if(element.getValue() == distance)
+//        			 if(element.getKey().getYPx()<target.getYPx())
+//        				 target=element.getKey();
+//        	 }
+//         }while(element.getValue() == distance);
          //shoot
+          Arena.logAttack(this,target);
          target.setHP( target.getHP()-attackPower);
+         prevShot = Arena.getFrameCount();
       }
     }
 }

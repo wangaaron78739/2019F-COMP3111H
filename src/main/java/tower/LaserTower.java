@@ -4,8 +4,9 @@ public class LaserTower extends Tower {
     private static final int baseAttackPower = 100;
     private static final int baseBuildingCost = 100;
     private static final int baseShootingRange = 100;
-    private static final String typeName = "LaserTower";
+    private static final int baseAttackCooldown = 100;
+    private static final String typeName = "Laser";
     public LaserTower(int x, int y) {
-        super(baseAttackPower, baseBuildingCost, baseShootingRange, x, y, typeName);
+        super(baseAttackPower, baseBuildingCost, baseShootingRange, baseAttackCooldown, x, y, typeName);
     }
 }

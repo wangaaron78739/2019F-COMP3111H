@@ -37,15 +37,15 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
  * [x] A monster is modeled as a point which should be roughly the center of its icon/grid. In other words, a monster has a size of 1px by 1px.
  * [ ] A monster is always moving from a grid to an adjacent grid either horizontally or vertically.
  * [x] The game must not allow a player to build a tower if the player does not have enough resource to build it.
- * [ ] When a monster is killed it must be removed from the arena, a certain amount of resource will be given to the player.
+ * [x] When a monster is killed it must be removed from the arena, a certain amount of resource will be given to the player.
  * [ ] Each grid can contain at most one tower. When it contains a tower, it cannot contain any monster.
  * [x] No tower shall be able to move. 
- * [ ] All distance used in the game should be referred as Euclidean distance, in pixels (px). 
+ * [x] All distance used in the game should be referred as Euclidean distance, in pixels (px). 
  * [x] The width and height of the Arena is 480 px-by-480 px. 
- * [ ] All operations by the player must be done by mouse.
+ * [x] All operations by the player must be done by mouse.
  * [x] A tower must have at least the following information: attack power, building cost, shooting range. 
  * [ ] A tower cannot attack a monster that is outside its shooting range. When we judge a monster is inside a tower's shooting range, the following distance will be used: the Euclidean distance between the center of the grid of where the tower is built and the center of the monster.
- * [ ] The health point (HP) of a monster will be deducted by the attack power of the tower attacking it. When HP is less than or equal to zero a monster is killed. 
+ * [x] The health point (HP) of a monster will be deducted by the attack power of the tower attacking it. When HP is less than or equal to zero a monster is killed. 
  * [ ] When there are multiple possible monster a tower can shoot (in range), it should always choose a monster that is nearest to up-left corner of the end-zone ((440, 0) in our demo).
  * [ ] It is allowed that multiple towers shoot at a monster at the same time even through only one tower is needed to kill it. This is likely to happen. 
 
@@ -53,33 +53,33 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
  * [ ] A monster will never move toward a grid with a tower. If a monster is already on its way to a new grid and a part of the monster body is already insider the grid, no tower will be allowed to be built on this new grid. 
  * [x] After building a tower, all monsters on the map should have at least one valid path move toward the end-zone. Thus, the game must not allow a player to build a tower to trap a monster. 
  * [x] Each grid can contain any number of monsters as long as it does not contain a tower.
- * [ ] The game is a time-based game. The button `Next Frame` would NOT be tested in grading. It will be served as a debug button for your own interest. There are two methods to start the game: by clicking `Simulate` or `Play`. In either mode monsters will be automatically generated and the monsters will move towards the end-zone, towers will automatically fire if any monsters are in its shooting distance. In `simulate` mode, player is only allowed to build tower before the simulate button is clicked. Once the button is clicked, the player will no be clicking any button until the game is over. In `play` mode, the player is allowed to build or to upgrade tower when the game is running.
+ * [x] The game is a time-based game. The button `Next Frame` would NOT be tested in grading. It will be served as a debug button for your own interest. There are two methods to start the game: by clicking `Simulate` or `Play`. In either mode monsters will be automatically generated and the monsters will move towards the end-zone, towers will automatically fire if any monsters are in its shooting distance. In `simulate` mode, player is only allowed to build tower before the simulate button is clicked. Once the button is clicked, the player will no be clicking any button until the game is over. In `play` mode, the player is allowed to build or to upgrade tower when the game is running.
  
 ### Tasks (16 points of project Total)
  
 #### Regular Individual-Task - applies to both 3111 and 3111H students
 1. [ ] Arena Building (15)
-    1. [ ] Indicate the grid that a monster show up and the grid representing end-zone with png images. 
+    1. [x] Indicate the grid that a monster show up and the grid representing end-zone with png images. 
     The image must shall be shown at the back when there is a monster on the grid. Create/choose your own image. (1)
     1. [x] Allow all types of towers to be built on all green grids using drag and drop gesture. (1)
         1. [x] When a tower is built, an image of the tower will be placed on the grid. Use the png files 
         provided under `src\main\resources`. (1)
-        1. [ ] A fixed amount of resource (e.g. money, or you create your own set of resources.) is deducted 
+        1. [x] A fixed amount of resource (e.g. money, or you create your own set of resources.) is deducted 
         and correctly display the remaining amount of resource on GUI screen after building
         the tower. (1)
         1. [x] When the mouse pointer is moved over a built tower, all information related to the 
         tower must be displayed on the graphic interface (`System.out.println` is not acceptable)) (1)
             1. [x] Furthermore, the pixels of the area that are inside the tower's range are shaded (you might use a circle UI). (1)
                 1. [x] Furthermore, when the mouse is moved away from the tower, the shaded area will be restored (you are not allowed to dismiss the information/shaded pixel by clicking button, e.g. click a message box). (1)
-        1. [ ] When there is not enough resource to build a tower, the program should prompt a dialog box to warn the player (1)
-        1. [ ] When a tower is clicked, the player will be provided with two options: `destroy the tower` and `upgrade`. (1)
-            1. [ ] Furthermore, when `destroy the tower` is selected, the tower will be destroyed. (1)
-            1. [ ] Furthermore, when `upgrade` is selected, and in case there is enough resource (you can determine the resources needed) to upgrade, it will invoke the function that corresponding to 
+        1. [x] When there is not enough resource to build a tower, the program should prompt a dialog box to warn the player (1)
+        1. [x] When a tower is clicked, the player will be provided with two options: `destroy the tower` and `upgrade`. (1)
+            1. [x] Furthermore, when `destroy the tower` is selected, the tower will be destroyed. (1)
+            1. [x] Furthermore, when `upgrade` is selected, and in case there is enough resource (you can determine the resources needed) to upgrade, it will invoke the function that corresponding to 
             upgrading the tower and a line `XXX tower is being upgraded` is printed on the console. (1)
-                1. [ ] Furthermore, in case there isn't enough resource to upgrade the tower, the upgrade will be aborted and a line `not enough resource to upgrade XXX tower` is printed on the console. (1)
+                1. [x] Furthermore, in case there isn't enough resource to upgrade the tower, the upgrade will be aborted and a line `not enough resource to upgrade XXX tower` is printed on the console. (1)
     1. [ ] Logging the following information using `System.out.println`:
         1. [x] When a monster is generated. Log its type and HP in the format `<type>:<HP> generated` (1)
-        1. [ ] When a monster is attacked. Log the type and position tower attacks it and the position of the monster in the format `<tower_type>@(<x>.<y>) -> <monster_type>@(<x>, <y>)` (1)
+        1. [x] When a monster is attacked. Log the type and position tower attacks it and the position of the monster in the format `<tower_type>@(<x>.<y>) -> <monster_type>@(<x>, <y>)` (1)
             1. [ ] Furthermore, represent the attack in the GUI so that the monster and the tower involved can be visually identified without reading the log. (1)
 1. [ ] Towers (15)
     1. [ ] All towers built in the arena will shoot a monster automatically which is inside its range (unless all towers are impossible to attack, e.g. out of range, in cool down etc). (1)      
@@ -104,9 +104,9 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
     1. [ ] Monsters on the arena will move towards the end-zone automatically. (1)
         1. [ ] Furthermore, if no tower is built, the monster will be successfully reach the end-zone and cause the game over (player lose). A single line `Gameover` will be printed to console. (1)
             1. [ ] Furthermore, if the game is over, both monster generation and tower shooting should stop and a dialog box will pop up to notify the game is over (1)
-    1. [ ] Represent a monster with png images (`fox.png`, `unicorn.png`, `penguin.png`) provided under `src\main\resources`. (1)
+    1. [x] Represent a monster with png images (`fox.png`, `unicorn.png`, `penguin.png`) provided under `src\main\resources`. (1)
         1. [ ] Furthermore, when a monster is killed (HP reach 0), its image will be replaced by `collision.png`. (1)
-            1. [ ] Furthermore, the dead monster will be removed from the arena automatically. (1)
+            1. [x] Furthermore, the dead monster will be removed from the arena automatically. (1)
     1. [ ] When a mouse pointer moves over a monster, the HP of the monster will be shown on the graphical interface. (1)
         1. [ ] Furthermore, when the mouse pointer moves away from the monster, the HP information will be dismissed. (1)
     1. [ ] Implements three types of monsters: Fox, Unicorn, Penguin such that:
@@ -116,7 +116,7 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
 
 #### H Individual-Task - applies to 3111H students only - (5%)
 1. [ ] Arena
-    1. [ ] Allow player to build towers in all grids unless it violates the rules stipulated in the Game Physics - Rules for H task. (1)
+    1. [x] Allow player to build towers in all grids unless it violates the rules stipulated in the Game Physics - Rules for H task. (1)
     1. [ ] Implement the button `Simulate` according to the game physics. (2)
         1. [ ] Furthermore, implement the button `Play` according to the game physics. (2)
 1. [ ] Tower

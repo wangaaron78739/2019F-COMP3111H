@@ -3,6 +3,7 @@ package arena.logic;
 import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.Random;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -26,6 +27,10 @@ public class Arena {
     private static Resource resource;
 
     private static int FrameCount = 0;
+    private static boolean gameStarted = false;
+
+    //TODO: change this?
+    private static final int monsterKillResource = 300;
 
     /**
      * Arena Constructor
@@ -53,12 +58,20 @@ public class Arena {
         }
     }
 
-    private static void logAttack(Tower tower, Monster mon) {
-        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower,tower.getX(),tower.getY(),mon.getType(),mon.getYPx(),mon.getYPx());
+    public static void logAttack(Tower tower, Monster mon) {
+        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower.getType(),tower.getX()*GRID_WIDTH+GRID_WIDTH/2,tower.getY()*GRID_HEIGHT+GRID_HEIGHT/2,mon.getType(),(int)mon.getYPx(),(int)mon.getYPx());
     }
 
-    private static void logMonsterCreated(Monster mon) {
+    public static void logMonsterCreated(Monster mon) {
         System.out.printf("%s:%d generated\n",mon.getType(),mon.getMaxHP());
+    }
+
+    public static void logTowerUpgrade(Tower tower) {
+        System.out.printf("%s tower is being upgraded\n",tower.getType());
+    }
+
+    public static void logTowerUpgradeFailed(Tower tower) {
+        System.out.printf("not enough resource to upgrade %s tower\n",tower.getType());
     }
 
     /**
@@ -169,16 +182,16 @@ public class Arena {
     public boolean buildTower(int x, int y, String towerType) {
         Tower tower;
         switch (towerType) {
-            case "BasicTower":
+            case "Basic":
                 tower = new BasicTower(x,y);
                 break;
             case "Catapult":
                 tower = new Catapult(x,y);
                 break;
-            case "IceTower":
+            case "Ice":
                 tower = new IceTower(x,y);
                 break;
-            case "LaserTower":
+            case "Laser":
                 tower = new LaserTower(x,y);
                 break;
             default:
@@ -279,19 +292,38 @@ public class Arena {
         if (towerBuilt(x,y)) {
             for (Tower t: towers) {
                 if (towerIsAt(x,y,t)) {
-                    t.upgrade();
+                    if (Resource.canDeductAmount(t.getUpgradeCost())) {
+                        t.upgrade();
+                        logTowerUpgrade(t);
+                    }else {
+                        logTowerUpgradeFailed(t);
+                    }
                 }
             }
         }
     }
-
+    static Random rand = new Random();
     public static void nextFrame() {
+        if (!gameStarted) return;
         FrameCount++;
-        towers.forEach(t -> t.shoot());
-        // TODO: Give resource for killing monsters
+        if ((FrameCount%50)==0) addMonster(100+rand.nextInt(100),100+rand.nextInt(100), "Fox");
+        towers.forEach(Tower::shoot);
+        monsters.forEach(m-> {
+            if (m.getHP() <= 0) {
+                Resource.addResourceAmount(monsterKillResource);
+                //TODO: boom
+            }
+        });
         monsters.removeIf(m->m.getHP()<=0);
-        monsters.forEach(m -> m.move());
-
+        monsters.forEach(Monster::move);
+        //TODO: Check endgame
     }
 
+    public static void startGame() {
+        gameStarted = true;
+    }
+
+    public static int getFrameCount() {
+        return FrameCount;
+    }
 }

@@ -32,7 +32,7 @@
                         <Button fx:id="buttonSimulate" layoutX="17.0" layoutY="10.0" mnemonicParsing="false"
                                 onAction="#simulateStart" text="Simulate"/>
                         <Button fx:id="buttonPlay" layoutX="100" layoutY="10.0" mnemonicParsing="false"
-                                onAction="#play" text="Play"/>
+                                onAction="#playStart" text="Play"/>
                         <Label fx:id="labelBasicTower" layoutX="17.0" layoutY="290.0" minWidth="160" minHeight="35"
                                style="-fx-border-color: black;-fx-alignment: center;" text="Basic Tower">
                             <opaqueInsets>
@@ -105,6 +105,7 @@
                             </padding>
                         </Label>
                         <Label fx:id="labelResource" layoutX="17.0" layoutY="50.0" text="Money: "/>
+                        <Label fx:id="labelFrameCount" layoutX="17.0" layoutY="240.0" text="FrameCount: "/>
                         <Label fx:id="labelHovered" layoutX="17.0" layoutY="70.0" text="Hovered Tower:"/>
                         <Label fx:id="labelActive" layoutX="17.0" layoutY="170.0" text="Selected Tower:"/>
                         <Button fx:id="buttonDeleteTower" layoutX="17.0" layoutY="260.0" mnemonicParsing="false"
