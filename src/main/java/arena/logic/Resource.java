@@ -24,4 +24,7 @@ public class Resource {
     public static void setResourceAmount(int resourceAmount) {
         Resource.resourceAmount = resourceAmount;
     }
+    public static void addResourceAmount(int resourceAmount) {
+        Resource.resourceAmount += resourceAmount;
+    }
 }
