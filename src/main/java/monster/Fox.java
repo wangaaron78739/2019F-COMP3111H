@@ -13,6 +13,6 @@ public class Fox extends Monster {
     }*/
     
     public Fox(int x, int y, int stage) {
-        super(x, y, defaultSpeed*stage, defaultHP, "Fox"); // stronger as the speed is faster
+        super(x, y, (int)(defaultSpeed*(0.75+0.25*stage)), defaultHP, "Fox"); // stronger as the speed is faster
     }
 }

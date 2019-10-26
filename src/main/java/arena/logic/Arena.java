@@ -315,16 +315,21 @@ public class Arena {
         }
     }
     static Random rand = new Random();
+
+    // random position for the fixed grid of monster generation (up-left corner)
+    static int MonsterStartXPx = 40*rand.nextInt(4);
+    static int MonsterStartYPx = 40*rand.nextInt(4);
+    
     public static void nextFrame() {
         if (!gameStarted) return;
         FrameCount++;
         final String[] names = {"Fox", "Penguin", "Unicorn"};
-        String randomString = names[rand.nextInt(names.length)];
         // Create random monster
         if ((FrameCount%50)==0) {
-        	addMonster(100+rand.nextInt(100),100+rand.nextInt(100), randomString);
+        	for (int i=0; i<=rand.nextInt(3); ++i) // one or more monster
+        		addMonster(MonsterStartXPx+rand.nextInt(40),MonsterStartYPx+rand.nextInt(40), names[rand.nextInt(names.length)]);
         }
-        //towers.forEach(Tower::shoot);
+        towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
