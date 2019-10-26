@@ -27,6 +27,7 @@ public class Arena {
     private static Resource resource;
 
     private static int FrameCount = 0;
+    private static int EachStageCount = 2500; // larger stage, stronger monster
     private static boolean gameStarted = false;
 
     //TODO: change this?
@@ -249,21 +250,32 @@ public class Arena {
         if (monsters == null) return 0;
         return monsters.size();
     }
+    
+    public static int getStage() { 
+    	int index = FrameCount / EachStageCount;
+    	switch (index) {
+    		case 0:
+    		case 1:
+    			return index+1;
+    		default:
+    			return 3;
+    	}
+    }
 
     public static boolean addMonster(int x, int y, String monster) {
-        if (Arena.getTower(x/GRID_WIDTH,y/GRID_HEIGHT) != null) {
-            return false;
+    	if (Arena.getTower(x/GRID_WIDTH,y/GRID_HEIGHT) != null) {
+    		return false;
         }
         Monster m;
         switch (monster) {
             case "Fox":
-                m = new Fox(x,y);
+                m = new Fox(x,y,getStage());
                 break;
             case "Penguin":
-                m = new Penguin(x,y);
+                m = new Penguin(x,y,getStage());
                 break;
             case "Unicorn":
-                m = new Unicorn(x,y);
+                m = new Unicorn(x,y,getStage());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + monster);
@@ -309,8 +321,10 @@ public class Arena {
         final String[] names = {"Fox", "Penguin", "Unicorn"};
         String randomString = names[rand.nextInt(names.length)];
         // Create random monster
-        if ((FrameCount%50)==0) addMonster(100+rand.nextInt(100),100+rand.nextInt(100), randomString);
-        towers.forEach(Tower::shoot);
+        if ((FrameCount%50)==0) {
+        	addMonster(100+rand.nextInt(100),100+rand.nextInt(100), randomString);
+        }
+        //towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
