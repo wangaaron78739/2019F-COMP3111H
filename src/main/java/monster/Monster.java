@@ -60,6 +60,6 @@ public class Monster {
     }
 
     public void move() {
-
+    	
     }
 }
