@@ -306,7 +306,10 @@ public class Arena {
     public static void nextFrame() {
         if (!gameStarted) return;
         FrameCount++;
-        if ((FrameCount%50)==0) addMonster(100+rand.nextInt(100),100+rand.nextInt(100), "Fox");
+        final String[] names = {"Fox", "Penguin", "Unicorn"};
+        String randomString = names[rand.nextInt(names.length)];
+        // Create random monster
+        if ((FrameCount%50)==0) addMonster(100+rand.nextInt(100),100+rand.nextInt(100), randomString);
         towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
             if (m.getHP() <= 0) {
