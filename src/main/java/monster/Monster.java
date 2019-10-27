@@ -1,5 +1,7 @@
 package monster;
 
+import java.util.*;
+
 import arena.logic.Arena;
 
 public class Monster {
@@ -10,7 +12,14 @@ public class Monster {
     private final int maxHP;
     private final String type;
     private static int monsterNum;
-
+    
+    private static Cell[][] gridsInArena; // an array for representing grids in the arena
+    private static Cell currentCell;
+    private static int towerCount = 0;
+    private static int currentValue = 0;
+    private static final List<Cell> checkedNodes = new ArrayList<Cell>(); // an array for finding the shortest path
+    private static final List<Cell> frontierNodes = new ArrayList<Cell>();
+    
     public Monster(float x, float y, int speed, int maxHP, String type) {
         this.xPx = x;
         this.yPx = y;
@@ -18,6 +27,92 @@ public class Monster {
         this.speed = speed;
         this.maxHP = maxHP;
         this.type = type;
+        // initialize the array gridsInArena
+        if (gridsInArena == null) {
+        	this.gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
+        	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
+        		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+        			gridsInArena[i][j] = new Cell(i, j, 0);
+            	}
+        	}
+        }
+    }
+    
+    public static void updateGrids() {
+    	towerCount = 0;
+    	// update index by search for grids of towers
+    	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
+    		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+    			if (Arena.getTower(i,j) != null) {
+    				gridsInArena[i][j].setIndex(1); // tower grid
+    				gridsInArena[i][j].setIndex(1000);
+    				++towerCount;
+    			}
+        	}
+    	}
+    	
+    	// update value by search from the endzone
+    	checkedNodes.clear();
+    	currentValue = 0;
+    	frontierNodes.clear();
+    	// end zone
+    	currentCell = gridsInArena[Arena.MAX_H_NUM_GRID-1][Arena.MAX_V_NUM_GRID-1]; 
+    	currentCell.setValue(currentValue); // end zone can be reached by itself in 0 steps
+    	checkedNodes.add(currentCell);
+    	frontierNodes.add(currentCell);
+    	++currentValue; // now reachable cells has currentValue one larger
+    	
+    	while (checkedNodes.size()<Arena.MAX_H_NUM_GRID*Arena.MAX_V_NUM_GRID-towerCount) {
+    		List<Cell> NodesThisStep = new ArrayList<Cell>();
+    		for (Cell node : frontierNodes) { // for all the checked nodes
+    			// Left
+    			if (node.xGrid!=0) { // can move left
+    				currentCell = gridsInArena[node.xGrid-1][node.yGrid]; // get the left node
+    				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
+	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
+	    					currentCell.setValue(currentValue);
+	    					NodesThisStep.add(currentCell);
+	    				}
+	    			}
+    			}
+    			// Right
+    			if (node.xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
+    				currentCell = gridsInArena[node.xGrid+1][node.yGrid]; // get the right node
+    				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
+	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
+	    					currentCell.setValue(currentValue);
+	    					NodesThisStep.add(currentCell);
+	    				}
+	    			}
+    			}
+    			// Up
+    			if (node.yGrid!=0) { // can move up
+    				currentCell = gridsInArena[node.xGrid][node.yGrid-1]; // get the up node
+    				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
+	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
+	    					currentCell.setValue(currentValue);
+	    					NodesThisStep.add(currentCell);
+	    				}
+	    			}
+    			}
+    			// Down
+    			if (node.yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
+    				currentCell = gridsInArena[node.xGrid][node.yGrid+1]; // get the down node
+    				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
+	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
+	    					currentCell.setValue(currentValue);
+	    					NodesThisStep.add(currentCell);
+	    				}
+	    			}
+    			}
+    		}
+    		frontierNodes.clear();
+    		for (Cell node : NodesThisStep) {
+    			frontierNodes.add(node);
+    			checkedNodes.add(node);
+    		}
+    		++currentValue;
+    	}
     }
 
     public float getXPx() {
@@ -32,6 +127,10 @@ public class Monster {
         return yPx;
     }
 
+    public void setYPx(int yPx) {
+        this.yPx = yPx;
+    }
+
     public int getXGrid() {
         return (int)(xPx/ Arena.GRID_WIDTH) ;
     }
@@ -39,10 +138,7 @@ public class Monster {
     public int getYGrid() {
         return (int)(yPx/ Arena.GRID_HEIGHT) ;
     }
-    public void setYPx(int yPx) {
-        this.yPx = yPx;
-    }
-
+    
     public int getHP() {
         return HP;
     }
@@ -59,7 +155,114 @@ public class Monster {
         return maxHP;
     }
 
-    public void move() {
+    public void move() { // TODO: override this method
+    	int xGrid = getXGrid();
+    	int yGrid = getYGrid();
+    	int count = gridsInArena[xGrid][yGrid].getValue();
+    	int leftCount = 1000;
+    	int rightCount = 1000;
+    	int upCount = 1000;
+    	int downCount = 1000;
     	
+    	// get all the four counts
+		if (xGrid!=0 && Arena.getTower(xGrid-1,yGrid)==null) { // can move left
+			leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
+		}
+		if (xGrid!=Arena.MAX_H_NUM_GRID-1 && Arena.getTower(xGrid+1,yGrid)==null) { // can move right
+			rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
+		}
+		if (yGrid!=0 && Arena.getTower(xGrid,yGrid-1)==null) { // can move up
+			upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
+		}
+		if (yGrid!=Arena.MAX_V_NUM_GRID-1 && Arena.getTower(xGrid,yGrid+1)==null) { // can move down
+			downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
+		}
+		
+		int[] counts = {leftCount, rightCount, upCount, downCount};
+		int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimum count among all four directions
+		
+		ArrayList<String> optimalDirections = new ArrayList<String>();
+		String direction;
+		if (leftCount==minimumCount) optimalDirections.add("Left");
+		if (rightCount==minimumCount) optimalDirections.add("Right");
+		if (upCount==minimumCount) optimalDirections.add("Up");
+		if (downCount==minimumCount) optimalDirections.add("Down");
+		int numOfDirections = optimalDirections.size();
+		
+		Random rand = new Random(); 
+		direction = optimalDirections.get(rand.nextInt(numOfDirections));
+		
+		switch (direction) {
+			case "Left":
+				for (int i=0; i<speed; ++i) {
+					setXPx((int)(getXPx()-1));
+				}
+				break;
+			case "Right":
+				for (int i=0; i<speed; ++i) {
+					setXPx((int)(getXPx()+1));
+				}
+				break;
+			case "Up":
+				for (int i=0; i<speed; ++i) {
+					setYPx((int)(getYPx()-1));
+				}
+				break;
+			case "Down":
+				for (int i=0; i<speed; ++i) {
+					setYPx((int)(getYPx()+1));
+				}
+				break;
+			default: break;
+		}
+		
+		/* not randomed version of move()
+		if (rightCount<count) { // moving right is the first step in one of the shortest path
+			for (int i=0; i<speed; ++i) {
+				setXPx((int)(getXPx()+1));
+			}
+		}
+		else if (downCount<count) { // moving down is the first step in one of the shortest path
+			for (int i=0; i<speed; ++i) {
+				setYPx((int)(getYPx()+1));
+			}
+		}
+		else if (leftCount<count) { // moving left is the first step in one of the shortest path
+			for (int i=0; i<speed; ++i) {
+				setXPx((int)(getXPx()-1));
+			}
+		}
+		else if (upCount<count) { // moving up is the first step in one of the shortest path
+			for (int i=0; i<speed; ++i) {
+				setYPx((int)(getYPx()-1));
+			}
+		}*/
+    }
+    
+    // public inner class for representing cells in the grid
+    public static class Cell {
+    	private int xGrid = 0;
+    	private int yGrid = 0;
+    	private int index = 0; // 0 for empty, 1 for tower
+    	private int value = 1000; // represent minimal steps needed to reach from end zone
+    	
+    	public Cell(int xGrid, int yGrid, int index) {
+    		this.xGrid = xGrid;
+    		this.yGrid = yGrid;
+    		this.index = index;
+    		this.value = 0; // modified later
+    	}
+    	
+    	public int getValue() {
+    		return value;
+    	}
+    	
+    	public void setIndex(int index) {
+    		this.index = index;
+    	}
+    	
+    	public void setValue(int value) {
+    		this.value = value;
+    	}
     }
 }

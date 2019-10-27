@@ -35,7 +35,7 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
  Regardless how you implement the game, there are some ground rules that need to follow. If your task has violated these physics, penalty may be applied to individual or to the whole group. So please take extra attention to these rules.
  * [x] A tower can only be placed on one grid, not crossing the border. 
  * [x] A monster is modeled as a point which should be roughly the center of its icon/grid. In other words, a monster has a size of 1px by 1px.
- * [ ] A monster is always moving from a grid to an adjacent grid either horizontally or vertically.
+ * [x] A monster is always moving from a grid to an adjacent grid either horizontally or vertically.
  * [x] The game must not allow a player to build a tower if the player does not have enough resource to build it.
  * [x] When a monster is killed it must be removed from the arena, a certain amount of resource will be given to the player.
  * [ ] Each grid can contain at most one tower. When it contains a tower, it cannot contain any monster.
@@ -50,7 +50,7 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
  * [ ] It is allowed that multiple towers shoot at a monster at the same time even through only one tower is needed to kill it. This is likely to happen. 
 
 #### Rules applies to COMP3111-H groups only. 
- * [ ] A monster will never move toward a grid with a tower. If a monster is already on its way to a new grid and a part of the monster body is already insider the grid, no tower will be allowed to be built on this new grid. 
+ * [ ] <u>A monster will never move toward a grid with a tower</u> <u>(Finished)</u>. If a monster is already on its way to a new grid and a part of the monster body is already insider the grid, no tower will be allowed to be built on this new grid. 
  * [x] After building a tower, all monsters on the map should have at least one valid path move toward the end-zone. Thus, the game must not allow a player to build a tower to trap a monster. 
  * [x] Each grid can contain any number of monsters as long as it does not contain a tower.
  * [x] The game is a time-based game. The button `Next Frame` would NOT be tested in grading. It will be served as a debug button for your own interest. There are two methods to start the game: by clicking `Simulate` or `Play`. In either mode monsters will be automatically generated and the monsters will move towards the end-zone, towers will automatically fire if any monsters are in its shooting distance. In `simulate` mode, player is only allowed to build tower before the simulate button is clicked. Once the button is clicked, the player will no be clicking any button until the game is over. In `play` mode, the player is allowed to build or to upgrade tower when the game is running.
@@ -109,10 +109,10 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
             1. [x] Furthermore, the dead monster will be removed from the arena automatically. (1)
     1. [ ] When a mouse pointer moves over a monster, the HP of the monster will be shown on the graphical interface. (1)
         1. [ ] Furthermore, when the mouse pointer moves away from the monster, the HP information will be dismissed. (1)
-    1. [ ] Implements three types of monsters: Fox, Unicorn, Penguin such that:
+    1. [x] Implements three types of monsters: Fox, Unicorn, Penguin such that:
         1. [x] Fox move fastest. (1)
         1. [x] Unicorn has more HP than other monsters. (1)
-        1. [ ] Penguin has can replenish some HP (but not more than its initial value) each time it moves. (2)
+        1. [x] Penguin has can replenish some HP (but not more than its initial value) each time it moves. (2)
 
 #### H Individual-Task - applies to 3111H students only - (5%)
 1. [ ] Arena
@@ -126,12 +126,13 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
     is nearest to the end-zone will be attacked; and (1)
         1. [ ] the stone should thrown to the coordinate that hits most monsters; (2)
         1. [ ] Rule for tie-breaking: If there are two monsters that are both considered nearest 
+      
           to the end-zone, the stone will be thrown towards the one that hits more monsters. If the same number of monsters
           are hit by the stone, choose any monster you wish. (1)
             1. [ ] Create a test case in JUnit to show your algorithm. (1)
         1. [ ] *Note: a stone can be thrown to a grid that contains a tower if it make sense. The tower will not be destroy because of that.*
 1. [ ] Monster
-    1. [ ] All monster are able to walk towards the end-zone with a shortest path (choose any path if there are two shortest paths). (1)
+    1. [x] All monster are able to walk towards the end-zone with a shortest path (choose any path if there are two shortest paths). (1)
         1. [ ] Furthermore, Fox is a very wise monster that will not simply walk a shortest path. Fox will try to 
           follow a path that receives a minimum number of attacks from towers by assuming that there is no other monster in Arena. (2)
     1. [ ] Create a test case in JUnit to show your algorithm. (1)
