@@ -2,7 +2,7 @@ package monster;
 
 public class Fox extends Monster {
     private static final int defaultHP = 50;
-    private static final int defaultSpeed = 20;
+    private static final int defaultSpeed = 10;
 
     /*public Fox(int x, int y, int stage, int speed, int maxHP, String type) {
         super(x, y, speed, maxHP, type);

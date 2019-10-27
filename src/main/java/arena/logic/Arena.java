@@ -25,8 +25,12 @@ public class Arena {
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Resource resource;
+    
+    // Grid index for monster generation
+    public static int MonsterStartXGrid = 0;
+    public static int MonsterStartYGrid = 0;
 
-    private static int FrameCount = 0;
+    private static int FrameCount = -1; // changed to -1, so it can generate monster from the starting time
     private static int EachStageCount = 2500; // larger stage, stronger monster
     private static boolean gameStarted = false;
 
@@ -57,6 +61,10 @@ public class Arena {
         for (String[] row: towerBuilt) {
             Arrays.fill(row,"");
         }
+        // initialize grid index for monster generation
+        Random rand = new Random();
+        MonsterStartXGrid = rand.nextInt(4);
+        MonsterStartYGrid = rand.nextInt(4);
     }
 
     public static void logAttack(Tower tower, Monster mon) {
@@ -251,6 +259,10 @@ public class Arena {
         return monsters.size();
     }
     
+    /**
+     * Helper function for getting the current stage of difficulty
+     * @return The number of stage represent the difficulty
+     */
     public static int getStage() { 
     	int index = FrameCount / EachStageCount;
     	switch (index) {
@@ -315,10 +327,6 @@ public class Arena {
         }
     }
     static Random rand = new Random();
-
-    // random position for the fixed grid of monster generation (up-left corner)
-    static int MonsterStartXPx = 40*rand.nextInt(4);
-    static int MonsterStartYPx = 40*rand.nextInt(4);
     
     public static void nextFrame() {
         if (!gameStarted) return;
@@ -326,8 +334,8 @@ public class Arena {
         final String[] names = {"Fox", "Penguin", "Unicorn"};
         // Create random monster
         if ((FrameCount%50)==0) {
-        	for (int i=0; i<=rand.nextInt(3); ++i) // one or more monster
-        		addMonster(MonsterStartXPx+rand.nextInt(40),MonsterStartYPx+rand.nextInt(40), names[rand.nextInt(names.length)]);
+        	for (int i=0; i<=rand.nextInt(2); ++i) // one or two monster
+        		addMonster(MonsterStartXGrid*40+rand.nextInt(40),MonsterStartYGrid*40+rand.nextInt(40), names[rand.nextInt(names.length)]);
         }
         towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
@@ -337,6 +345,7 @@ public class Arena {
             }
         });
         monsters.removeIf(m->m.getHP()<=0);
+        Monster.updateGrids();
         monsters.forEach(Monster::move);
         //TODO: Check endgame
     }
