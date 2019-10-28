@@ -156,87 +156,64 @@ public class Monster {
     }
 
     public void move() { // TODO: override this method
-    	int xGrid = getXGrid();
-    	int yGrid = getYGrid();
-    	int count = gridsInArena[xGrid][yGrid].getValue();
-    	int leftCount = 1000;
-    	int rightCount = 1000;
-    	int upCount = 1000;
-    	int downCount = 1000;
-    	
-    	// get all the four counts
-		if (xGrid!=0 && Arena.getTower(xGrid-1,yGrid)==null) { // can move left
-			leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
-		}
-		if (xGrid!=Arena.MAX_H_NUM_GRID-1 && Arena.getTower(xGrid+1,yGrid)==null) { // can move right
-			rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
-		}
-		if (yGrid!=0 && Arena.getTower(xGrid,yGrid-1)==null) { // can move up
-			upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
-		}
-		if (yGrid!=Arena.MAX_V_NUM_GRID-1 && Arena.getTower(xGrid,yGrid+1)==null) { // can move down
-			downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
-		}
-		
-		int[] counts = {leftCount, rightCount, upCount, downCount};
-		int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimum count among all four directions
-		
-		ArrayList<String> optimalDirections = new ArrayList<String>();
-		String direction;
-		if (leftCount==minimumCount) optimalDirections.add("Left");
-		if (rightCount==minimumCount) optimalDirections.add("Right");
-		if (upCount==minimumCount) optimalDirections.add("Up");
-		if (downCount==minimumCount) optimalDirections.add("Down");
-		int numOfDirections = optimalDirections.size();
-		
-		Random rand = new Random(); 
-		direction = optimalDirections.get(rand.nextInt(numOfDirections));
-		
-		switch (direction) {
-			case "Left":
-				for (int i=0; i<speed; ++i) {
+    	for (int i=0; i<speed; ++i) {
+	    	int xGrid = getXGrid();
+	    	int yGrid = getYGrid();
+	    	int count = gridsInArena[xGrid][yGrid].getValue();
+	    	int leftCount = 1000;
+	    	int rightCount = 1000;
+	    	int upCount = 1000;
+	    	int downCount = 1000;
+	    	
+	    	// when the monster has reached the end zone, simply return (no move)
+	    	if ((xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)) {
+	    		return;
+	    	}
+	    	
+	    	// get all the four counts
+			if (xGrid!=0 && Arena.getTower(xGrid-1,yGrid)==null) { // can move left
+				leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
+			}
+			if (xGrid!=Arena.MAX_H_NUM_GRID-1 && Arena.getTower(xGrid+1,yGrid)==null) { // can move right
+				rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
+			}
+			if (yGrid!=0 && Arena.getTower(xGrid,yGrid-1)==null) { // can move up
+				upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
+			}
+			if (yGrid!=Arena.MAX_V_NUM_GRID-1 && Arena.getTower(xGrid,yGrid+1)==null) { // can move down
+				downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
+			}
+			
+			int[] counts = {leftCount, rightCount, upCount, downCount};
+			int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimum count among all four directions
+			
+			ArrayList<String> optimalDirections = new ArrayList<String>();
+			String direction;
+			if (leftCount==minimumCount) optimalDirections.add("Left");
+			if (rightCount==minimumCount) optimalDirections.add("Right");
+			if (upCount==minimumCount) optimalDirections.add("Up");
+			if (downCount==minimumCount) optimalDirections.add("Down");
+			int numOfDirections = optimalDirections.size();
+			
+			Random rand = new Random(); 
+			direction = optimalDirections.get(rand.nextInt(numOfDirections));
+			
+			switch (direction) {
+				case "Left":
 					setXPx((int)(getXPx()-1));
-				}
-				break;
-			case "Right":
-				for (int i=0; i<speed; ++i) {
+					break;
+				case "Right":
 					setXPx((int)(getXPx()+1));
-				}
-				break;
-			case "Up":
-				for (int i=0; i<speed; ++i) {
+					break;
+				case "Up":
 					setYPx((int)(getYPx()-1));
-				}
-				break;
-			case "Down":
-				for (int i=0; i<speed; ++i) {
+					break;
+				case "Down":
 					setYPx((int)(getYPx()+1));
-				}
-				break;
-			default: break;
-		}
-		
-		/* not randomed version of move()
-		if (rightCount<count) { // moving right is the first step in one of the shortest path
-			for (int i=0; i<speed; ++i) {
-				setXPx((int)(getXPx()+1));
+					break;
+				default: break;
 			}
-		}
-		else if (downCount<count) { // moving down is the first step in one of the shortest path
-			for (int i=0; i<speed; ++i) {
-				setYPx((int)(getYPx()+1));
-			}
-		}
-		else if (leftCount<count) { // moving left is the first step in one of the shortest path
-			for (int i=0; i<speed; ++i) {
-				setXPx((int)(getXPx()-1));
-			}
-		}
-		else if (upCount<count) { // moving up is the first step in one of the shortest path
-			for (int i=0; i<speed; ++i) {
-				setYPx((int)(getYPx()-1));
-			}
-		}*/
+    	}
     }
     
     // public inner class for representing cells in the grid
@@ -250,7 +227,7 @@ public class Monster {
     		this.xGrid = xGrid;
     		this.yGrid = yGrid;
     		this.index = index;
-    		this.value = 0; // modified later
+    		this.value = 1000; // modified later
     	}
     	
     	public int getValue() {
