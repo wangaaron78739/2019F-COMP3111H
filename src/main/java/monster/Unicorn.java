@@ -4,7 +4,7 @@ import arena.logic.Arena;
 
 public class Unicorn extends Monster {
     private static final int defaultHP = 150;
-    private static final int defaultSpeed = 5;
+    private static final int defaultSpeed = 2;
 
     /*public Unicorn(int x, int y, int stage, int speed, int maxHP, String type) {
         super(x, y, speed, maxHP, type);

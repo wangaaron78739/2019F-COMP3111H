@@ -13,6 +13,7 @@ public class Monster {
     private final String type;
     private static int monsterNum;
 
+    private String direction = "Left";
     private static int towerCount = 0;
     private static int currentValue = 0;
     
@@ -157,26 +158,26 @@ public class Monster {
     }
 
     public void move() { // TODO: override this method
-    	int initXGrid = getXGrid(); // initial means before the monster move for any steps
-    	int initYGrid = getYGrid();
-    	Random rand = new Random(); 
-    	int leftCount = 1000;
-    	int rightCount = 1000;
-    	int upCount = 1000;
-    	int downCount = 1000;
-		String direction = "Left";
     	for (int i=0; i<speed; ++i) {
-        	int xGrid = getXGrid();
-        	int yGrid = getYGrid();
-        	// int count = gridsInArena[xGrid][yGrid].getValue();
+	    	int xPx = (int)getXPx();
+	    	int yPx = (int)getYPx();
+
+    		int xGrid = getXGrid();
+    		int yGrid = getYGrid();
 	    	// when the monster has reached the end zone, simply return (no move)
 	    	if ((xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)) {
 	    		return;
 	    	}
-			
-			if (i==0 || ((xGrid!=initXGrid) || (yGrid!=initYGrid))) { // the first move made by the monster
-				// get all the four counts
-				if (xGrid!=0) { // can move left
+	    	
+	    	if (xPx % Arena.GRID_WIDTH == (int)(0.5*Arena.GRID_WIDTH) && 
+					yPx % Arena.GRID_HEIGHT == (int)(0.5*Arena.GRID_HEIGHT)) {
+	    		int leftCount = 1000;
+	    		int rightCount = 1000;
+	    		int upCount = 1000;
+	    		int downCount = 1000;
+	    		Random rand = new Random();
+	    		// update direction
+	    		if (xGrid!=0) { // can move left
 					leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
 				}
 				if (xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
@@ -188,32 +189,35 @@ public class Monster {
 				if (yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
 					downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
 				}
-				
 				int[] counts = {leftCount, rightCount, upCount, downCount};
-				int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimum count among all four directions
+				int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimal possible counts
 				
-				ArrayList<String> optimalDirections = new ArrayList<String>();
-				if (leftCount==minimumCount) optimalDirections.add("Left");
-				if (rightCount==minimumCount) optimalDirections.add("Right");
-				if (upCount==minimumCount) optimalDirections.add("Up");
-				if (downCount==minimumCount) optimalDirections.add("Down");
+				ArrayList<String> optimalDirections = new ArrayList<String>(); // array storing all the optimal directions
+				if (leftCount==minimumCount) 
+					optimalDirections.add("Left");
+				if (rightCount==minimumCount) 
+					optimalDirections.add("Right");
+				if (upCount==minimumCount) 
+					optimalDirections.add("Up");
+				if (downCount==minimumCount) 
+					optimalDirections.add("Down");
+				
 				int numOfDirections = optimalDirections.size();
 				
 				direction = optimalDirections.get(rand.nextInt(numOfDirections));
-			}	
-			
-			switch (direction) {
+			}
+	    	switch (direction) {
 				case "Left":
-					setXPx((int)(getXPx()-1));
+					setXPx(xPx-1);
 					break;
 				case "Right":
-					setXPx((int)(getXPx()+1));
+					setXPx(xPx+1);
 					break;
 				case "Up":
-					setYPx((int)(getYPx()-1));
+					setYPx(yPx-1);
 					break;
 				case "Down":
-					setYPx((int)(getYPx()+1));
+					setYPx(yPx+1);
 					break;
 				default: break;
 			}
