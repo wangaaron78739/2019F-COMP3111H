@@ -12,11 +12,12 @@ public class Monster {
     private final int maxHP;
     private final String type;
     private static int monsterNum;
+
+    private static int towerCount = 0;
+    private static int currentValue = 0;
     
     private static Cell[][] gridsInArena; // an array for representing grids in the arena
     private static Cell currentCell;
-    private static int towerCount = 0;
-    private static int currentValue = 0;
     private static final List<Cell> checkedNodes = new ArrayList<Cell>(); // an array for finding the shortest path
     private static final List<Cell> frontierNodes = new ArrayList<Cell>();
     
