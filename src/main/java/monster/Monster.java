@@ -12,11 +12,12 @@ public class Monster {
     private final int maxHP;
     private final String type;
     private static int monsterNum;
+
+    private static int towerCount = 0;
+    private static int currentValue = 0;
     
     private static Cell[][] gridsInArena; // an array for representing grids in the arena
     private static Cell currentCell;
-    private static int towerCount = 0;
-    private static int currentValue = 0;
     private static final List<Cell> checkedNodes = new ArrayList<Cell>(); // an array for finding the shortest path
     private static final List<Cell> frontierNodes = new ArrayList<Cell>();
     
@@ -45,7 +46,7 @@ public class Monster {
     		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
     			if (Arena.getTower(i,j) != null) {
     				gridsInArena[i][j].setIndex(1); // tower grid
-    				gridsInArena[i][j].setIndex(1000);
+    				gridsInArena[i][j].setValue(1000);
     				++towerCount;
     			}
         	}
@@ -175,16 +176,16 @@ public class Monster {
 			
 			if (i==0 || ((xGrid!=initXGrid) || (yGrid!=initYGrid))) { // the first move made by the monster
 				// get all the four counts
-				if (xGrid!=0 && Arena.getTower(xGrid-1,yGrid)==null) { // can move left
+				if (xGrid!=0) { // can move left
 					leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
 				}
-				if (xGrid!=Arena.MAX_H_NUM_GRID-1 && Arena.getTower(xGrid+1,yGrid)==null) { // can move right
+				if (xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
 					rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
 				}
-				if (yGrid!=0 && Arena.getTower(xGrid,yGrid-1)==null) { // can move up
+				if (yGrid!=0) { // can move up
 					upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
 				}
-				if (yGrid!=Arena.MAX_V_NUM_GRID-1 && Arena.getTower(xGrid,yGrid+1)==null) { // can move down
+				if (yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
 					downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
 				}
 				
