@@ -31,7 +31,7 @@ public class Arena {
     public static int MonsterStartYGrid = 0;
 
     private static int FrameCount = -1; // changed to -1, so it can generate monster from the starting time
-    private static int EachStageCount = 2500; // larger stage, stronger monster
+    private static int EachStageCount = 500; // larger stage, stronger monster
     private static boolean gameStarted = false;
 
     //TODO: change this?
@@ -268,9 +268,11 @@ public class Arena {
     	switch (index) {
     		case 0:
     		case 1:
+    		case 2:
+    		case 3:
     			return index+1;
     		default:
-    			return 3;
+    			return 5;
     	}
     }
 
@@ -334,8 +336,9 @@ public class Arena {
         final String[] names = {"Fox", "Penguin", "Unicorn"};
         // Create random monster
         if ((FrameCount%50)==0) {
-        	for (int i=0; i<=rand.nextInt(2); ++i) // one or two monster
-        		addMonster(MonsterStartXGrid*40+rand.nextInt(40),MonsterStartYGrid*40+rand.nextInt(40), names[rand.nextInt(names.length)]);
+        	for (int i=0; i<=rand.nextInt(2); ++i) // one or three monster
+        		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH),MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT), names[rand.nextInt(names.length)]);
+        		//addMonster(60,60,"Fox");
         }
         towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
