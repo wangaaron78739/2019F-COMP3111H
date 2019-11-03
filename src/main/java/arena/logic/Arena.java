@@ -337,7 +337,7 @@ public class Arena {
         // Create random monster
         if ((FrameCount%50)==0) {
         	for (int i=0; i<=rand.nextInt(2); ++i) // one or three monster
-        		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH),MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT), names[rand.nextInt(names.length)]);
+        		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH)-1,MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT)-1, names[rand.nextInt(names.length)]);
         		//addMonster(60,60,"Fox");
         }
         towers.forEach(Tower::shoot);

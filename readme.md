@@ -133,8 +133,8 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
         1. [ ] *Note: a stone can be thrown to a grid that contains a tower if it make sense. The tower will not be destroy because of that.*
 1. [ ] Monster
     1. [x] All monster are able to walk towards the end-zone with a shortest path (choose any path if there are two shortest paths). (1)
-        1. [ ] Furthermore, Fox is a very wise monster that will not simply walk a shortest path. Fox will try to 
-          follow a path that receives a minimum number of attacks from towers by assuming that there is no other monster in Arena. (2)
+        1. [x] Furthermore, Fox is a very wise monster that will not simply walk a shortest path. Fox will try to 
+            follow a path that receives a minimum number of attacks from towers by assuming that there is no other monster in Arena. (2)
     1. [ ] Create a test case in JUnit to show your algorithm. (1)
 
 #### H Group-Task - applies to 3111H students only - (5%)

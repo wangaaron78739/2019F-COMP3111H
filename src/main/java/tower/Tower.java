@@ -75,6 +75,10 @@ public class Tower {
         return upgradeCost;
     }
 
+    // helper function for checking whether a pixel is in the range, would be overrride
+    public boolean canAttack(int xPx, int yPx) {
+    	return true;
+    }
 
     public void shoot() {
         if (Arena.getFrameCount()-prevShot < cooldown) return;
