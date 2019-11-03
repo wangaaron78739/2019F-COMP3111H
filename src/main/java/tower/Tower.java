@@ -19,7 +19,7 @@ public class Tower {
     private final int y;
     private final int cooldown;
     private int prevShot = 0;
-    private int upgradeCost = buildingCost;
+    private int upgradeCost;
 
     public Tower(int attackPower, int buildingCost, int shootingRange, int cooldown, int x, int y, String type) {
         this.attackPower = attackPower;
@@ -29,6 +29,7 @@ public class Tower {
         this.y = y;
         this.type = type;
         this.cooldown = cooldown;
+        this.upgradeCost = buildingCost;
     }
 
     public int getAttackPower() {

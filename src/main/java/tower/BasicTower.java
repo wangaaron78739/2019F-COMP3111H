@@ -17,7 +17,7 @@ public class BasicTower extends Tower {
     @Override
     public void upgrade(){
     	 setAttackPower(this.getAttackPower() + 60);
-    	 Resource.setResourceAmount(Resource.getResourceAmount()-this.getUpgradeCost()); 
+    	 Resource.deductAmount(this.getUpgradeCost()); 
     }
     
     @Override
