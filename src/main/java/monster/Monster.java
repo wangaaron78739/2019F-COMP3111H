@@ -148,6 +148,10 @@ public class Monster {
     	return speed;
     }
     
+    public void setSpeed(int speed) {
+    	this.speed = speed;
+    }
+    
     public int getHP() {
         return HP;
     }

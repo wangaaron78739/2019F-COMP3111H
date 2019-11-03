@@ -1,5 +1,7 @@
 package tower;
 
+import arena.logic.Resource;
+import monster.Monster;
 
 public class IceTower extends Tower {
     private static final int baseAttackPower = 100;
@@ -11,4 +13,5 @@ public class IceTower extends Tower {
     public IceTower(int x, int y) {
         super(baseAttackPower, baseBuildingCost, baseShootingRange, baseAttackCooldown, x, y, typeName);
     }
+    
 }

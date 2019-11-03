@@ -68,13 +68,17 @@ public class Tower {
     }
 
     public void upgrade() {
-        //TODO: just change stats
+        
     }
 
     public int getUpgradeCost() {
         return upgradeCost;
     }
-
+    
+    public void implement(Monster target){
+    	
+    }
+    
     // helper function for checking whether a pixel is in the range, would be overrride
     public boolean canAttack(int xPx, int yPx) {
     	return true;
@@ -102,21 +106,24 @@ public class Tower {
          Map.Entry<Monster, Double> element = iter.next();
          Monster target = element.getKey();
          double distance = element.getValue();
-         //TODO: Stuck in this while loop
-//         do{
-//        	 if(iter.hasNext()){
-//        		 element = iter.next();
-//        		 if(element.getValue() == distance)
-//        			 if(element.getKey().getYPx()<target.getYPx())
-//        				 target=element.getKey();
-//        	 }
-//         }while(element.getValue() == distance);
-         //shoot
-          Arena.logAttack(this,target);
-         target.setHP( target.getHP()-attackPower);
+         //fixed: Stuck in this while loop
+         do{
+        	 if(iter.hasNext()){
+        		 element = iter.next();
+        		 if(element.getValue() == distance)
+        			 if(element.getKey().getYPx()<target.getYPx())
+        				 target=element.getKey();
+        	 }
+        	 else break;
+         }while(element.getValue() == distance);
+         //Implement
+         Arena.logAttack(this,target);
+//         target.setHP( target.getHP()-attackPower);
+         this.implement(target);
          prevShot = Arena.getFrameCount();
       }
     }
+    
 }
     
     
