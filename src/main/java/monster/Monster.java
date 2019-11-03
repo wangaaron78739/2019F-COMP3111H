@@ -11,11 +11,11 @@ public class Monster {
     private int speed;
     private final int maxHP;
     private final String type;
-    private static int monsterNum;
 
-    private String direction = "Left";
-    private static int towerCount = 0;
+    protected String direction = "Left";
+    protected static int towerCount = 0;
     private static int currentValue = 0;
+    public static int defaultCount = 100000;
     
     private static Cell[][] gridsInArena; // an array for representing grids in the arena
     private static Cell currentCell;
@@ -31,33 +31,36 @@ public class Monster {
         this.type = type;
         // initialize the array gridsInArena
         if (gridsInArena == null) {
-        	this.gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
+        	gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
         	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
         		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
-        			gridsInArena[i][j] = new Cell(i, j, 0);
+        			gridsInArena[i][j] = new Cell(i, j);
             	}
         	}
         }
     }
     
-    public static void updateGrids() {
+    public static void updateTowerCount() {
     	towerCount = 0;
     	// update index by search for grids of towers
     	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
     		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
     			if (Arena.getTower(i,j) != null) {
-    				gridsInArena[i][j].setIndex(1); // tower grid
-    				gridsInArena[i][j].setValue(1000);
+    				gridsInArena[i][j].setValue(defaultCount);
     				++towerCount;
     			}
         	}
     	}
+    }
+    
+    public static void updateGrids() {
+    	updateTowerCount();
     	
-    	// update value by search from the endzone
+    	// reset the arrays
     	checkedNodes.clear();
     	currentValue = 0;
     	frontierNodes.clear();
-    	// end zone
+    	// update value by search from the endzone
     	currentCell = gridsInArena[Arena.MAX_H_NUM_GRID-1][Arena.MAX_V_NUM_GRID-1]; 
     	currentCell.setValue(currentValue); // end zone can be reached by itself in 0 steps
     	checkedNodes.add(currentCell);
@@ -141,6 +144,10 @@ public class Monster {
         return (int)(yPx/ Arena.GRID_HEIGHT) ;
     }
     
+    public int getSpeed() {
+    	return speed;
+    }
+    
     public int getHP() {
         return HP;
     }
@@ -156,6 +163,45 @@ public class Monster {
     public int getMaxHP() {
         return maxHP;
     }
+    
+    public String getDirection() {
+    	return direction;
+    }
+    
+    public String determineWhichDirectionAtCenter(int xGrid, int yGrid) {
+    	int leftCount = defaultCount;
+		int rightCount = defaultCount;
+		int upCount = defaultCount;
+		int downCount = defaultCount;
+		Random rand = new Random();
+		// update direction
+		if (xGrid!=0) { // can move left
+			leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
+		}
+		if (xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
+			rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
+		}
+		if (yGrid!=0) { // can move up
+			upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
+		}
+		if (yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
+			downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
+		}
+		int[] counts = {leftCount, rightCount, upCount, downCount};
+		int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimal possible counts
+		
+		ArrayList<String> optimalDirections = new ArrayList<String>(); // array storing all the optimal directions
+		if (leftCount==minimumCount) 
+			optimalDirections.add("Left");
+		if (rightCount==minimumCount) 
+			optimalDirections.add("Right");
+		if (upCount==minimumCount) 
+			optimalDirections.add("Up");
+		if (downCount==minimumCount) 
+			optimalDirections.add("Down");
+		
+		return(optimalDirections.get(rand.nextInt(optimalDirections.size())));
+    }
 
     public void move() { // TODO: override this method
     	for (int i=0; i<speed; ++i) {
@@ -169,43 +215,23 @@ public class Monster {
 	    		return;
 	    	}
 	    	
-	    	if (xPx % Arena.GRID_WIDTH == (int)(0.5*Arena.GRID_WIDTH) && 
-					yPx % Arena.GRID_HEIGHT == (int)(0.5*Arena.GRID_HEIGHT)) {
-	    		int leftCount = 1000;
-	    		int rightCount = 1000;
-	    		int upCount = 1000;
-	    		int downCount = 1000;
-	    		Random rand = new Random();
-	    		// update direction
-	    		if (xGrid!=0) { // can move left
-					leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
-				}
-				if (xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
-					rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
-				}
-				if (yGrid!=0) { // can move up
-					upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
-				}
-				if (yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
-					downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
-				}
-				int[] counts = {leftCount, rightCount, upCount, downCount};
-				int minimumCount = Arrays.stream(counts).min().getAsInt(); // get the minimal possible counts
-				
-				ArrayList<String> optimalDirections = new ArrayList<String>(); // array storing all the optimal directions
-				if (leftCount==minimumCount) 
-					optimalDirections.add("Left");
-				if (rightCount==minimumCount) 
-					optimalDirections.add("Right");
-				if (upCount==minimumCount) 
-					optimalDirections.add("Up");
-				if (downCount==minimumCount) 
-					optimalDirections.add("Down");
-				
-				int numOfDirections = optimalDirections.size();
-				
-				direction = optimalDirections.get(rand.nextInt(numOfDirections));
+	    	// determine which direction to go to when reach the middle of a cell
+	    	if (xPx % Arena.GRID_WIDTH == (int)(0.5*Arena.GRID_WIDTH)-1 && 
+					yPx % Arena.GRID_HEIGHT == (int)(0.5*Arena.GRID_HEIGHT)-1 ) {
+	    		direction = determineWhichDirectionAtCenter(xGrid, yGrid);
 			}
+	    	
+	    	// handle the case when already on the way, but a tower is built
+	    	if (direction == "Left" && (xPx % Arena.GRID_WIDTH < (int)(0.5*Arena.GRID_WIDTH)-1) && (Arena.getTower(xGrid-1,yGrid) != null)) 
+	    		direction = "Right";
+	    	if (direction == "Right" && (xPx % Arena.GRID_WIDTH > (int)(0.5*Arena.GRID_WIDTH)-1) && (Arena.getTower(xGrid+1,yGrid) != null)) 
+	    		direction = "Left";
+	    	if (direction == "Up" && (yPx % Arena.GRID_HEIGHT < (int)(0.5*Arena.GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid-1) != null)) 
+	    		direction = "Down";
+	    	if (direction == "Down" && (yPx % Arena.GRID_HEIGHT > (int)(0.5*Arena.GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid+1) != null)) 
+	    		direction = "Up";
+	    	
+	    	// move according to the direction
 	    	switch (direction) {
 				case "Left":
 					setXPx(xPx-1);
@@ -225,29 +251,40 @@ public class Monster {
     }
     
     // public inner class for representing cells in the grid
-    public static class Cell {
+    protected static class Cell {
     	private int xGrid = 0;
     	private int yGrid = 0;
-    	private int index = 0; // 0 for empty, 1 for tower
-    	private int value = 1000; // represent minimal steps needed to reach from end zone
+    	private int value = defaultCount; // represent minimal steps needed to reach from end zone
+    	private String fromCell = "Left"; // the cell we used to get this cell, only used by Fox
     	
-    	public Cell(int xGrid, int yGrid, int index) {
-    		this.xGrid = xGrid;
+    	public Cell(int xGrid, int yGrid) {
     		this.yGrid = yGrid;
-    		this.index = index;
-    		this.value = 1000; // modified later
+    		this.xGrid = xGrid;
+    		this.value = defaultCount; // modified later
+    	}
+    	
+    	public int getXGrid() {
+    		return xGrid;
+    	}
+    	
+    	public int getYGrid() {
+    		return yGrid;
     	}
     	
     	public int getValue() {
     		return value;
     	}
     	
-    	public void setIndex(int index) {
-    		this.index = index;
-    	}
-    	
     	public void setValue(int value) {
     		this.value = value;
+    	}
+    	
+    	public String getFromCell() {
+    		return fromCell;
+    	}
+    	
+    	public void setFromCell(String fromCell) {
+    		this.fromCell = fromCell;
     	}
     }
 }
