@@ -351,13 +351,13 @@ public class Arena {
         		//addMonster(60,60,"Fox");
         }
         towers.forEach(Tower::shoot);
+        monsters.removeIf(m->m.getType()=="Death"); // remove all the currently dead monsters
         monsters.forEach(m-> {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
-                //TODO: boom
+                m.setTypeDeath(); // image of monster replaced by collision.png
             }
         });
-        monsters.removeIf(m->m.getHP()<=0);
         Monster.updateGrids();
         monsters.forEach(Monster::move);
         //TODO: Check endgame
