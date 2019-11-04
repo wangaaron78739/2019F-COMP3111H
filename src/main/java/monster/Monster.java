@@ -206,6 +206,15 @@ public class Monster {
 		
 		return(optimalDirections.get(rand.nextInt(optimalDirections.size())));
     }
+    
+    public static boolean gameEnds() {
+    	for (Monster m: Arena.getMonsters()) {
+    		if ((m.getXGrid()==Arena.MAX_H_NUM_GRID-1) && (m.getYGrid()==Arena.MAX_V_NUM_GRID-1)) {
+	    		return true;
+	    	}
+    	}
+    	return false;
+    }
 
     public void move() { // TODO: override this method
     	for (int i=0; i<speed; ++i) {
@@ -215,7 +224,7 @@ public class Monster {
     		int xGrid = getXGrid();
     		int yGrid = getYGrid();
 	    	// when the monster has reached the end zone, simply return (no move)
-	    	if ((xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)) {
+	    	if (gameEnds()/*(xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)*/) {
 	    		return;
 	    	}
 	    	
