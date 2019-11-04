@@ -14,6 +14,8 @@ public class Arena {
 
     public static int ARENA_WIDTH;
     public static int ARENA_HEIGHT;
+    public static int MONSTER_WIDTH;
+    public static int MONSTER_HEIGHT;
     public static int MAX_H_NUM_GRID;
     public static int MAX_V_NUM_GRID;
     public static int GRID_WIDTH;
@@ -39,8 +41,10 @@ public class Arena {
 
     /**
      * Arena Constructor
-     * @param ARENA_WIDTH The width of the arena width in pixels
-     * @param ARENA_HEIGHT The height of the arena width in pixels
+     * @param ARENA_WIDTH The width of the arena cell in pixels
+     * @param ARENA_HEIGHT The height of the arena cell in pixels
+     * @param MONSTER_WIDTH The width of the monster width in pixels
+     * @param MONSTER_HEIGHT The height of the monster width in pixels
      * @param MAX_H_NUM_GRID The number of grid cells in each row of the arena
      * @param MAX_V_NUM_GRID The number of grid cells in each column of the arena
      * @param GRID_WIDTH The width of each grid cell in pixels
@@ -48,9 +52,11 @@ public class Arena {
      * @param INITIAL_RESOURCE_NUM The initial amount of resource
      * @param UPDATE_INTERVAL The update interval of the game in ms
      */
-    public Arena(int ARENA_WIDTH, int ARENA_HEIGHT, int MAX_H_NUM_GRID, int MAX_V_NUM_GRID, int GRID_WIDTH, int GRID_HEIGHT, int INITIAL_RESOURCE_NUM, int UPDATE_INTERVAL) {
+    public Arena(int ARENA_WIDTH, int ARENA_HEIGHT, int MONSTER_WIDTH, int MONSTER_HEIGHT, int MAX_H_NUM_GRID, int MAX_V_NUM_GRID, int GRID_WIDTH, int GRID_HEIGHT, int INITIAL_RESOURCE_NUM, int UPDATE_INTERVAL) {
         Arena.ARENA_WIDTH = ARENA_WIDTH;
         Arena.ARENA_HEIGHT = ARENA_HEIGHT;
+        Arena.MONSTER_WIDTH = MONSTER_WIDTH;
+        Arena.MONSTER_HEIGHT = MONSTER_HEIGHT;
         Arena.MAX_H_NUM_GRID = MAX_H_NUM_GRID;
         Arena.MAX_V_NUM_GRID = MAX_V_NUM_GRID;
         Arena.GRID_WIDTH = GRID_WIDTH;
@@ -224,9 +230,13 @@ public class Arena {
     }
 
     private int monsterNumInCell(int x, int y) {
+        int xLow = x*GRID_WIDTH-MONSTER_WIDTH/2;
+        int xHigh = (x+1)*GRID_WIDTH+MONSTER_WIDTH/2;
+        int yLow = y*GRID_HEIGHT-MONSTER_HEIGHT/2;
+        int yHigh = (y+1)*GRID_HEIGHT+MONSTER_HEIGHT/2;
         int total = 0;
         for (Monster m : monsters) {
-            if (m.getXPx() / GRID_WIDTH == x && m.getYPx() / GRID_HEIGHT == y) {
+            if (m.getXPx()>xLow && m.getXPx()<xHigh && m.getYPx()>yLow && m.getYPx()<yHigh) {
                 total++;
             }
         }
@@ -337,10 +347,10 @@ public class Arena {
         // Create random monster
         if ((FrameCount%50)==0) {
         	for (int i=0; i<=rand.nextInt(2); ++i) // one or three monster
-        		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH)-1,MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT)-1, names[rand.nextInt(names.length)]);
+        		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH)-1,MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT)-1, "Fox"/*names[rand.nextInt(names.length)]*/);
         		//addMonster(60,60,"Fox");
         }
-        towers.forEach(Tower::shoot);
+        //towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
@@ -351,6 +361,8 @@ public class Arena {
         Monster.updateGrids();
         monsters.forEach(Monster::move);
         //TODO: Check endgame
+        if (Monster.gameEnds())
+        	System.out.println("Game over!");
     }
 
     public static void startGame() {
