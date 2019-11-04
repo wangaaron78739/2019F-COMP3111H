@@ -22,6 +22,8 @@ public class Monster {
     private static final List<Cell> checkedNodes = new ArrayList<Cell>(); // an array for finding the shortest path
     private static final List<Cell> frontierNodes = new ArrayList<Cell>();
     
+    private int cooldown = 0; // number of cool downs left
+    
     public Monster(float x, float y, int speed, int maxHP, String type) {
         this.xPx = x;
         this.yPx = y;
@@ -145,7 +147,8 @@ public class Monster {
     }
     
     public int getSpeed() {
-    	return speed;
+    	if (cooldown==0) return speed;
+    	else return speed/2;
     }
     
     public void setSpeed(int speed) {
@@ -170,6 +173,14 @@ public class Monster {
     
     public String getDirection() {
     	return direction;
+    }
+    
+    public int getCoolDown() {
+    	return cooldown;
+    }
+    
+    public void setCoolDown(int cooldown) {
+    	this.cooldown = cooldown;
     }
     
     public String determineWhichDirectionAtCenter(int xGrid, int yGrid) {
@@ -217,14 +228,14 @@ public class Monster {
     }
 
     public void move() { // TODO: override this method
-    	for (int i=0; i<speed; ++i) {
+    	for (int i=0; i<getSpeed(); ++i) {
 	    	int xPx = (int)getXPx();
 	    	int yPx = (int)getYPx();
 
     		int xGrid = getXGrid();
     		int yGrid = getYGrid();
 	    	// when the monster has reached the end zone, simply return (no move)
-	    	if (gameEnds()/*(xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)*/) {
+	    	if (gameEnds()) {
 	    		return;
 	    	}
 	    	
@@ -261,6 +272,8 @@ public class Monster {
 				default: break;
 			}
     	}
+    	
+    	if (cooldown>0) --cooldown; // one less round of cooldown
     }
     
     // public inner class for representing cells in the grid
