@@ -189,7 +189,6 @@ public class Arena {
      * Sets the
      * @param x The x coordinate of the target cell
      * @param y The y coordinate of the target cell
-     * @return String tower type of tower in cell (x,y)
      */
     public static void setTowerBuilt(int x, int y, String tower) {
         towerBuilt[y][x] = tower;

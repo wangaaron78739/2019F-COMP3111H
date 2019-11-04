@@ -16,6 +16,7 @@ public class Catapult extends Tower {
     private static final int baseAttackCooldown = 100;
     private static final int upperShootingRange = 150;
     private static final int lowerShootingRange = 50;
+    private static final int baseAttackRadius = 25;
     private int cooldown = 50;
     private int prevShot = 0;
     private static final String typeName = "Catapult";
@@ -24,8 +25,25 @@ public class Catapult extends Tower {
         super(baseAttackPower, baseBuildingCost, baseShootingRange, baseAttackCooldown, x, y, typeName);
     }
     
-    @Override
+    public int getUpperShootingRange() {
+    	return upperShootingRange;
+    }
     
+    public int getLowerShootingRange() {
+    	return lowerShootingRange;
+    }
+    
+    public int getBaseAttackRadius() {
+    	return baseAttackRadius;
+    }
+    
+    @Override
+    public boolean canAttack(int xPx, int yPx) {
+    	double distance = Math.hypot(xPx - (getX()*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), yPx - (getY()*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2));
+    	return (distance>=getLowerShootingRange()-getBaseAttackRadius() && distance<=getUpperShootingRange()+getBaseAttackRadius());
+    }
+    
+    @Override
     public void shoot() {
       if(Arena.getFrameCount() - prevShot < this.cooldown) return;
       if(Arena.getMonsterNum() > 0){
