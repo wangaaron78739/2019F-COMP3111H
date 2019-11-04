@@ -234,6 +234,9 @@ public class ArenaUI {
                 case "Unicorn":
                     l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/unicorn.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
                     break;
+                case "Death":
+                	l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/collision.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + m);
             }

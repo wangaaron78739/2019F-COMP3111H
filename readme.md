@@ -105,7 +105,7 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
         1. [ ] Furthermore, if no tower is built, the monster will be successfully reach the end-zone and cause the game over (player lose). A single line `Gameover` will be printed to console. (1)
             1. [ ] Furthermore, if the game is over, both monster generation and tower shooting should stop and a dialog box will pop up to notify the game is over (1)
     1. [x] Represent a monster with png images (`fox.png`, `unicorn.png`, `penguin.png`) provided under `src\main\resources`. (1)
-        1. [ ] Furthermore, when a monster is killed (HP reach 0), its image will be replaced by `collision.png`. (1)
+        1. [x] Furthermore, when a monster is killed (HP reach 0), its image will be replaced by `collision.png`. (1)
             1. [x] Furthermore, the dead monster will be removed from the arena automatically. (1)
     1. [ ] When a mouse pointer moves over a monster, the HP of the monster will be shown on the graphical interface. (1)
         1. [ ] Furthermore, when the mouse pointer moves away from the monster, the HP information will be dismissed. (1)
