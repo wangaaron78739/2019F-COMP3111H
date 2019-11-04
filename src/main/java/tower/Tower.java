@@ -83,42 +83,41 @@ public class Tower {
     }
 
     public void shoot() {
-      if(Arena.getMonsterNum() > 0){
-    	  HashMap<Monster, Double> map = new HashMap<Monster, Double>();
-    	  for(Monster m: Arena.getMonsters()){
-    		  double distance = Math.hypot(m.getXPx() - (this.x*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), m.getYPx() - (this.y*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2));
-    		  if(distance <= shootingRange)
-    		  map.put(m, distance);
-    	  }
-    	  if(map.isEmpty()) return;
-    	  //rank the distance to monsters
-    	  List<Map.Entry<Monster, Double>> list = new ArrayList<Map.Entry<Monster,Double>>(map.entrySet());
-    	  list.sort(Map.Entry.comparingByValue());
-    	  HashMap<Monster,Double> sorted = new HashMap<>();
-          for (Map.Entry<Monster, Double> entry : list) {
-              sorted.put(entry.getKey(), entry.getValue());
-          }
-    	  //find the up-left monster among the nearest monsters
-         Iterator<Map.Entry<Monster,Double>> iter = sorted.entrySet().iterator();
-         Map.Entry<Monster, Double> element = iter.next();
-         Monster target = element.getKey();
-         double distance = element.getValue();
-         //fixed: Stuck in this while loop
-         do{
-        	 if(iter.hasNext()){
-        		 element = iter.next();
-        		 if(element.getValue() == distance)
-        			 if(element.getKey().getYPx()<target.getYPx())
-        				 target=element.getKey();
-        	 }
-        	 else break;
-         }while(element.getValue() == distance);
-         //Attack
-         Arena.logAttack(this,target);
-         implement(target);
-      }
+    	if(Arena.getMonsterNum() > 0){
+    		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
+    		for(Monster m: Arena.getMonsters()){
+    			double distance = Math.hypot(m.getXPx() - (this.x*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), m.getYPx() - (this.y*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2));
+    			if(distance <= shootingRange)
+    				map.put(m, distance);
+    		}
+    		if(map.isEmpty()) return;
+    		//rank the distance to monsters
+    		List<Map.Entry<Monster, Double>> list = new ArrayList<Map.Entry<Monster,Double>>(map.entrySet());
+    		list.sort(Map.Entry.comparingByValue());
+    		HashMap<Monster,Double> sorted = new HashMap<>();
+    		for (Map.Entry<Monster, Double> entry : list) {
+    			sorted.put(entry.getKey(), entry.getValue());
+    		}
+    		//find the up-left monster among the nearest monsters
+    		Iterator<Map.Entry<Monster,Double>> iter = sorted.entrySet().iterator();
+    		Map.Entry<Monster, Double> element = iter.next();
+    		Monster target = element.getKey();
+    		double distance = element.getValue();
+    		//fixed: Stuck in this while loop
+    		do{
+    			if(iter.hasNext()){
+    				element = iter.next();
+    				if(element.getValue() == distance)
+    					if(element.getKey().getYPx()<target.getYPx())
+    						target=element.getKey();
+    			}
+    			else break;
+    		}while(element.getValue() == distance);
+    		//Attack
+    		Arena.logAttack(this,target);
+    		implement(target);
+    	}
     }
-    
+
 }
-    
-    
+
