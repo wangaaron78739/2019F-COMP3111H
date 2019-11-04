@@ -90,7 +90,7 @@ public class Tower {
       if(Arena.getMonsterNum() > 0){
     	  HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     	  for(Monster m: Arena.getMonsters()){
-    		  double distance = Math.hypot(m.getXPx() - this.x*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2, m.getYPx() - this.y*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2);
+    		  double distance = Math.hypot(m.getXPx() - (this.x*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), m.getYPx() - (this.y*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2));
     		  if(distance <= shootingRange)
     		  map.put(m, distance);
     	  }
