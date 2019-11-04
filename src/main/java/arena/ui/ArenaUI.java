@@ -111,7 +111,7 @@ public class ArenaUI {
     public void createArena() {
         if (arena != null)
             return;
-        arena = new Arena(ARENA_WIDTH, ARENA_HEIGHT, MAX_H_NUM_GRID, MAX_V_NUM_GRID,
+        arena = new Arena(ARENA_WIDTH, ARENA_HEIGHT, MONSTER_WIDTH, MONSTER_HEIGHT, MAX_H_NUM_GRID, MAX_V_NUM_GRID,
                 GRID_WIDTH, GRID_HEIGHT, INITIAL_RESOURCE_NUM, UPDATE_INTERVAL);
         for (int j = 0; j < MAX_V_NUM_GRID; j++)
             for (int i = 0; i < MAX_H_NUM_GRID; i++) {
