@@ -17,8 +17,6 @@ public class Tower {
     private final String type;
     private final int x;
     private final int y;
-    private final int cooldown;
-    private int prevShot = 0;
     private int upgradeCost;
 
     public Tower(int attackPower, int buildingCost, int shootingRange, int cooldown, int x, int y, String type) {
@@ -28,7 +26,6 @@ public class Tower {
         this.x = x;
         this.y = y;
         this.type = type;
-        this.cooldown = cooldown;
         this.upgradeCost = buildingCost;
     }
 
@@ -63,7 +60,7 @@ public class Tower {
     public int getY() {
         return y;
     }
-
+    
     public String getType() {
         return type;
     }
@@ -86,7 +83,6 @@ public class Tower {
     }
 
     public void shoot() {
-        if (Arena.getFrameCount()-prevShot < cooldown) return;
       if(Arena.getMonsterNum() > 0){
     	  HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     	  for(Monster m: Arena.getMonsters()){
@@ -121,7 +117,6 @@ public class Tower {
          Arena.logAttack(this,target);
 //         target.setHP( target.getHP()-attackPower);
          this.implement(target);
-         prevShot = Arena.getFrameCount();
       }
     }
     
