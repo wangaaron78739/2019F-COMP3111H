@@ -350,7 +350,7 @@ public class Arena {
         		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH)-1,MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT)-1, "Fox"/*names[rand.nextInt(names.length)]*/);
         		//addMonster(60,60,"Fox");
         }
-        //towers.forEach(Tower::shoot);
+        towers.forEach(Tower::shoot);
         monsters.forEach(m-> {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
