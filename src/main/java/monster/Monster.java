@@ -175,6 +175,10 @@ public class Monster {
     	return direction;
     }
     
+    public int getCoolDown() {
+    	return cooldown;
+    }
+    
     public void setCoolDown(int cooldown) {
     	this.cooldown = cooldown;
     }
