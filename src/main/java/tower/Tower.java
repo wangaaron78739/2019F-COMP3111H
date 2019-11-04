@@ -113,10 +113,9 @@ public class Tower {
         	 }
         	 else break;
          }while(element.getValue() == distance);
-         //Implement
+         //Attack
          Arena.logAttack(this,target);
-//         target.setHP( target.getHP()-attackPower);
-         this.implement(target);
+         implement(target);
       }
     }
     
