@@ -11,9 +11,9 @@ import tower.Tower;
 
 public class Fox extends Monster {
     private static final int defaultHP = 50;
-    private static final int defaultSpeed = 10;
+    private static final int defaultSpeed = 5;
     
-	private static int numStepsEachCell = 4;
+	private static int numStepsEachCell = 8;
     private static Cell[][] gridsInArenaFox; // an array for representing grids in the arena
     private static Cell currentCellFox;
     private static final List<Cell> checkedNodesFox = new ArrayList<Cell>(); // an array for finding the path with least attacks
@@ -51,7 +51,7 @@ public class Fox extends Monster {
     	cellCount = 0;
         numStepsEachCell = Arena.GRID_HEIGHT/getSpeed();
     	currentCellFox = gridsInArenaFox[Arena.MAX_H_NUM_GRID-1][Arena.MAX_V_NUM_GRID-2]; 
-    	for (int i=0; i<numStepsEachCell-1; ++i) {
+    	for (int i=0; i<numStepsEachCell/2+1; ++i) {
     		// the coordinates of the pixels the fox would go through
     		xPx = currentCellFox.getXGrid()*Arena.GRID_WIDTH + (int)(0.5*Arena.GRID_WIDTH) - 1;
         	yPx = currentCellFox.getYGrid()*Arena.GRID_HEIGHT + (int)(0.5*Arena.GRID_HEIGHT) - 1 + i*defaultSpeed;
@@ -70,7 +70,7 @@ public class Fox extends Monster {
     	// update the cell on the left of the end zone
     	cellCount = 0;
     	currentCellFox = gridsInArenaFox[Arena.MAX_H_NUM_GRID-2][Arena.MAX_V_NUM_GRID-1]; 
-    	for (int i=0; i<numStepsEachCell-1; ++i) {
+    	for (int i=0; i<numStepsEachCell/2+1; ++i) {
     		// the coordinates of the pixels the fox would go through
     		xPx = currentCellFox.getXGrid()*Arena.GRID_WIDTH + (int)(0.5*Arena.GRID_WIDTH) - 1 + i*defaultSpeed;
         	yPx = currentCellFox.getYGrid()*Arena.GRID_HEIGHT + (int)(0.5*Arena.GRID_HEIGHT) - 1;
