@@ -277,11 +277,9 @@ public class Arena {
     	switch (index) {
     		case 0:
     		case 1:
-    		case 2:
-    		case 3:
     			return index+1;
     		default:
-    			return 5;
+    			return 3;
     	}
     }
 

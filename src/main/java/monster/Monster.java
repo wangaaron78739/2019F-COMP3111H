@@ -1,9 +1,22 @@
+/**
+ * monster is a group of files for monsters
+ */
 package monster;
 
 import java.util.*;
 
 import arena.logic.Arena;
 
+/**
+ * <p>
+ * Class implement Monster.
+ * <p>
+ * There are three types of Monster, Fox, Penguin and Unicorn.
+ * <p>
+ * Along the time elapsed, different Monster would become stronger in different ways.
+ * @author CHIU Ka Ho
+ * 
+ */
 public class Monster {
     private float xPx;
     private float yPx;
@@ -12,9 +25,30 @@ public class Monster {
     private final int maxHP;
     private String type;
 
+    /**
+     * <p>
+     * A String representing the direction that monster in a cell should move to.
+     * <p>
+     * The default value is "Left", indicating that the monster in the cell should move to the cell to the next to it.
+     */
     protected String direction = "Left";
+    /**
+     * <p>
+     * An integer counting the total number of towers in current grids.
+     * <p>
+     * The default value is 0, indicating that no tower is built in current grids.
+     */
     protected static int towerCount = 0;
     private static int currentValue = 0;
+    /**
+     * <p>
+     * An integer representing default count for each cell,
+     * i.e. the count of a cell if it hasn't been modified.
+     * <p>
+     * A cell with tower inside will always have count equal to this value.
+     * <p>
+     * The default value is 100000, indicating the count for the cell is 100000.
+     */
     public static int defaultCount = 100000;
     
     private static Cell[][] gridsInArena; // an array for representing grids in the arena
@@ -24,6 +58,17 @@ public class Monster {
     
     private int cooldown = 0; // number of cool downs left
     
+    /**
+     * <p>
+     * Monster Constructor.
+     * <p>
+     * Monster have three types: Fox, Penguin and Unicorn
+     * @param x The x-coordinate (in pixels) of the Monster
+     * @param y The y-coordinate (in pixels) of the Monster
+     * @param speed The speed (when not slowed down by IceTower) of the Monster
+     * @param maxHP The maximum (and initial) HP of the Monster
+     * @param type The type of the Monster
+     */
     public Monster(float x, float y, int speed, int maxHP, String type) {
         this.xPx = x;
         this.yPx = y;
@@ -40,6 +85,76 @@ public class Monster {
             	}
         	}
         }
+    }
+    
+    /**
+	 * <p>
+     * Getter function for the parameter xPx.
+     * @return Integer representing the x-coordinate (in pixels) of the Monster.
+     */
+    public float getXPx() {
+        return xPx;
+    }
+
+    public float getYPx() {
+        return yPx;
+    }
+
+    public int getXGrid() {
+        return (int)(xPx/ Arena.GRID_WIDTH) ;
+    }
+
+    public int getYGrid() {
+        return (int)(yPx/ Arena.GRID_HEIGHT) ;
+    }
+    
+    public int getSpeed() {
+    	if (cooldown==0) return speed;
+    	else return speed/2;
+    }
+    
+    public int getHP() {
+        return HP;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+    
+    public String getDirection() {
+    	return direction;
+    }
+    
+    public int getCoolDown() {
+    	return cooldown;
+    }   
+
+    public void setXPx(int xPx) {
+        this.xPx = xPx;
+    }
+
+    public void setYPx(int yPx) {
+        this.yPx = yPx;
+    }
+    
+    public void setSpeed(int speed) {
+    	this.speed = speed;
+    }
+    
+    public void setHP(int HP) {
+        this.HP = HP;
+    }
+    
+    public void setTypeDeath() {
+        type = "Death";
+    }
+    
+    public void setCoolDown(int cooldown) {
+    	this.cooldown = cooldown;
     }
     
     public static void updateTowerCount() {
@@ -120,71 +235,6 @@ public class Monster {
     		}
     		++currentValue;
     	}
-    }
-
-    public float getXPx() {
-        return xPx;
-    }
-
-    public void setXPx(int xPx) {
-        this.xPx = xPx;
-    }
-
-    public float getYPx() {
-        return yPx;
-    }
-
-    public void setYPx(int yPx) {
-        this.yPx = yPx;
-    }
-
-    public int getXGrid() {
-        return (int)(xPx/ Arena.GRID_WIDTH) ;
-    }
-
-    public int getYGrid() {
-        return (int)(yPx/ Arena.GRID_HEIGHT) ;
-    }
-    
-    public int getSpeed() {
-    	if (cooldown==0) return speed;
-    	else return speed/2;
-    }
-    
-    public void setSpeed(int speed) {
-    	this.speed = speed;
-    }
-    
-    public int getHP() {
-        return HP;
-    }
-
-    public void setHP(int HP) {
-        this.HP = HP;
-    }
-
-    public String getType() {
-        return type;
-    }
-    
-    public void setTypeDeath() {
-        type = "Death";
-    }
-
-    public int getMaxHP() {
-        return maxHP;
-    }
-    
-    public String getDirection() {
-    	return direction;
-    }
-    
-    public int getCoolDown() {
-    	return cooldown;
-    }
-    
-    public void setCoolDown(int cooldown) {
-    	this.cooldown = cooldown;
     }
     
     public String determineWhichDirectionAtCenter(int xGrid, int yGrid) {
@@ -280,39 +330,87 @@ public class Monster {
     	if (cooldown>0) --cooldown; // one less round of cooldown
     }
     
-    // public inner class for representing cells in the grid
+    /**
+     * <p>
+     * Nested class implement Cell in the game.
+     * <p>
+     * Used for getting the count for each Cell in the game.
+     * <p>
+     * The count would have different meanings for different classes, 
+     * in Monster it means the minimum possible steps needed for a Monster to go from the current Cell to end zone,
+     * in Fox it means the minimum possible number of attacks received for a Fox to go from the current Cell to end zone.
+     * @author CHIU Ka Ho
+     * 
+     */
     protected static class Cell {
     	private int xGrid = 0;
     	private int yGrid = 0;
     	private int value = defaultCount; // represent minimal steps needed to reach from end zone
     	private String fromCell = "Left"; // the cell we used to get this cell, only used by Fox
     	
+    	/**
+    	 * <p>
+         * Cell Constructor.
+         * <p>
+         * Cells would be constructed correspondingly to their positions in the map.
+         * @param xGrid The x-coordinate (in grids) of the Cell
+         * @param yGrid The y-coordinate (in grids) of the Cell
+         */
     	public Cell(int xGrid, int yGrid) {
     		this.yGrid = yGrid;
     		this.xGrid = xGrid;
     		this.value = defaultCount; // modified later
     	}
     	
+    	/**
+    	 * <p>
+         * Getter function for the parameter xGrid.
+         * @return Integer representing the x-coordinate (in grids) of the Cell.
+         */
     	public int getXGrid() {
     		return xGrid;
     	}
     	
+    	/**
+    	 * <p>
+         * Getter function for the parameter yGrid.
+         * @return Integer representing the y-coordinate (in grids) of the Cell.
+         */
     	public int getYGrid() {
     		return yGrid;
     	}
     	
+    	/**
+    	 * <p>
+         * Getter function for the parameter value.
+         * @return Integer representing the current value of the Cell.
+         */
     	public int getValue() {
     		return value;
     	}
+	
+    	/**
+    	 * <p>
+         * Getter function for the parameter fromCell.
+         * @return String representing the direction from which the current Cell is pointed by another Cell.
+         */
+    	public String getFromCell() {
+    		return fromCell;
+    	}   	
     	
+    	/**
+    	 * <p>
+         * Setter function for setting the parameter value.
+         * @param value The value we want to associate with the current Cell.
+         */
     	public void setValue(int value) {
     		this.value = value;
     	}
-    	
-    	public String getFromCell() {
-    		return fromCell;
-    	}
-    	
+    	/**
+    	 * <p>
+         * Setter function for setting the parameter fromCell.
+         * @param fromCell The String representing the direction from which the current Cell is pointed by another Cell.
+         */
     	public void setFromCell(String fromCell) {
     		this.fromCell = fromCell;
     	}
