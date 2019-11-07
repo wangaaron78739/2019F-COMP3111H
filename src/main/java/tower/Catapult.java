@@ -99,6 +99,7 @@ public class Catapult extends Tower {
     @Override    
     public void shoot() {
     	if(Arena.getFrameCount() - prevShot < Catapult.cooldown) return;
+    	//find the monster closest to the end zone
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
@@ -113,22 +114,26 @@ public class Catapult extends Tower {
     			}
     		}
     		if(map.isEmpty()) return;
-    		//    		//rank the distance to monsters
-    		//    		List<Map.Entry<Monster, Double>> list = new ArrayList<Map.Entry<Monster,Double>>(map.entrySet());
-    		//    		//list.sort(Map.Entry.comparingByValue());
-    		//    		HashMap<Monster,Double> sorted = new HashMap<>();
-    		//
-    		//    		for (Map.Entry<Monster, Double> entry : list) {
-    		//    			sorted.put(entry.getKey(), entry.getValue());
-    		//    		}
+    		
+//    		//rank the distance to monsters
+//    		List<Map.Entry<Monster, Double>> list = new ArrayList<Map.Entry<Monster,Double>>(map.entrySet());
+//    		//list.sort(Map.Entry.comparingByValue());
+//    		HashMap<Monster,Double> sorted = new HashMap<>();
+//
+//    		for (Map.Entry<Monster, Double> entry : list) {
+//    			sorted.put(entry.getKey(), entry.getValue());
+//    		}
+    		
     		//go through the adjacent pixels
     		int targetMonX = map.entrySet().iterator().next().getKey().getXGrid();
     		int targetMonY = map.entrySet().iterator().next().getKey().getYGrid();
     		
+    		//find the best pixel target
     		Pixel bestTarget = null;
     		int x = targetMonX - 25, y = targetMonY - 25;
     		int MonstersInRange = 0;
     		
+    		//go through the 25x25 pixels around the monster nearest to the end zone
     		for(; x <= targetMonX + 25; x++){
     			for(; y <= targetMonY + 25; y++){
     				double distance = Math.hypot(x - this.getX() * Arena.GRID_WIDTH + Arena.GRID_WIDTH/2, y - this.getY() * Arena.GRID_HEIGHT + Arena.GRID_HEIGHT/2);
@@ -147,6 +152,7 @@ public class Catapult extends Tower {
     				}
     			}
     		}		
+    		
     		//Implement
     		for(Monster m: bestTarget.getMonsterList()){
     			Arena.logAttack(this,m);
