@@ -23,7 +23,7 @@ public class BasicTower extends Tower {
     
     @Override
     public void implement(Monster target){
-    	target.setHP(target.getHP()-this.getAttackPower());
+    	target.setHP(target.getHP() - this.getAttackPower());
     }
     
     @Override

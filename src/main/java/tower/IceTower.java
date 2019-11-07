@@ -5,7 +5,7 @@ import arena.logic.Resource;
 import monster.Monster;
 
 public class IceTower extends Tower {
-    private static final int baseAttackPower = 100;
+    private static int baseAttackPower = 100;
     private static final int baseBuildingCost = 100;
     private static final int baseShootingRange = 100;
     private static final int baseAttackCooldown = 100;
@@ -18,5 +18,16 @@ public class IceTower extends Tower {
     @Override
     public boolean canAttack(int xPx, int yPx) {
     	return (Math.hypot(xPx - (getX()*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), yPx - (getY()*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2))<=getShootingRange());
+    }
+    
+    @Override
+    public void upgrade(){
+    	 baseAttackPower += 60;
+    	 Resource.deductAmount(this.getUpgradeCost()); 
+    }
+    
+    @Override
+    public void implement(Monster target){
+    	target.setCoolDown(baseAttackPower);
     }
 }

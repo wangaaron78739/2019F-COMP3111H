@@ -1,14 +1,13 @@
 package tower;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import arena.logic.Arena;
+import arena.logic.Resource;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import monster.Monster;
 
 public class Catapult extends Tower {
@@ -46,32 +45,31 @@ public class Catapult extends Tower {
     }
     
     class Pixel{
-    	int CoordX; int CoordY;
-    	int MonstersInRange;
-    	List<Monster> monstersAttacked = new LinkedList<Monster>();
+    	int CoordX, CoordY;
     	
     	Pixel(int X, int Y){
     		this.CoordX = X;
     		this.CoordY = Y;
-    		this.MonstersInRange = NumMonstersInRange();
+    		
     	}
     	
-    	int NumMonstersInRange(){
+//    	int NumMonstersInRange(){
+//    		for(Monster m : Arena.getMonsters()){
+//    			double distance = Math.hypot(m.getXPx() - CoordX, m.getYPx() - CoordY);
+//    			if(distance <= 25) {
+//    				MonstersInRange++;
+//    				if(!monstersAttacked.contains(m))
+//    					monstersAttacked.add(m);
+//    			}
+//    		}
+//    		return MonstersInRange;
+//    	}
+    	
+    	LinkedList<Monster> getMonsterList(){
+    		LinkedList<Monster> monstersAttacked = new LinkedList<Monster>();
     		for(Monster m : Arena.getMonsters()){
     			double distance = Math.hypot(m.getXPx() - CoordX, m.getYPx() - CoordY);
     			if(distance <= 25) {
-    				MonstersInRange++;
-    				if(!monstersAttacked.contains(m))
-    					monstersAttacked.add(m);
-    			}
-    		}
-    		return MonstersInRange;
-    	}
-    	List<Monster> getMonsterList(){
-    		for(Monster m : Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - CoordX, m.getYPx() - CoordY);
-    			if(distance <= 25) {
-    				if(!monstersAttacked.contains(m))
     					monstersAttacked.add(m);
     			}
     		}
@@ -79,6 +77,24 @@ public class Catapult extends Tower {
     	}
     };
     
+    @Override
+    public void implement(Monster target){
+    	target.setHP(target.getHP()- this.baseAttackPower);
+    }
+    
+    @Override
+    public void upgrade(){
+    	if(cooldown >= 20){
+    		cooldown -= 5;
+    		Resource.deductAmount(this.getUpgradeCost()); 
+    	}
+    	else {
+    		Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setTitle("Cannot upgrade any more");
+            alert.setHeaderText("Cannot decrease the cooldown time span");
+            alert.showAndWait();
+    	}
+    }
     
     @Override    
     public void shoot() {
@@ -134,14 +150,10 @@ public class Catapult extends Tower {
     		//Implement
     		for(Monster m: bestTarget.getMonsterList()){
     			Arena.logAttack(this,m);
-    			this.implement(m);
+    			// this.implement(m);
     		}
     		prevShot = Arena.getFrameCount();
     	}
     }
     
-    @Override
-    public void implement(Monster target){
-    	target.setHP(target.getHP()- this.baseAttackPower);
-    }
 }
