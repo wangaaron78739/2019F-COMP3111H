@@ -6,11 +6,20 @@ import java.util.List;
 import arena.logic.Arena;
 import tower.Tower;
 
+/**
+ * 
+ * Class implement one type of Monster, Fox.
+ * Fox has the fastest speed among all three kinds of Monster.
+ * Along the time elapsed, Fox would become stronger as they would have higher HP.
+ * @author CHIU Ka Ho
+ * 
+ */
+
 //import arena.logic.Arena;
 //import monster.Monster.Cell;
 
 public class Fox extends Monster {
-    private static final int defaultHP = 50;
+    private static final int defaultHP = 500;
     private static final int defaultSpeed = 5;
     
 	private static int numStepsEachCell = 8;
@@ -19,6 +28,12 @@ public class Fox extends Monster {
     private static final List<Cell> checkedNodesFox = new ArrayList<Cell>(); // an array for finding the path with least attacks
     private static final List<Cell> frontierNodesFox = new ArrayList<Cell>();
     
+    /**
+     * Fox Constructor.
+     * @param x The x-coordinate (in pixels) of the Fox
+     * @param y The y-coordinate (in pixels) of the Fox
+     * @param stage The current stage of the game
+     */
     public Fox(int x, int y, int stage) {
         super(x, y, defaultSpeed, defaultHP*stage, "Fox"); // stronger as the speed is faster
         // initialize the array gridsInArenaFox
@@ -32,7 +47,15 @@ public class Fox extends Monster {
         }
     }
     
-    // not overriding!!!!
+    /**
+	 * <p>
+     * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
+     * <p>
+     * Notice that this is not overriding, but simply change the way of updating the array.
+     * <p>
+     * It would update the value associated with each cells, 
+     * which can be used in determining where a Fox in a particular Cell should move.
+     */
     public void updateGridsFox() {
     	// reset the arrays
     	checkedNodesFox.clear();
@@ -215,6 +238,13 @@ public class Fox extends Monster {
     	}
     }
     
+    /**
+	 * <p>
+     * Method for determining where a Fox in a cell's center should move to.
+     * @param xGrid The current x-coordinate (in grids) of the Fox.
+     * @param yGrid The current y-coordinate (in grids) of the Fox.
+     * @return String representing the moving direction of the Fox.
+     */
     @Override
     public String determineWhichDirectionAtCenter(int xGrid, int yGrid) {
     	if (towerCount==0) {
