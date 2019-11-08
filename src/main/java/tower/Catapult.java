@@ -18,7 +18,7 @@ public class Catapult extends Tower {
     private static final int upperShootingRange = 150;
     private static final int lowerShootingRange = 50;
     private static final int baseAttackRadius = 25;
-    private static int cooldown = 50;
+    private int cooldown = 50;
     private int prevShot = 0;
     private static final String typeName = "Catapult";
 
@@ -50,7 +50,6 @@ public class Catapult extends Tower {
     	Pixel(int X, int Y){
     		this.CoordX = X;
     		this.CoordY = Y;
-    		
     	}
     	
 //    	int NumMonstersInRange(){
@@ -79,7 +78,7 @@ public class Catapult extends Tower {
     
     @Override
     public void implement(Monster target){
-    	target.setHP(target.getHP()- this.baseAttackPower);
+    	target.setHP(target.getHP()- Catapult.baseAttackPower);
     }
     
     @Override
@@ -98,7 +97,7 @@ public class Catapult extends Tower {
     
     @Override    
     public void shoot() {
-    	if(Arena.getFrameCount() - prevShot < Catapult.cooldown) return;
+    	if(Arena.getFrameCount() - prevShot < this.cooldown) return;
     	//find the monster closest to the end zone
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
@@ -130,12 +129,12 @@ public class Catapult extends Tower {
     		
     		//find the best pixel target
     		Pixel bestTarget = new Pixel (0,0);
-    		int x = targetMonX - 25, y = targetMonY - 25;
     		int MonstersInRange = 0;
     		
     		//go through the 25x25 pixels around the monster nearest to the end zone
-    		for(; x <= targetMonX + 25; x++){
-    			for(; y <= targetMonY + 25; y++){
+    		for(int x = targetMonX - 25; x <= targetMonX + 25; x++){
+    			for(int y = targetMonY - 25; y <= targetMonY + 25; y++){
+    				//System.out.printf("Loop:%d,%d\n",x,y);
     				double distance = Math.hypot(x - (this.getX() * Arena.GRID_WIDTH + Arena.GRID_WIDTH/2), y - (this.getY() * Arena.GRID_HEIGHT + Arena.GRID_HEIGHT/2));
     				double distanceToNearestMonster = Math.hypot(x - targetMonX, y - targetMonY);
     				if(distance <= upperShootingRange && distance >= lowerShootingRange && distanceToNearestMonster <= 25){
@@ -143,19 +142,21 @@ public class Catapult extends Tower {
     					for(Monster m : Arena.getMonsters()){
     						double distanceToMonster = Math.hypot(m.getXPx() - x, m.getYPx() - y);
     						if(distanceToMonster <= 25) {
-    							num++;
+    							num = num + 1;
+    							//System.out.printf("A:%d",num);
     						}
     					}
     					if(num > MonstersInRange){
     						MonstersInRange = num;
+    						//System.out.printf("\nB:%d\n",num);
     						bestTarget = new Pixel (x,y);
     					}
     				}
     			}
     		}		
     		
-    		//Implement
-    		System.out.printf("%b tower is being upgraded\n",bestTarget.getMonsterList().isEmpty());
+    		//Implement`
+    		System.out.printf("The monsterList is empty:%b\n",bestTarget.getMonsterList().isEmpty());
     		for(Monster m: bestTarget.getMonsterList()){
     			Arena.logAttack(this,m);
     			this.implement(m);
