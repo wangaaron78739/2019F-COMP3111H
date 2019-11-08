@@ -50,7 +50,7 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
  * [ ] It is allowed that multiple towers shoot at a monster at the same time even through only one tower is needed to kill it. This is likely to happen. 
 
 #### Rules applies to COMP3111-H groups only. 
- * [ ] <u>A monster will never move toward a grid with a tower</u> <u>(Finished)</u>. If a monster is already on its way to a new grid and a part of the monster body is already insider the grid, no tower will be allowed to be built on this new grid. 
+ * [x] <u>A monster will never move toward a grid with a tower</u> <u>(Finished)</u>. If a monster is already on its way to a new grid and a part of the monster body is already insider the grid, no tower will be allowed to be built on this new grid. 
  * [x] After building a tower, all monsters on the map should have at least one valid path move toward the end-zone. Thus, the game must not allow a player to build a tower to trap a monster. 
  * [x] Each grid can contain any number of monsters as long as it does not contain a tower.
  * [x] The game is a time-based game. The button `Next Frame` would NOT be tested in grading. It will be served as a debug button for your own interest. There are two methods to start the game: by clicking `Simulate` or `Play`. In either mode monsters will be automatically generated and the monsters will move towards the end-zone, towers will automatically fire if any monsters are in its shooting distance. In `simulate` mode, player is only allowed to build tower before the simulate button is clicked. Once the button is clicked, the player will no be clicking any button until the game is over. In `play` mode, the player is allowed to build or to upgrade tower when the game is running.
