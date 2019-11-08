@@ -10,8 +10,15 @@ import javafx.scene.control.ButtonType;
 import monster.*;
 import tower.*;
 
+
+/**
+ * Handles the logic of the arena.
+ */
 public class Arena {
 
+    /**
+     * Width of arena.
+     */
     public static int ARENA_WIDTH;
     public static int ARENA_HEIGHT;
     public static int MONSTER_WIDTH;
@@ -189,21 +196,22 @@ public class Arena {
      * Returns the tower type of the tower in cell (x,y)
      * @param x The x coordinate of the target cell
      * @param y The y coordinate of the target cell
-     * @return String tower typ eo ftower in cell (x,y)
+     * @return String tower type of tower in cell (x,y)
      */
     public static String towerBuiltType(int x, int y) {
         return towerBuilt[y][x];
     }
 
     /**
-     * Sets the
+     * Sets the tower type of the tower built in cell (x,y)
      * @param x The x coordinate of the target cell
      * @param y The y coordinate of the target cell
+     * @param tower The Tower type of tower in cell (x,y)
      */
     public static void setTowerBuilt(int x, int y, String tower) {
         towerBuilt[y][x] = tower;
     }
-    public boolean buildTower(int x, int y, String towerType) {
+    public static boolean buildTower(int x, int y, String towerType) {
         Tower tower;
         switch (towerType) {
             case "Basic":
