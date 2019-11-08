@@ -90,7 +90,7 @@ public class ArenaUI {
     static final int GRID_HEIGHT = 40;
     static final int MAX_H_NUM_GRID = 12;
     static final int MAX_V_NUM_GRID = 12;
-    static final int INITIAL_RESOURCE_NUM = 500;
+    static final int INITIAL_RESOURCE_NUM = 1000;
     static final int UPDATE_INTERVAL = 50;
 
     static final int MONSTER_HEIGHT = 15;

@@ -28,16 +28,26 @@ public class Arena {
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Resource resource;
     
-    // Grid index for monster generation
+    /**
+     * <p>
+     * An integer representing the x-coordinate (in grids) of the Monster's start zone.
+     * <p>
+     * Monster would always be generated from that zone.
+     */
     public static int MonsterStartXGrid = 0;
+    /**
+     * <p>
+     * An integer representing the y-coordinate (in grids) of the Monster's start zone.
+     * <p>
+     * Monster would always be generated from that zone.
+     */
     public static int MonsterStartYGrid = 0;
 
     private static int FrameCount = -1; // changed to -1, so it can generate monster from the starting time
     private static int EachStageCount = 500; // larger stage, stronger monster
     private static boolean gameStarted = false;
 
-    //TODO: change this?
-    private static final int monsterKillResource = 300;
+    private static final int monsterKillResource = 100;
 
     /**
      * Arena Constructor
@@ -269,8 +279,8 @@ public class Arena {
     }
     
     /**
-     * Helper function for getting the current stage of difficulty
-     * @return The number of stage represent the difficulty
+     * Function for getting the current stage of difficulty.
+     * @return The number of stage represent the difficulty.
      */
     public static int getStage() { 
     	int index = FrameCount / EachStageCount;
@@ -283,6 +293,13 @@ public class Arena {
     	}
     }
 
+    /**
+     * Function for adding Monster to the game.
+     * @param x The x-coordinate (in pixels) that we want the Monster to be at.
+     * @param y The y-coordinate (in pixels) that we want the Monster to be at.
+     * @param monster The type of the Monster.
+     * @return A boolean value represent whether we can add the monster successfully.
+     */
     public static boolean addMonster(int x, int y, String monster) {
     	if (Arena.getTower(x/GRID_WIDTH,y/GRID_HEIGHT) != null) {
     		return false;

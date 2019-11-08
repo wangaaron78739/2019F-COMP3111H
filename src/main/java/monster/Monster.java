@@ -96,67 +96,161 @@ public class Monster {
         return xPx;
     }
 
+    /**
+	 * <p>
+     * Getter function for the parameter yPx.
+     * @return Integer representing the y-coordinate (in pixels) of the Monster.
+     */
     public float getYPx() {
         return yPx;
     }
 
+    /**
+	 * <p>
+     * Getter function for the x-coordinate (in grids) of the Monster.
+     * @return Integer representing the x-coordinate (in grids) of the Monster.
+     */
     public int getXGrid() {
         return (int)(xPx/ Arena.GRID_WIDTH) ;
     }
 
+    /**
+	 * <p>
+     * Getter function for the y-coordinate (in grids) of the Monster.
+     * @return Integer representing the y-coordinate (in grids) of the Monster.
+     */
     public int getYGrid() {
         return (int)(yPx/ Arena.GRID_HEIGHT) ;
     }
     
+    /**
+	 * <p>
+     * Getter function for the speed (number of movements per move) of the Monster.
+     * <p>
+     * Notice if the Monster is hit by a IceTower and is in coolDown, its speed would be half of its default speed.
+     * <p>
+     * The monster would only resume normal speed when its coolDown is 0.
+     * @return Integer representing the speed of the Monster.
+     */
     public int getSpeed() {
     	if (cooldown==0) return speed;
     	else return speed/2;
     }
     
+    /**
+	 * <p>
+     * Getter function for the HP of the Monster.
+     * @return Integer representing the HP of the Monster.
+     */
     public int getHP() {
         return HP;
     }
 
+    /**
+	 * <p>
+     * Getter function for the type of the Monster.
+     * <p>
+     * A monster can have four types, the normal three ("Fox", "Penguin" and "Unicorn") and a "Death" type when it dies.
+     * @return String representing the type of the Monster.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+	 * <p>
+     * Getter function for the type of the Monster.
+     * <p>
+     * A monster can have four types, the normal three ("Fox", "Penguin" and "Unicorn") and a "Death" type when it dies.
+     * @return String representing the type of the Monster.
+     */
     public int getMaxHP() {
         return maxHP;
     }
     
+    /**
+	 * <p>
+     * Getter function for the moving direction of the Monster.
+     * <p>
+     * A monster can have four directions to move, "Up", "Down", "Left" and "Right".
+     * @return String representing the direction that the Monster would move towards.
+     */
     public String getDirection() {
     	return direction;
     }
     
+    /**
+	 * <p>
+     * Getter function for the coolDown of the Monster.
+     * @return String representing the direction that the Monster would move towards.
+     */
     public int getCoolDown() {
     	return cooldown;
     }   
 
+    /**
+	 * <p>
+     * Setter function for the x-coordinate (in pixels) of the Monster.
+     * @param xPx The x-coordinate (in pixels) that we want the Monster to have.
+     */
     public void setXPx(int xPx) {
         this.xPx = xPx;
     }
 
+    /**
+	 * <p>
+     * Setter function for the y-coordinate (in pixels) of the Monster.
+     * @param yPx The y-coordinate (in pixels) that we want the Monster to have.
+     */
     public void setYPx(int yPx) {
         this.yPx = yPx;
     }
     
+    /**
+	 * <p>
+     * Setter function for the speed (number of movements per move) of the Monster.
+     * @param speed The speed that we want the Monster to have.
+     */
     public void setSpeed(int speed) {
     	this.speed = speed;
     }
     
+    /**
+	 * <p>
+     * Setter function for the HP of the Monster.
+     * @param HP The HP that we want the Monster to have.
+     */
     public void setHP(int HP) {
         this.HP = HP;
     }
     
+    /**
+	 * <p>
+     * Special setter function for the type of the Monster.
+     * <p>
+     * Note that this function can only set the type of the Monster to "Death".
+     * <p>
+     * It would be used only when the Monster's HP reaches 0 and is dead.
+     */
     public void setTypeDeath() {
         type = "Death";
     }
     
+    /**
+	 * <p>
+     * Setter function for the rounds of coolDown of the Monster.
+     * @param cooldown The number of rounds the Monster has to wait for the effect of IceTower to gone and it can resume normal speed.
+     */
     public void setCoolDown(int cooldown) {
     	this.cooldown = cooldown;
     }
     
+    /**
+	 * <p>
+     * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
+     * <p>
+     * It would update all the locations where there is a tower, and count the total number of towers currently.
+     */
     public static void updateTowerCount() {
     	towerCount = 0;
     	// update index by search for grids of towers
@@ -170,6 +264,13 @@ public class Monster {
     	}
     }
     
+    /**
+	 * <p>
+     * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
+     * <p>
+     * It would update the value associated with each cells, 
+     * which can be used in determining where a Monster in a particular Cell should move.
+     */
     public static void updateGrids() {
     	updateTowerCount();
     	
@@ -237,6 +338,13 @@ public class Monster {
     	}
     }
     
+    /**
+	 * <p>
+     * Method for determining where a Monster in a cell's center should move to.
+     * @param xGrid The current x-coordinate (in grids) of the Monster.
+     * @param yGrid The current y-coordinate (in grids) of the Monster.
+     * @return String representing the moving direction of the Monster.
+     */
     public String determineWhichDirectionAtCenter(int xGrid, int yGrid) {
     	int leftCount = defaultCount;
 		int rightCount = defaultCount;
@@ -272,6 +380,12 @@ public class Monster {
 		return(optimalDirections.get(rand.nextInt(optimalDirections.size())));
     }
     
+    /**
+	 * <p>
+     * Method for determining whether there's any Monster already in the end zone,
+     * causing the game to end.
+     * @return Boolean value representing whether the game has ended.
+     */
     public static boolean gameEnds() {
     	for (Monster m: Arena.getMonsters()) {
     		if ((m.getXGrid()==Arena.MAX_H_NUM_GRID-1) && (m.getYGrid()==Arena.MAX_V_NUM_GRID-1)) {
@@ -281,7 +395,11 @@ public class Monster {
     	return false;
     }
 
-    public void move() { // TODO: override this method
+    /**
+	 * <p>
+     * Method for updating the location of the Monster base on their moving direction
+     */
+    public void move() {
     	for (int i=0; i<getSpeed(); ++i) {
 	    	int xPx = (int)getXPx();
 	    	int yPx = (int)getYPx();

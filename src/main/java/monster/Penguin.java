@@ -10,16 +10,16 @@ package monster;
  */
 
 public class Penguin extends Monster {
-    private static final int defaultHP = 50;
-    private static final int defaultRestoreHP = 10;
+    private static final int defaultHP = 500;
+    private static final int defaultRestoreHP = 30;
     private static final int defaultSpeed = 2;
     
     private int restoreHP = defaultRestoreHP;
 
     /**
      * Penguin Constructor.
-     * @param x The x-coordinate (in pixels) of the Unicorn
-     * @param y The y-coordinate (in pixels) of the Unicorn
+     * @param x The x-coordinate (in pixels) of the Penguin
+     * @param y The y-coordinate (in pixels) of the Penguin
      * @param stage The current stage of the game
      */
     public Penguin(int x, int y, int stage) {

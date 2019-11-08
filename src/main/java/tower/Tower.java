@@ -77,7 +77,14 @@ public class Tower {
     	
     }
     
-    // helper function for checking whether a pixel is in the range, would be overrride
+    /**
+     * Method for determining whether the Tower can attack a given pixel,
+     * i.e. whether the pixel is inside its range.
+     * Notice that LaserTower can always attack all the coordinates.
+     * @param xPx The x-coordinate(in pixels) of the pixel.
+     * @param yPx The y-coordinate(in pixels) of the pixel.
+     * @return Boolean value showing whether the Tower can attack the given pixel.
+     */
     public boolean canAttack(int xPx, int yPx) {
     	return true;
     }
