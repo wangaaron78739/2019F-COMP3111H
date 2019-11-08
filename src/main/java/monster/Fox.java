@@ -19,7 +19,7 @@ import tower.Tower;
 //import monster.Monster.Cell;
 
 public class Fox extends Monster {
-    private static final int defaultHP = 500;
+    private static final int defaultHP = 200;
     private static final int defaultSpeed = 5;
     
 	private static int numStepsEachCell = 8;

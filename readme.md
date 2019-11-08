@@ -82,16 +82,16 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
         1. [x] When a monster is attacked. Log the type and position tower attacks it and the position of the monster in the format `<tower_type>@(<x>.<y>) -> <monster_type>@(<x>, <y>)` (1)
             1. [ ] Furthermore, represent the attack in the GUI so that the monster and the tower involved can be visually identified without reading the log. (1)
 1. [ ] Towers (15)
-    1. [ ] All towers built in the arena will shoot a monster automatically which is inside its range (unless all towers are impossible to attack, e.g. out of range, in cool down etc). (1)      
-    1. [ ] Implement Basic Tower that has a shooting range [0,65] pixels. You can decide the attack power and other parameters of the tower. (1)
-        1. [ ] Implement the upgrade function of Basic Tower that increase the attack power of the basic Tower. (1)
-    1. [ ] Implement Ice Tower that will make monster move slower for a period of time (Take a human noticeable longer time to move without making other monster move slower). You can determine other attributes of Ice Tower. (1)
-        1. [ ] Implement the upgrade function of Ice Tower that increase the duration of the monster being slowed. (1)
-    1. [ ] Implement Catapult that:
-        1. [ ] it throws a stone (attacks) to a coordinate less than 150 px but more than 50 px away from the center of the Catapult. (1)
-        1. [ ] All monsters placed at the radius of 25px of where the stone drop receive damage. (2)
-        1. [ ] After a stone is thrown, the Catapult take some times to reload the stone (cold down). During that period of time the Catapult will not be able to throw a stone again. (1)
-            1. [ ] Furthermore, implement the upgrade function of Catapult that the reload time/cold down time is shorten. (1)
+    1. [x] All towers built in the arena will shoot a monster automatically which is inside its range (unless all towers are impossible to attack, e.g. out of range, in cool down etc). (1)      
+    1. [x] Implement Basic Tower that has a shooting range [0,65] pixels. You can decide the attack power and other parameters of the tower. (1)
+        1. [x] Implement the upgrade function of Basic Tower that increase the attack power of the basic Tower. (1)
+    1. [x] Implement Ice Tower that will make monster move slower for a period of time (Take a human noticeable longer time to move without making other monster move slower). You can determine other attributes of Ice Tower. (1)
+        1. [x] Implement the upgrade function of Ice Tower that increase the duration of the monster being slowed. (1)
+    1. [x] Implement Catapult that:
+        1. [x] it throws a stone (attacks) to a coordinate less than 150 px but more than 50 px away from the center of the Catapult. (1)
+        1. [x] All monsters placed at the radius of 25px of where the stone drop receive damage. (2)
+        1. [x] After a stone is thrown, the Catapult take some times to reload the stone (cold down). During that period of time the Catapult will not be able to throw a stone again. (1)
+            1. [x] Furthermore, implement the upgrade function of Catapult that the reload time/cold down time is shorten. (1)
     1. [ ] Implement Laser Tower that:
         1. [ ] it consumes some resources to attack a monster. (1)
         1. [ ] draw a line from the center to the tower to the monster and extend beyond until it reach the edge of the Arena. (2)
@@ -120,12 +120,13 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
     1. [ ] Implement the button `Simulate` according to the game physics. (2)
         1. [ ] Furthermore, implement the button `Play` according to the game physics. (2)
 1. [ ] Tower
-    1. [ ] Catapult attacks algorithm. Instead of throwing a stone to a particular monster, the Catapult will throw a stone
+    1. [x] Catapult attacks algorithm. Instead of throwing a stone to a particular monster, the Catapult will throw a stone
     to a coordinate such that 
-        1. [ ] among all monsters falls into the attack range plus 25px (the stone radius), the one monster which
-    is nearest to the end-zone will be attacked; and (1)
-        1. [ ] the stone should thrown to the coordinate that hits most monsters; (2)
-        1. [ ] Rule for tie-breaking: If there are two monsters that are both considered nearest 
+      
+     1. [x] among all monsters falls into the attack range plus 25px (the stone radius), the one monster which
+       is nearest to the end-zone will be attacked; and (1)
+        1. [x] the stone should thrown to the coordinate that hits most monsters; (2)
+        1. [x] Rule for tie-breaking: If there are two monsters that are both considered nearest 
       
           to the end-zone, the stone will be thrown towards the one that hits more monsters. If the same number of monsters
           are hit by the stone, choose any monster you wish. (1)

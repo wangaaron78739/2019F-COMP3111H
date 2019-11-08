@@ -10,7 +10,7 @@ package monster;
  */
 
 public class Penguin extends Monster {
-    private static final int defaultHP = 500;
+    private static final int defaultHP = 200;
     private static final int defaultRestoreHP = 30;
     private static final int defaultSpeed = 2;
     
