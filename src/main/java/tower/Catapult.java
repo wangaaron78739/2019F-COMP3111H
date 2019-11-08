@@ -103,8 +103,8 @@ public class Catapult extends Tower {
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - this.getX() * Arena.GRID_WIDTH + Arena.GRID_WIDTH/2, m.getYPx() - this.getY() * Arena.GRID_HEIGHT + Arena.GRID_HEIGHT/2);
-    			double distanceToEndZone = Math.hypot(m.getYPx() - (Arena.MAX_H_NUM_GRID - 0.5) * Arena.GRID_HEIGHT, m.getXPx() - (Arena.MAX_V_NUM_GRID - 0.5) * Arena.ARENA_WIDTH);
+    			double distance = Math.hypot(m.getXPx() - this.getX() * Arena.GRID_WIDTH - Arena.GRID_WIDTH/2, m.getYPx() - this.getY() * Arena.GRID_HEIGHT - Arena.GRID_HEIGHT/2);
+    			double distanceToEndZone = Math.hypot(m.getYPx() - (Arena.MAX_H_NUM_GRID + 0.5) * Arena.GRID_HEIGHT, m.getXPx() - (Arena.MAX_V_NUM_GRID + 0.5) * Arena.ARENA_WIDTH);
     			if(distance <= upperShootingRange && distance >= lowerShootingRange){
     				if(!map.isEmpty() && distanceToEndZone < map.entrySet().iterator().next().getValue()){
     					map.remove(map.entrySet().iterator().next());
@@ -125,19 +125,20 @@ public class Catapult extends Tower {
 //    		}
     		
     		//go through the adjacent pixels
-    		int targetMonX = map.entrySet().iterator().next().getKey().getXGrid();
-    		int targetMonY = map.entrySet().iterator().next().getKey().getYGrid();
+    		int targetMonX = (int)(map.entrySet().iterator().next().getKey().getXGrid() + 0.5) * Arena.GRID_WIDTH;
+    		int targetMonY = (int)(map.entrySet().iterator().next().getKey().getYGrid() + 0.5) * Arena.GRID_HEIGHT;
     		
     		//find the best pixel target
-    		Pixel bestTarget = null;
+    		Pixel bestTarget = new Pixel (0,0);
     		int x = targetMonX - 25, y = targetMonY - 25;
     		int MonstersInRange = 0;
     		
     		//go through the 25x25 pixels around the monster nearest to the end zone
     		for(; x <= targetMonX + 25; x++){
     			for(; y <= targetMonY + 25; y++){
-    				double distance = Math.hypot(x - this.getX() * Arena.GRID_WIDTH + Arena.GRID_WIDTH/2, y - this.getY() * Arena.GRID_HEIGHT + Arena.GRID_HEIGHT/2);
-    				if(distance <= upperShootingRange && distance >= lowerShootingRange){
+    				double distance = Math.hypot(x - (this.getX() * Arena.GRID_WIDTH + Arena.GRID_WIDTH/2), y - (this.getY() * Arena.GRID_HEIGHT + Arena.GRID_HEIGHT/2));
+    				double distanceToNearestMonster = Math.hypot(x - targetMonX, y - targetMonY);
+    				if(distance <= upperShootingRange && distance >= lowerShootingRange && distanceToNearestMonster <= 25){
     					int num = 0;
     					for(Monster m : Arena.getMonsters()){
     						double distanceToMonster = Math.hypot(m.getXPx() - x, m.getYPx() - y);
@@ -145,7 +146,7 @@ public class Catapult extends Tower {
     							num++;
     						}
     					}
-    					if(num > MonstersInRange) {
+    					if(num > MonstersInRange){
     						MonstersInRange = num;
     						bestTarget = new Pixel (x,y);
     					}
@@ -154,9 +155,10 @@ public class Catapult extends Tower {
     		}		
     		
     		//Implement
+    		System.out.printf("%b tower is being upgraded\n",bestTarget.getMonsterList().isEmpty());
     		for(Monster m: bestTarget.getMonsterList()){
     			Arena.logAttack(this,m);
-    			// this.implement(m);
+    			this.implement(m);
     		}
     		prevShot = Arena.getFrameCount();
     	}
