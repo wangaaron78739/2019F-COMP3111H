@@ -407,7 +407,7 @@ public class Monster {
     		int xGrid = getXGrid();
     		int yGrid = getYGrid();
 	    	// when the monster has reached the end zone, simply return (no move)
-	    	if (gameEnds()/*(xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)*/ && getType()!="Death") {
+	    	if (gameEnds()/*(xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)*/ || getType()=="Death") {
 	    		return;
 	    	}
 	    	

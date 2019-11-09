@@ -101,9 +101,9 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
 1. [ ] Monsters (15)
     1. [x] In every fixed period of time, one or more monsters will be generated in the arena from a fixed grid that the monster shows up. (2)
         1. [x] Furthermore, along the time elapsed the *stronger* the monster will be generated so that the difficulty of the game increase. *Stronger* [ ] may refer to more HP, moving faster, or any factors that make the game difficult to play. You can make your own definition of *stronger*. (1)
-    1. [ ] Monsters on the arena will move towards the end-zone automatically. (1)
-        1. [ ] Furthermore, if no tower is built, the monster will be successfully reach the end-zone and cause the game over (player lose). A single line `Gameover` will be printed to console. (1)
-            1. [ ] Furthermore, if the game is over, both monster generation and tower shooting should stop and a dialog box will pop up to notify the game is over (1)
+    1. [x] Monsters on the arena will move towards the end-zone automatically. (1)
+        1. [x] Furthermore, if no tower is built, the monster will be successfully reach the end-zone and cause the game over (player lose). A single line `Gameover` will be printed to console. (1)
+            1. [x] Furthermore, if the game is over, both monster generation and tower shooting should stop and a dialog box will pop up to notify the game is over (1)
     1. [x] Represent a monster with png images (`fox.png`, `unicorn.png`, `penguin.png`) provided under `src\main\resources`. (1)
         1. [x] Furthermore, when a monster is killed (HP reach 0), its image will be replaced by `collision.png`. (1)
             1. [x] Furthermore, the dead monster will be removed from the arena automatically. (1)
@@ -124,10 +124,11 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
     to a coordinate such that 
       
      1. [x] among all monsters falls into the attack range plus 25px (the stone radius), the one monster which
+   
        is nearest to the end-zone will be attacked; and (1)
         1. [x] the stone should thrown to the coordinate that hits most monsters; (2)
         1. [x] Rule for tie-breaking: If there are two monsters that are both considered nearest 
-      
+          
           to the end-zone, the stone will be thrown towards the one that hits more monsters. If the same number of monsters
           are hit by the stone, choose any monster you wish. (1)
             1. [ ] Create a test case in JUnit to show your algorithm. (1)

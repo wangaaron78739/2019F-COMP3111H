@@ -382,9 +382,8 @@ public class Arena {
         });
         Monster.updateGrids();
         monsters.forEach(Monster::move);
-        //TODO: Check endgame
-        /*if (Monster.gameEnds())
-        	System.out.println("Game over!");*/
+        if (Monster.gameEnds())
+        	System.out.println("Game over!");
     }
 
     public static void startGame() {
