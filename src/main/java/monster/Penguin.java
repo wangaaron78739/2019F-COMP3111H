@@ -28,6 +28,15 @@ public class Penguin extends Monster {
     }
     
     /**
+	 * <p>
+     * Getter function for the parameter restoreHP.
+     * @return Integer representing the restore HP (replenished HP per move) of the Monster.
+     */
+    public int getRestoreHP() {
+        return restoreHP;
+    }
+    
+    /**
      * Method to let penguin move,
      * Penguin will replenish some HP (but not more than its initial value) each time it moves.
      */
