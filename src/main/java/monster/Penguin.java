@@ -44,7 +44,7 @@ public class Penguin extends Monster {
     public void move() {
     	super.move();
     	if (getHP()<defaultHP) {
-    		setHP(Math.max(getHP()+restoreHP, defaultHP));
+    		setHP(Math.min(getHP()+restoreHP, defaultHP));
     	}
     }
 }

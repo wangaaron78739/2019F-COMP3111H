@@ -45,10 +45,10 @@ public class UnicornTest {
      */
 	@Test
 	public void givenParametes_whenCreateUnicorn_assertAttributesAllDefaultValue() {
-		assertEquals(unicorn.getXGrid(), 0);
-		assertEquals(unicorn.getYGrid(), 0);
-		assertEquals(unicorn.getSpeed(), 2);
-		assertEquals(unicorn.getHP(), 1000);
-		assertEquals(unicorn.getType(), "Unicorn");
+		assertEquals(0, unicorn.getXGrid());
+		assertEquals(0, unicorn.getYGrid());
+		assertEquals(2, unicorn.getSpeed());
+		assertEquals(1000, unicorn.getHP());
+		assertEquals("Unicorn", unicorn.getType());
 	}
 }

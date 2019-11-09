@@ -44,10 +44,10 @@ public class MonsterCellTest {
      */
 	@Test
 	public void givenParametes_whenCreateMonsterCell_assertAttributesAllDefaultValue() {
-		assertEquals(cell.getXGrid(), 0);
-		assertEquals(cell.getYGrid(), 0);
-		assertEquals(cell.getValue(), Monster.defaultCount);
-		assertEquals(cell.getFromCell(), "Left");
+		assertEquals(0, cell.getXGrid());
+		assertEquals(0,cell.getYGrid());
+		assertEquals(Monster.defaultCount, cell.getValue());
+		assertEquals("Left", cell.getFromCell());
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class MonsterCellTest {
 		cell.setValue(1);
 		cell.setFromCell("Up");
 		
-		assertEquals(cell.getValue(), 1);
-		assertEquals(cell.getFromCell(), "Up");
+		assertEquals(1, cell.getValue());
+		assertEquals("Up", cell.getFromCell());
 	}
 }
