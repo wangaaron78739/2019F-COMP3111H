@@ -77,14 +77,12 @@ public class Monster {
         this.maxHP = maxHP;
         this.type = type;
         // initialize the array gridsInArena
-        if (gridsInArena == null) {
-        	gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
-        	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-        		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
-        			gridsInArena[i][j] = new Cell(i, j);
-            	}
+        gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
+    	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
+    		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+    			gridsInArena[i][j] = new Cell(i, j);
         	}
-        }
+    	}
     }
     
     /**
@@ -177,6 +175,28 @@ public class Monster {
      */
     public String getDirection() {
     	return direction;
+    }
+    
+    /**
+	 * <p>
+     * Getter function for the current number of towers in the Game.
+     * <p>
+     * Don't use static as this method is only used for testing.
+     * @return Integer representing the current number of towers in the Game.
+     */
+    public int getTowerCount() {
+    	return towerCount;
+    }
+    
+    /**
+	 * <p>
+     * Getter function for the grids in the Game.
+     * <p>
+     * Don't use static as this method is only used for testing.
+     * @return 2D Array representing the current grids in the Game.
+     */
+    public Cell[][] getGridInArena() {
+    	return gridsInArena;
     }
     
     /**
