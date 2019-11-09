@@ -4,6 +4,8 @@ import arena.logic.Arena;
 import arena.logic.Resource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.*;
@@ -104,6 +106,7 @@ public class ArenaUI {
     static int hoveredCellY = -1;
 
     static boolean enableBuildTowers = true;
+	boolean gameOverShown = false;
     /**
      * A function that create the Arena
      */
@@ -165,11 +168,19 @@ public class ArenaUI {
     }
 
     private void startUpdateUILoop() {
+    	Alert alert = new Alert(AlertType.WARNING);
+    	alert.setTitle("Game Over!");
+    	alert.setHeaderText(null);
+    	alert.setContentText("No Monster movement or Tower attack from now on!");
         Timeline timer = new Timeline(new KeyFrame(Duration.millis(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 updateUI();
-                Arena.nextFrame();
+                if (!Monster.gameEnds()) Arena.nextFrame();
+                else if (!gameOverShown) {
+                	alert.show();
+                	gameOverShown = true;
+                }
             }
         }));
         timer.setCycleCount(Timeline.INDEFINITE);
