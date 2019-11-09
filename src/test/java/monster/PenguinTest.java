@@ -9,9 +9,16 @@ import org.junit.Before;
 
 import static org.junit.Assert.*;
 
+/**
+ * 
+ * Class implement testing for one type of Monster, Penguin.
+ * @author CHIU Ka Ho
+ * 
+ */
+
 public class PenguinTest {
-	public Penguin penguin = null;
 	public Arena arena = null;
+	public Penguin penguin = null;
 	
 	/**
 	 * <p>
@@ -23,8 +30,8 @@ public class PenguinTest {
      */
 	@Before
 	public void setUp() {
-		penguin = new Penguin(0,0,1);
 		arena = new Arena(480, 480, 15, 15, 12, 12, 40, 40, 1000, 50); // create the arena with the same attributes as the one in the real game
+		penguin = new Penguin(0,0,1);
 	}
 	
 	/**
