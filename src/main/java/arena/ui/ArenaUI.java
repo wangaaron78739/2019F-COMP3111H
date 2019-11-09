@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -235,6 +236,22 @@ public class ArenaUI {
             Label l = labelMonsters.get(i);
             l.setLayoutX(m.getXPx()-MONSTER_WIDTH/2);
             l.setLayoutY(m.getYPx()-MONSTER_HEIGHT/2);
+            /*Tooltip tooltip = new Tooltip(Integer.toString(m.getHP()));
+            l.setOnMouseEntered(new EventHandler<MouseEvent>(){
+        		@Override  
+        		public void handle(MouseEvent event) {
+        			tooltip.setAnchorX(event.getScreenX());
+        			tooltip.setAnchorY(event.getScreenY() + 15);
+        			tooltip.setShowDuration(Duration.millis(1));
+        			tooltip.show(l, event.getScreenX(), event.getScreenY() + 15);
+        		}
+        	}); 
+            l.setOnMouseExited(new EventHandler<MouseEvent>(){
+        		@Override
+        		public void handle(MouseEvent event){
+        			tooltip.hide();
+        		}
+        	});*/
             switch (m.getType()) {
                 case "Fox":
                     l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/fox.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
