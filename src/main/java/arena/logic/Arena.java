@@ -288,6 +288,7 @@ public class Arena {
     
     /**
      * Function for getting the current stage of difficulty.
+     * There would be five stages in this game.
      * @return The number of stage represent the difficulty.
      */
     public static int getStage() { 
@@ -295,9 +296,11 @@ public class Arena {
     	switch (index) {
     		case 0:
     		case 1:
+    		case 2:
+    		case 3:
     			return index+1;
     		default:
-    			return 3;
+    			return 5;
     	}
     }
 
