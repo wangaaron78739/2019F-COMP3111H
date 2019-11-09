@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.lang.Math;
+import static arena.logic.ArenaConstants.*;
 
 
 public class Tower {
@@ -76,7 +77,7 @@ public class Tower {
     public void implement(Monster target){
     	
     }
-    
+
     /**
      * Method for determining whether the Tower can attack a given pixel,
      * i.e. whether the pixel is inside its range.
@@ -93,7 +94,7 @@ public class Tower {
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - (this.x*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), m.getYPx() - (this.y*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2));
+    			double distance = Math.hypot(m.getXPx() - (this.x*GRID_WIDTH+GRID_WIDTH/2), m.getYPx() - (this.y*GRID_HEIGHT+GRID_HEIGHT/2));
     			if(distance <= shootingRange)
     				map.put(m, distance);
     		}
@@ -122,6 +123,8 @@ public class Tower {
     		}while(element.getValue() == distance);
     		//Attack
     		Arena.logAttack(this,target);
+    		target.setHit(true);
+    		Arena.setTowerShot(x,y);
     		implement(target);
     	}
     }

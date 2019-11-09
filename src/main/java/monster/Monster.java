@@ -6,6 +6,7 @@ package monster;
 import java.util.*;
 
 import arena.logic.Arena;
+import static arena.logic.ArenaConstants.*;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ public class Monster {
     private int speed;
     private final int maxHP;
     private String type;
-
+	private boolean hit;
     /**
      * <p>
      * A String representing the direction that monster in a cell should move to.
@@ -77,9 +78,9 @@ public class Monster {
         this.maxHP = maxHP;
         this.type = type;
         // initialize the array gridsInArena
-        gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
-    	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-    		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+        gridsInArena = new Cell[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+    	for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+    		for (int j=0; j<MAX_V_NUM_GRID; ++j) {
     			gridsInArena[i][j] = new Cell(i, j);
         	}
     	}
@@ -109,7 +110,7 @@ public class Monster {
      * @return Integer representing the x-coordinate (in grids) of the Monster.
      */
     public int getXGrid() {
-        return (int)(xPx/ Arena.GRID_WIDTH) ;
+        return (int)(xPx/ GRID_WIDTH) ;
     }
 
     /**
@@ -118,7 +119,7 @@ public class Monster {
      * @return Integer representing the y-coordinate (in grids) of the Monster.
      */
     public int getYGrid() {
-        return (int)(yPx/ Arena.GRID_HEIGHT) ;
+        return (int)(yPx/ GRID_HEIGHT) ;
     }
     
     /**
@@ -274,8 +275,8 @@ public class Monster {
     public static void updateTowerCount() {
     	towerCount = 0;
     	// update index by search for grids of towers
-    	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-    		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+    	for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+    		for (int j=0; j<MAX_V_NUM_GRID; ++j) {
     			if (Arena.getTower(i,j) != null) {
     				gridsInArena[i][j].setValue(defaultCount);
     				++towerCount;
@@ -299,13 +300,13 @@ public class Monster {
     	currentValue = 0;
     	frontierNodes.clear();
     	// update value by search from the endzone
-    	currentCell = gridsInArena[Arena.MAX_H_NUM_GRID-1][Arena.MAX_V_NUM_GRID-1]; 
+    	currentCell = gridsInArena[MAX_H_NUM_GRID-1][MAX_V_NUM_GRID-1];
     	currentCell.setValue(currentValue); // end zone can be reached by itself in 0 steps
     	checkedNodes.add(currentCell);
     	frontierNodes.add(currentCell);
     	++currentValue; // now reachable cells has currentValue one larger
     	
-    	while (checkedNodes.size()<Arena.MAX_H_NUM_GRID*Arena.MAX_V_NUM_GRID-towerCount) {
+    	while (checkedNodes.size()<MAX_H_NUM_GRID*MAX_V_NUM_GRID-towerCount) {
     		List<Cell> NodesThisStep = new ArrayList<Cell>();
     		for (Cell node : frontierNodes) { // for all the checked nodes
     			// Left
@@ -319,7 +320,7 @@ public class Monster {
 	    			}
     			}
     			// Right
-    			if (node.xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
+    			if (node.xGrid!=MAX_H_NUM_GRID-1) { // can move right
     				currentCell = gridsInArena[node.xGrid+1][node.yGrid]; // get the right node
     				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
 	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
@@ -339,7 +340,7 @@ public class Monster {
 	    			}
     			}
     			// Down
-    			if (node.yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
+    			if (node.yGrid!=MAX_V_NUM_GRID-1) { // can move down
     				currentCell = gridsInArena[node.xGrid][node.yGrid+1]; // get the down node
     				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
 	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
@@ -375,13 +376,13 @@ public class Monster {
 		if (xGrid!=0) { // can move left
 			leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
 		}
-		if (xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
+		if (xGrid!=MAX_H_NUM_GRID-1) { // can move right
 			rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
 		}
 		if (yGrid!=0) { // can move up
 			upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
 		}
-		if (yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
+		if (yGrid!=MAX_V_NUM_GRID-1) { // can move down
 			downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
 		}
 		int[] counts = {leftCount, rightCount, upCount, downCount};
@@ -408,7 +409,7 @@ public class Monster {
      */
     public static boolean gameEnds() {
     	for (Monster m: Arena.getMonsters()) {
-    		if ((m.getXGrid()==Arena.MAX_H_NUM_GRID-1) && (m.getYGrid()==Arena.MAX_V_NUM_GRID-1)) {
+    		if ((m.getXGrid()==MAX_H_NUM_GRID-1) && (m.getYGrid()==MAX_V_NUM_GRID-1)) {
 	    		return true;
 	    	}
     	}
@@ -427,24 +428,24 @@ public class Monster {
     		int xGrid = getXGrid();
     		int yGrid = getYGrid();
 	    	// when the monster has reached the end zone, simply return (no move)
-	    	if (gameEnds()/*(xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)*/ || getType()=="Death") {
+	    	if (gameEnds()/*(xGrid==MAX_H_NUM_GRID-1) && (yGrid==MAX_V_NUM_GRID-1)*/ || getType()=="Death") {
 	    		return;
 	    	}
 	    	
 	    	// determine which direction to go to when reach the middle of a cell
-	    	if (xPx % Arena.GRID_WIDTH == (int)(0.5*Arena.GRID_WIDTH)-1 && 
-					yPx % Arena.GRID_HEIGHT == (int)(0.5*Arena.GRID_HEIGHT)-1 ) {
+	    	if (xPx % GRID_WIDTH == (int)(0.5*GRID_WIDTH)-1 &&
+					yPx % GRID_HEIGHT == (int)(0.5*GRID_HEIGHT)-1 ) {
 	    		direction = determineWhichDirectionAtCenter(xGrid, yGrid);
 			}
 	    	
 	    	// handle the case when already on the way, but a tower is built
-	    	if (direction == "Left" && (xPx % Arena.GRID_WIDTH < (int)(0.5*Arena.GRID_WIDTH)-1) && (Arena.getTower(xGrid-1,yGrid) != null)) 
+	    	if (direction == "Left" && (xPx % GRID_WIDTH < (int)(0.5*GRID_WIDTH)-1) && (Arena.getTower(xGrid-1,yGrid) != null))
 	    		direction = "Right";
-	    	if (direction == "Right" && (xPx % Arena.GRID_WIDTH > (int)(0.5*Arena.GRID_WIDTH)-1) && (Arena.getTower(xGrid+1,yGrid) != null)) 
+	    	if (direction == "Right" && (xPx % GRID_WIDTH > (int)(0.5*GRID_WIDTH)-1) && (Arena.getTower(xGrid+1,yGrid) != null))
 	    		direction = "Left";
-	    	if (direction == "Up" && (yPx % Arena.GRID_HEIGHT < (int)(0.5*Arena.GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid-1) != null)) 
+	    	if (direction == "Up" && (yPx % GRID_HEIGHT < (int)(0.5*GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid-1) != null))
 	    		direction = "Down";
-	    	if (direction == "Down" && (yPx % Arena.GRID_HEIGHT > (int)(0.5*Arena.GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid+1) != null)) 
+	    	if (direction == "Down" && (yPx % GRID_HEIGHT > (int)(0.5*GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid+1) != null))
 	    		direction = "Up";
 	    	
 	    	// move according to the direction
@@ -467,8 +468,31 @@ public class Monster {
     	
     	if (cooldown>0) --cooldown; // one less round of cooldown
     }
-    
-    /**
+
+	/**
+	 * <p>
+	 * Getter function for the parameter hit.
+	 * @return boolean representing the current value of the Cell.
+	 */
+	public boolean getHit() {
+		return hit;
+	}
+	/**
+	 * <p>
+	 * Setter function for setting the parameter hit.
+	 * @param hit The value we want to associate with the current Cell.
+	 */
+	public void setHit(boolean hit) {
+		this.hit = hit;
+	}
+	/**
+	 * <p>
+	 * Resets parameter hit to false.
+	 */
+	public void resetHit() {
+		this.hit = false;
+	}
+	/**
      * <p>
      * Nested class implement Cell in the game.
      * <p>
@@ -485,8 +509,9 @@ public class Monster {
     	private int yGrid = 0;
     	private int value = defaultCount; // represent minimal steps needed to reach from end zone
     	private String fromCell = "Left"; // the cell we used to get this cell, only used by Fox
-    	
-    	/**
+
+
+		/**
     	 * <p>
          * Cell Constructor.
          * <p>
@@ -552,5 +577,6 @@ public class Monster {
     	public void setFromCell(String fromCell) {
     		this.fromCell = fromCell;
     	}
+
     }
 }

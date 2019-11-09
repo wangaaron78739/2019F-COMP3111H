@@ -1,5 +1,9 @@
 package arena.logic;
 
+/**
+ * Class to store the Resources
+ * @author Aaron WANG
+ */
 public class Resource {
     private static int resourceAmount;
 
@@ -19,7 +23,7 @@ public class Resource {
         return false;
     }
     public static boolean canDeductAmount(int am) {
-        return resourceAmount >= am;
+        return resourceAmount >= am && am >=0;
     }
     public static void setResourceAmount(int resourceAmount) {
         Resource.resourceAmount = resourceAmount;

@@ -9,6 +9,8 @@ import javafx.scene.input.ClipboardContent;
 
 import java.io.InputStream;
 
+import static arena.logic.ArenaConstants.*;
+
 public class ArenaUIUtils {
     public static ClipboardContent copyToClipboardText(String s) {
         final ClipboardContent content = new ClipboardContent();
@@ -38,15 +40,15 @@ public class ArenaUIUtils {
     public static ImageView setIconFromPath(String path) {
         InputStream is = ArenaUIUtils.class.getResourceAsStream(path);
         ImageView iv = new ImageView(new Image(is));
-        iv.setFitHeight(ArenaUI.GRID_HEIGHT);
-        iv.setFitWidth(ArenaUI.GRID_WIDTH);
+        iv.setFitHeight(GRID_HEIGHT);
+        iv.setFitWidth(GRID_WIDTH);
         return iv;
     }
 
     public static ImageView setIcon(Image i) {
         ImageView iv = new ImageView(i);
-        iv.setFitHeight(ArenaUI.GRID_HEIGHT);
-        iv.setFitWidth(ArenaUI.GRID_WIDTH);
+        iv.setFitHeight(GRID_HEIGHT);
+        iv.setFitWidth(GRID_WIDTH);
         return iv;
     }
 

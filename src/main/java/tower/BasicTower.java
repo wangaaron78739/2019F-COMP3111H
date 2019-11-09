@@ -3,6 +3,7 @@ package tower;
 import arena.logic.Arena;
 import arena.logic.Resource;
 import monster.*;
+import static arena.logic.ArenaConstants.*;
 
 public class BasicTower extends Tower {
     private static final int baseAttackPower = 100;
@@ -35,6 +36,6 @@ public class BasicTower extends Tower {
      */
     @Override
     public boolean canAttack(int xPx, int yPx) {
-    	return (Math.hypot(xPx - (getX()*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), yPx - (getY()*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2))<=getShootingRange());
+    	return (Math.hypot(xPx - (getX()*GRID_WIDTH+GRID_WIDTH/2), yPx - (getY()*GRID_HEIGHT+GRID_HEIGHT/2))<=getShootingRange());
     }
 }
