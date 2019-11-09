@@ -114,7 +114,7 @@ public class Arena {
      * @param y The y coordinate of the target cell
      * @return true iff a tower can be built in the target cell
      */
-    private boolean buildTowerPathValid(int x, int y) {
+    private static boolean buildTowerPathValid(int x, int y) {
         boolean[][] reachable = new boolean[GRID_HEIGHT][GRID_WIDTH];
         class Cell {
             int _x; int _y;
@@ -246,7 +246,7 @@ public class Arena {
         return true;
     }
 
-    private int monsterNumInCell(int x, int y) {
+    private static int monsterNumInCell(int x, int y) {
         int xLow = x*GRID_WIDTH-MONSTER_WIDTH/2;
         int xHigh = (x+1)*GRID_WIDTH+MONSTER_WIDTH/2;
         int yLow = y*GRID_HEIGHT-MONSTER_HEIGHT/2;
