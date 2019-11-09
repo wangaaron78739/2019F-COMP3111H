@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import static org.junit.Assert.*;
+import static arena.logic.ArenaConstants.*;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class MonsterTest {
      */
 	@Before
 	public void setUp() {
-		arena = new Arena(480, 480, 15, 15, 12, 12, 40, 40, 1000, 50); // create the arena with the same attributes as the one in the real game
+		arena = new Arena(); // create the arena with the same attributes as the one in the real game
 		monster = new Monster(0,0,2,1000,"Unicorn"); // we are using Unicorn as it's the only one that doesn't have move() overrided.
 	}
 	
@@ -175,9 +176,9 @@ public class MonsterTest {
 		Monster.updateGrids();
 		Monster thisMonster = Arena.getMonsters().peek();
 		assertEquals(0, thisMonster.getTowerCount()); // this is as the function also calls updateTowerCount()
-		for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-			for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
-				assertEquals(Arena.MAX_H_NUM_GRID-i-1+Arena.MAX_V_NUM_GRID-j-1, thisMonster.getGridInArena()[i][j].getValue());
+		for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+			for (int j=0; j<MAX_V_NUM_GRID; ++j) {
+				assertEquals(MAX_H_NUM_GRID-i-1+MAX_V_NUM_GRID-j-1, thisMonster.getGridInArena()[i][j].getValue());
 			}
 		}
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
@@ -196,10 +197,10 @@ public class MonsterTest {
 		Monster.updateGrids();
 		Monster thisMonster = Arena.getMonsters().peek();
 		assertEquals(1, thisMonster.getTowerCount()); // this is as the function also calls updateTowerCount()
-		for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-			for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+		for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+			for (int j=0; j<MAX_V_NUM_GRID; ++j) {
 				if (!(i==0&&j==0)) // not the grids where the tower is built
-					assertEquals(Arena.MAX_H_NUM_GRID-i-1+Arena.MAX_V_NUM_GRID-j-1, thisMonster.getGridInArena()[i][j].getValue());
+					assertEquals(MAX_H_NUM_GRID-i-1+MAX_V_NUM_GRID-j-1, thisMonster.getGridInArena()[i][j].getValue());
 				else assertEquals(Monster.defaultCount, thisMonster.getGridInArena()[i][j].getValue());
 			}
 		}
@@ -219,10 +220,10 @@ public class MonsterTest {
 		Monster.updateGrids();
 		Monster thisMonster = Arena.getMonsters().peek();
 		assertEquals(1, thisMonster.getTowerCount()); // this is as the function also calls updateTowerCount()
-		for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-			for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+		for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+			for (int j=0; j<MAX_V_NUM_GRID; ++j) {
 				if (!(i==1&&j==1)) // not the grids where the tower is built
-					assertEquals(Arena.MAX_H_NUM_GRID-i-1+Arena.MAX_V_NUM_GRID-j-1, thisMonster.getGridInArena()[i][j].getValue());
+					assertEquals(MAX_H_NUM_GRID-i-1+MAX_V_NUM_GRID-j-1, thisMonster.getGridInArena()[i][j].getValue());
 				else assertEquals(Monster.defaultCount, thisMonster.getGridInArena()[i][j].getValue());
 			}
 		}

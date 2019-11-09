@@ -30,7 +30,7 @@ public class PenguinTest {
      */
 	@Before
 	public void setUp() {
-		arena = new Arena(480, 480, 15, 15, 12, 12, 40, 40, 1000, 50); // create the arena with the same attributes as the one in the real game
+		arena = new Arena(); // create the arena with the same attributes as the one in the real game
 		penguin = new Penguin(0,0,1);
 	}
 	
