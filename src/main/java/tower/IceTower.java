@@ -38,5 +38,4 @@ public class IceTower extends Tower {
     public void implement(Monster target){
     	target.setCoolDown(baseAttackPower);
     }
-
 }
