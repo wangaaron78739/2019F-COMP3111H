@@ -11,7 +11,7 @@ import arena.logic.Arena;
  * 
  */
 public class Unicorn extends Monster {
-    private static final int defaultHP = 150;
+    private static final int defaultHP = 1000;
     private static final int defaultSpeed = 2;
 
     /**

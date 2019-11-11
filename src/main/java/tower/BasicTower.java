@@ -3,6 +3,7 @@ package tower;
 import arena.logic.Arena;
 import arena.logic.Resource;
 import monster.*;
+import static arena.logic.ArenaConstants.*;
 
 public class BasicTower extends Tower {
     private static final int baseAttackPower = 100;
@@ -26,8 +27,15 @@ public class BasicTower extends Tower {
     	target.setHP(target.getHP() - this.getAttackPower());
     }
     
+    /**
+     * Method for determining whether the BasicTower can attack a given pixel,
+     * i.e. whether the pixel is inside its range.
+     * @param xPx The x-coordinate(in pixels) of the pixel.
+     * @param yPx The y-coordinate(in pixels) of the pixel.
+     * @return Boolean value showing whether the BasicTower can attack the given pixel.
+     */
     @Override
     public boolean canAttack(int xPx, int yPx) {
-    	return (Math.hypot(xPx - (getX()*Arena.GRID_WIDTH+Arena.GRID_WIDTH/2), yPx - (getY()*Arena.GRID_HEIGHT+Arena.GRID_HEIGHT/2))<=getShootingRange());
+    	return (Math.hypot(xPx - (getX()*GRID_WIDTH+GRID_WIDTH/2), yPx - (getY()*GRID_HEIGHT+GRID_HEIGHT/2))<=getShootingRange());
     }
 }

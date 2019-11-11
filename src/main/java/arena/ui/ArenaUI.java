@@ -4,8 +4,11 @@ import arena.logic.Arena;
 import arena.logic.Resource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -20,7 +23,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import monster.Monster;
+
 import tower.*;
+
+import static arena.logic.ArenaConstants.*;
+
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -84,21 +91,12 @@ public class ArenaUI {
 
     @FXML
     private static Circle activeRangeUI = new Circle(0, new Color(1,0.5,0,0.5));
-    
+
     @FXML
     public ArrayList<Line> LaserAttackTraceUI = new ArrayList<Line>();
     
-    static final int ARENA_WIDTH = 480;
-    static final int ARENA_HEIGHT = 480;
-    static final int GRID_WIDTH = 40;
-    static final int GRID_HEIGHT = 40;
-    static final int MAX_H_NUM_GRID = 12;
-    static final int MAX_V_NUM_GRID = 12;
-    static final int INITIAL_RESOURCE_NUM = 500;
-    static final int UPDATE_INTERVAL = 50;
+   
 
-    static final int MONSTER_HEIGHT = 15;
-    static final int MONSTER_WIDTH = 15;
 
     private static Arena arena = null;
     private static Label grids[][] = new Label[MAX_V_NUM_GRID][MAX_H_NUM_GRID]; //the grids on arena
@@ -108,6 +106,7 @@ public class ArenaUI {
     static int hoveredCellY = -1;
 
     static boolean enableBuildTowers = true;
+	boolean gameOverShown = false;
     /**
      * A function that create the Arena
      */
@@ -115,8 +114,7 @@ public class ArenaUI {
     public void createArena() {
         if (arena != null)
             return;
-        arena = new Arena(ARENA_WIDTH, ARENA_HEIGHT, MONSTER_WIDTH, MONSTER_HEIGHT, MAX_H_NUM_GRID, MAX_V_NUM_GRID,
-                GRID_WIDTH, GRID_HEIGHT, INITIAL_RESOURCE_NUM, UPDATE_INTERVAL);
+        arena = new Arena();
         for (int j = 0; j < MAX_V_NUM_GRID; j++)
             for (int i = 0; i < MAX_H_NUM_GRID; i++) {
                 Label newLabel = new Label();
@@ -147,7 +145,7 @@ public class ArenaUI {
         labelEndZone.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/endZone.png")));
         paneArena.getChildren().addAll(labelEndZone);
         setHoveredRangeUI(0,0,0);
-            hoveredRangeUI.setMouseTransparent(true);
+        hoveredRangeUI.setMouseTransparent(true);
         paneArena.getChildren().addAll(hoveredRangeUI);
         setActiveRangeUI(0,0,0);
         activeRangeUI.setMouseTransparent(true);
@@ -169,11 +167,19 @@ public class ArenaUI {
     }
 
     private void startUpdateUILoop() {
+    	Alert alert = new Alert(AlertType.WARNING);
+    	alert.setTitle("Game Over!");
+    	alert.setHeaderText(null);
+    	alert.setContentText("No Monster movement or Tower attack from now on!");
         Timeline timer = new Timeline(new KeyFrame(Duration.millis(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 updateUI();
-                Arena.nextFrame();
+                if (!Monster.gameEnds()) Arena.nextFrame();
+                else if (!gameOverShown) {
+                	alert.show();
+                	gameOverShown = true;
+                }
             }
         }));
         timer.setCycleCount(Timeline.INDEFINITE);
@@ -187,18 +193,20 @@ public class ArenaUI {
         //TOWER
         for (int j = 0;j<MAX_V_NUM_GRID;j++) {
             for (int i=0;i<MAX_H_NUM_GRID;i++) {
+                String shot = "";
+                if (Arena.towerShot(i,j)) shot = "Shot";
                 switch (Arena.towerBuiltType(i,j)) {
                     case "Basic":
-                        grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/basicTower.png")));
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/basicTower"+shot+".png")));
                         break;
                     case "Catapult":
-                        grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/catapult.png"))));
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/catapult"+shot+".png"))));
                         break;
                     case "Ice":
-                        grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/iceTower.png"))));
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon((ArenaUIUtils.getImage("/iceTower"+shot+".png"))));
                         break;
                     case "Laser":
-                        grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/laserTower.png")));
+                        grids[j][i].setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/laserTower"+shot+".png")));
                         break;
                     default:
                         grids[j][i].setGraphic(null);
@@ -241,15 +249,33 @@ public class ArenaUI {
             Label l = labelMonsters.get(i);
             l.setLayoutX(m.getXPx()-MONSTER_WIDTH/2);
             l.setLayoutY(m.getYPx()-MONSTER_HEIGHT/2);
+            /*Tooltip tooltip = new Tooltip(Integer.toString(m.getHP()));
+            l.setOnMouseEntered(new EventHandler<MouseEvent>(){
+        		@Override  
+        		public void handle(MouseEvent event) {
+        			tooltip.setAnchorX(event.getScreenX());
+        			tooltip.setAnchorY(event.getScreenY() + 15);
+        			tooltip.setShowDuration(Duration.millis(1));
+        			tooltip.show(l, event.getScreenX(), event.getScreenY() + 15);
+        		}
+        	}); 
+            l.setOnMouseExited(new EventHandler<MouseEvent>(){
+        		@Override
+        		public void handle(MouseEvent event){
+        			tooltip.hide();
+        		}
+        	});*/
+            String hit = "";
+            if (m.getHit()) hit = "Hit";
             switch (m.getType()) {
                 case "Fox":
-                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/fox.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/fox"+hit+".png"),MONSTER_HEIGHT,MONSTER_WIDTH));
                     break;
                 case "Penguin":
-                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/penguin.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/penguin"+hit+".png"),MONSTER_HEIGHT,MONSTER_WIDTH));
                     break;
                 case "Unicorn":
-                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/unicorn.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
+                    l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/unicorn"+hit+".png"),MONSTER_HEIGHT,MONSTER_WIDTH));
                     break;
                 case "Death":
                 	l.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/collision.png"),MONSTER_HEIGHT,MONSTER_WIDTH));
@@ -295,7 +321,6 @@ public class ArenaUI {
         //TODO:
         Arena.startGame();
         setEnableBuildTowers(false);
-//        Arena.getMonsters().remove(0);
     }
 
     @FXML

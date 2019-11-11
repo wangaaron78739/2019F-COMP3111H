@@ -6,6 +6,7 @@ package monster;
 import java.util.*;
 
 import arena.logic.Arena;
+import static arena.logic.ArenaConstants.*;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ public class Monster {
     private int speed;
     private final int maxHP;
     private String type;
-
+	private boolean hit;
     /**
      * <p>
      * A String representing the direction that monster in a cell should move to.
@@ -77,14 +78,12 @@ public class Monster {
         this.maxHP = maxHP;
         this.type = type;
         // initialize the array gridsInArena
-        if (gridsInArena == null) {
-        	gridsInArena = new Cell[Arena.MAX_H_NUM_GRID][Arena.MAX_V_NUM_GRID];
-        	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-        		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
-        			gridsInArena[i][j] = new Cell(i, j);
-            	}
+        gridsInArena = new Cell[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+    	for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+    		for (int j=0; j<MAX_V_NUM_GRID; ++j) {
+    			gridsInArena[i][j] = new Cell(i, j);
         	}
-        }
+    	}
     }
     
     /**
@@ -96,72 +95,188 @@ public class Monster {
         return xPx;
     }
 
+    /**
+	 * <p>
+     * Getter function for the parameter yPx.
+     * @return Integer representing the y-coordinate (in pixels) of the Monster.
+     */
     public float getYPx() {
         return yPx;
     }
 
+    /**
+	 * <p>
+     * Getter function for the x-coordinate (in grids) of the Monster.
+     * @return Integer representing the x-coordinate (in grids) of the Monster.
+     */
     public int getXGrid() {
-        return (int)(xPx/ Arena.GRID_WIDTH) ;
+        return (int)(xPx/ GRID_WIDTH) ;
     }
 
+    /**
+	 * <p>
+     * Getter function for the y-coordinate (in grids) of the Monster.
+     * @return Integer representing the y-coordinate (in grids) of the Monster.
+     */
     public int getYGrid() {
-        return (int)(yPx/ Arena.GRID_HEIGHT) ;
+        return (int)(yPx/ GRID_HEIGHT) ;
     }
     
+    /**
+	 * <p>
+     * Getter function for the speed (number of movements per move) of the Monster.
+     * <p>
+     * Notice if the Monster is hit by a IceTower and is in coolDown, its speed would be half of its default speed.
+     * <p>
+     * The monster would only resume normal speed when its coolDown is 0.
+     * @return Integer representing the speed of the Monster.
+     */
     public int getSpeed() {
     	if (cooldown==0) return speed;
     	else return speed/2;
     }
     
+    /**
+	 * <p>
+     * Getter function for the HP of the Monster.
+     * @return Integer representing the HP of the Monster.
+     */
     public int getHP() {
         return HP;
     }
 
+    /**
+	 * <p>
+     * Getter function for the type of the Monster.
+     * <p>
+     * A monster can have four types, the normal three ("Fox", "Penguin" and "Unicorn") and a "Death" type when it dies.
+     * @return String representing the type of the Monster.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+	 * <p>
+     * Getter function for the type of the Monster.
+     * <p>
+     * A monster can have four types, the normal three ("Fox", "Penguin" and "Unicorn") and a "Death" type when it dies.
+     * @return String representing the type of the Monster.
+     */
     public int getMaxHP() {
         return maxHP;
     }
     
+    /**
+	 * <p>
+     * Getter function for the moving direction of the Monster.
+     * <p>
+     * A monster can have four directions to move, "Up", "Down", "Left" and "Right".
+     * @return String representing the direction that the Monster would move towards.
+     */
     public String getDirection() {
     	return direction;
     }
     
+    /**
+	 * <p>
+     * Getter function for the current number of towers in the Game.
+     * <p>
+     * Don't use static as this method is only used for testing.
+     * @return Integer representing the current number of towers in the Game.
+     */
+    public int getTowerCount() {
+    	return towerCount;
+    }
+    
+    /**
+	 * <p>
+     * Getter function for the grids in the Game.
+     * <p>
+     * Don't use static as this method is only used for testing.
+     * @return 2D Array representing the current grids in the Game.
+     */
+    public Cell[][] getGridInArena() {
+    	return gridsInArena;
+    }
+    
+    /**
+	 * <p>
+     * Getter function for the coolDown of the Monster.
+     * @return String representing the direction that the Monster would move towards.
+     */
     public int getCoolDown() {
     	return cooldown;
     }   
 
+    /**
+	 * <p>
+     * Setter function for the x-coordinate (in pixels) of the Monster.
+     * @param xPx The x-coordinate (in pixels) that we want the Monster to have.
+     */
     public void setXPx(int xPx) {
         this.xPx = xPx;
     }
 
+    /**
+	 * <p>
+     * Setter function for the y-coordinate (in pixels) of the Monster.
+     * @param yPx The y-coordinate (in pixels) that we want the Monster to have.
+     */
     public void setYPx(int yPx) {
         this.yPx = yPx;
     }
     
+    /**
+	 * <p>
+     * Setter function for the speed (number of movements per move) of the Monster.
+     * @param speed The speed that we want the Monster to have.
+     */
     public void setSpeed(int speed) {
     	this.speed = speed;
     }
     
+    /**
+	 * <p>
+     * Setter function for the HP of the Monster.
+     * @param HP The HP that we want the Monster to have.
+     */
     public void setHP(int HP) {
         this.HP = HP;
     }
     
+    /**
+	 * <p>
+     * Special setter function for the type of the Monster.
+     * <p>
+     * Note that this function can only set the type of the Monster to "Death".
+     * <p>
+     * It would be used only when the Monster's HP reaches 0 and is dead.
+     */
     public void setTypeDeath() {
         type = "Death";
     }
     
+    /**
+	 * <p>
+     * Setter function for the rounds of coolDown of the Monster.
+     * @param cooldown The number of rounds the Monster has to wait for the effect of IceTower to gone and it can resume normal speed.
+     */
     public void setCoolDown(int cooldown) {
     	this.cooldown = cooldown;
     }
     
+    /**
+	 * <p>
+     * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
+     * <p>
+     * It would update all the locations where there is a tower, and count the total number of towers currently.
+     */
     public static void updateTowerCount() {
     	towerCount = 0;
     	// update index by search for grids of towers
-    	for (int i=0; i<Arena.MAX_H_NUM_GRID; ++i) {
-    		for (int j=0; j<Arena.MAX_V_NUM_GRID; ++j) {
+    	for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+    		for (int j=0; j<MAX_V_NUM_GRID; ++j) {
     			if (Arena.getTower(i,j) != null) {
     				gridsInArena[i][j].setValue(defaultCount);
     				++towerCount;
@@ -170,6 +285,13 @@ public class Monster {
     	}
     }
     
+    /**
+	 * <p>
+     * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
+     * <p>
+     * It would update the value associated with each cells, 
+     * which can be used in determining where a Monster in a particular Cell should move.
+     */
     public static void updateGrids() {
     	updateTowerCount();
     	
@@ -178,13 +300,13 @@ public class Monster {
     	currentValue = 0;
     	frontierNodes.clear();
     	// update value by search from the endzone
-    	currentCell = gridsInArena[Arena.MAX_H_NUM_GRID-1][Arena.MAX_V_NUM_GRID-1]; 
+    	currentCell = gridsInArena[MAX_H_NUM_GRID-1][MAX_V_NUM_GRID-1];
     	currentCell.setValue(currentValue); // end zone can be reached by itself in 0 steps
     	checkedNodes.add(currentCell);
     	frontierNodes.add(currentCell);
     	++currentValue; // now reachable cells has currentValue one larger
     	
-    	while (checkedNodes.size()<Arena.MAX_H_NUM_GRID*Arena.MAX_V_NUM_GRID-towerCount) {
+    	while (checkedNodes.size()<MAX_H_NUM_GRID*MAX_V_NUM_GRID-towerCount) {
     		List<Cell> NodesThisStep = new ArrayList<Cell>();
     		for (Cell node : frontierNodes) { // for all the checked nodes
     			// Left
@@ -198,7 +320,7 @@ public class Monster {
 	    			}
     			}
     			// Right
-    			if (node.xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
+    			if (node.xGrid!=MAX_H_NUM_GRID-1) { // can move right
     				currentCell = gridsInArena[node.xGrid+1][node.yGrid]; // get the right node
     				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
 	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
@@ -218,7 +340,7 @@ public class Monster {
 	    			}
     			}
     			// Down
-    			if (node.yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
+    			if (node.yGrid!=MAX_V_NUM_GRID-1) { // can move down
     				currentCell = gridsInArena[node.xGrid][node.yGrid+1]; // get the down node
     				if (Arena.getTower(currentCell.xGrid,currentCell.yGrid) == null) { // not tower cell
 	    				if (!checkedNodes.contains(currentCell) && !NodesThisStep.contains(currentCell)) { // unfilled stuff before
@@ -237,6 +359,13 @@ public class Monster {
     	}
     }
     
+    /**
+	 * <p>
+     * Method for determining where a Monster in a cell's center should move to.
+     * @param xGrid The current x-coordinate (in grids) of the Monster.
+     * @param yGrid The current y-coordinate (in grids) of the Monster.
+     * @return String representing the moving direction of the Monster.
+     */
     public String determineWhichDirectionAtCenter(int xGrid, int yGrid) {
     	int leftCount = defaultCount;
 		int rightCount = defaultCount;
@@ -247,13 +376,13 @@ public class Monster {
 		if (xGrid!=0) { // can move left
 			leftCount = gridsInArena[xGrid-1][yGrid].getValue(); // get the left value
 		}
-		if (xGrid!=Arena.MAX_H_NUM_GRID-1) { // can move right
+		if (xGrid!=MAX_H_NUM_GRID-1) { // can move right
 			rightCount = gridsInArena[xGrid+1][yGrid].getValue(); // get the right value
 		}
 		if (yGrid!=0) { // can move up
 			upCount = gridsInArena[xGrid][yGrid-1].getValue(); // get the up value
 		}
-		if (yGrid!=Arena.MAX_V_NUM_GRID-1) { // can move down
+		if (yGrid!=MAX_V_NUM_GRID-1) { // can move down
 			downCount = gridsInArena[xGrid][yGrid+1].getValue(); // get the down value
 		}
 		int[] counts = {leftCount, rightCount, upCount, downCount};
@@ -272,16 +401,26 @@ public class Monster {
 		return(optimalDirections.get(rand.nextInt(optimalDirections.size())));
     }
     
+    /**
+	 * <p>
+     * Method for determining whether there's any Monster already in the end zone,
+     * causing the game to end.
+     * @return Boolean value representing whether the game has ended.
+     */
     public static boolean gameEnds() {
     	for (Monster m: Arena.getMonsters()) {
-    		if ((m.getXGrid()==Arena.MAX_H_NUM_GRID-1) && (m.getYGrid()==Arena.MAX_V_NUM_GRID-1)) {
+    		if ((m.getXGrid()==MAX_H_NUM_GRID-1) && (m.getYGrid()==MAX_V_NUM_GRID-1)) {
 	    		return true;
 	    	}
     	}
     	return false;
     }
 
-    public void move() { // TODO: override this method
+    /**
+	 * <p>
+     * Method for updating the location of the Monster base on their moving direction
+     */
+    public void move() {
     	for (int i=0; i<getSpeed(); ++i) {
 	    	int xPx = (int)getXPx();
 	    	int yPx = (int)getYPx();
@@ -289,24 +428,24 @@ public class Monster {
     		int xGrid = getXGrid();
     		int yGrid = getYGrid();
 	    	// when the monster has reached the end zone, simply return (no move)
-	    	if (gameEnds()/*(xGrid==Arena.MAX_H_NUM_GRID-1) && (yGrid==Arena.MAX_V_NUM_GRID-1)*/ && getType()!="Death") {
+	    	if (gameEnds()/*(xGrid==MAX_H_NUM_GRID-1) && (yGrid==MAX_V_NUM_GRID-1)*/ || getType()=="Death") {
 	    		return;
 	    	}
 	    	
 	    	// determine which direction to go to when reach the middle of a cell
-	    	if (xPx % Arena.GRID_WIDTH == (int)(0.5*Arena.GRID_WIDTH)-1 && 
-					yPx % Arena.GRID_HEIGHT == (int)(0.5*Arena.GRID_HEIGHT)-1 ) {
+	    	if (xPx % GRID_WIDTH == (int)(0.5*GRID_WIDTH)-1 &&
+					yPx % GRID_HEIGHT == (int)(0.5*GRID_HEIGHT)-1 ) {
 	    		direction = determineWhichDirectionAtCenter(xGrid, yGrid);
 			}
 	    	
 	    	// handle the case when already on the way, but a tower is built
-	    	if (direction == "Left" && (xPx % Arena.GRID_WIDTH < (int)(0.5*Arena.GRID_WIDTH)-1) && (Arena.getTower(xGrid-1,yGrid) != null)) 
+	    	if (direction == "Left" && (xPx % GRID_WIDTH < (int)(0.5*GRID_WIDTH)-1) && (Arena.getTower(xGrid-1,yGrid) != null))
 	    		direction = "Right";
-	    	if (direction == "Right" && (xPx % Arena.GRID_WIDTH > (int)(0.5*Arena.GRID_WIDTH)-1) && (Arena.getTower(xGrid+1,yGrid) != null)) 
+	    	if (direction == "Right" && (xPx % GRID_WIDTH > (int)(0.5*GRID_WIDTH)-1) && (Arena.getTower(xGrid+1,yGrid) != null))
 	    		direction = "Left";
-	    	if (direction == "Up" && (yPx % Arena.GRID_HEIGHT < (int)(0.5*Arena.GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid-1) != null)) 
+	    	if (direction == "Up" && (yPx % GRID_HEIGHT < (int)(0.5*GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid-1) != null))
 	    		direction = "Down";
-	    	if (direction == "Down" && (yPx % Arena.GRID_HEIGHT > (int)(0.5*Arena.GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid+1) != null)) 
+	    	if (direction == "Down" && (yPx % GRID_HEIGHT > (int)(0.5*GRID_HEIGHT)-1) && (Arena.getTower(xGrid,yGrid+1) != null))
 	    		direction = "Up";
 	    	
 	    	// move according to the direction
@@ -329,8 +468,31 @@ public class Monster {
     	
     	if (cooldown>0) --cooldown; // one less round of cooldown
     }
-    
-    /**
+
+	/**
+	 * <p>
+	 * Getter function for the parameter hit.
+	 * @return boolean representing the current value of the Cell.
+	 */
+	public boolean getHit() {
+		return hit;
+	}
+	/**
+	 * <p>
+	 * Setter function for setting the parameter hit.
+	 * @param hit The value we want to associate with the current Cell.
+	 */
+	public void setHit(boolean hit) {
+		this.hit = hit;
+	}
+	/**
+	 * <p>
+	 * Resets parameter hit to false.
+	 */
+	public void resetHit() {
+		this.hit = false;
+	}
+	/**
      * <p>
      * Nested class implement Cell in the game.
      * <p>
@@ -347,8 +509,9 @@ public class Monster {
     	private int yGrid = 0;
     	private int value = defaultCount; // represent minimal steps needed to reach from end zone
     	private String fromCell = "Left"; // the cell we used to get this cell, only used by Fox
-    	
-    	/**
+
+
+		/**
     	 * <p>
          * Cell Constructor.
          * <p>
@@ -414,5 +577,6 @@ public class Monster {
     	public void setFromCell(String fromCell) {
     		this.fromCell = fromCell;
     	}
+
     }
 }

@@ -10,65 +10,56 @@ import javafx.scene.control.ButtonType;
 import monster.*;
 import tower.*;
 
+import static arena.logic.ArenaConstants.*;
+
+/**
+ * Handles the logic of the arena.
+ */
 public class Arena {
 
-    public static int ARENA_WIDTH;
-    public static int ARENA_HEIGHT;
-    public static int MONSTER_WIDTH;
-    public static int MONSTER_HEIGHT;
-    public static int MAX_H_NUM_GRID;
-    public static int MAX_V_NUM_GRID;
-    public static int GRID_WIDTH;
-    public static int GRID_HEIGHT;
-    public static int UPDATE_INTERVAL;
-
     private static String towerBuilt[][];
+    private static boolean towerShot[][];
 //    private static LinkedList<LaserProjectile> projectiles = new LinkedList<LaserProjectile>();
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Resource resource;
     
-    // Grid index for monster generation
+    /**
+     * <p>
+     * An integer representing the x-coordinate (in grids) of the Monster's start zone.
+     * <p>
+     * Monster would always be generated from that zone.
+     */
     public static int MonsterStartXGrid = 0;
+    /**
+     * <p>
+     * An integer representing the y-coordinate (in grids) of the Monster's start zone.
+     * <p>
+     * Monster would always be generated from that zone.
+     */
     public static int MonsterStartYGrid = 0;
 
     private static int FrameCount = -1; // changed to -1, so it can generate monster from the starting time
     private static int EachStageCount = 500; // larger stage, stronger monster
     private static boolean gameStarted = false;
 
-    //TODO: change this?
-    private static final int monsterKillResource = 300;
+    private static final int monsterKillResource = 100;
 
     /**
      * Arena Constructor
-     * @param ARENA_WIDTH The width of the arena cell in pixels
-     * @param ARENA_HEIGHT The height of the arena cell in pixels
-     * @param MONSTER_WIDTH The width of the monster width in pixels
-     * @param MONSTER_HEIGHT The height of the monster width in pixels
-     * @param MAX_H_NUM_GRID The number of grid cells in each row of the arena
-     * @param MAX_V_NUM_GRID The number of grid cells in each column of the arena
-     * @param GRID_WIDTH The width of each grid cell in pixels
-     * @param GRID_HEIGHT The height of each grid cell in pixels
-     * @param INITIAL_RESOURCE_NUM The initial amount of resource
-     * @param UPDATE_INTERVAL The update interval of the game in ms
      */
-    public Arena(int ARENA_WIDTH, int ARENA_HEIGHT, int MONSTER_WIDTH, int MONSTER_HEIGHT, int MAX_H_NUM_GRID, int MAX_V_NUM_GRID, int GRID_WIDTH, int GRID_HEIGHT, int INITIAL_RESOURCE_NUM, int UPDATE_INTERVAL) {
-        Arena.ARENA_WIDTH = ARENA_WIDTH;
-        Arena.ARENA_HEIGHT = ARENA_HEIGHT;
-        Arena.MONSTER_WIDTH = MONSTER_WIDTH;
-        Arena.MONSTER_HEIGHT = MONSTER_HEIGHT;
-        Arena.MAX_H_NUM_GRID = MAX_H_NUM_GRID;
-        Arena.MAX_V_NUM_GRID = MAX_V_NUM_GRID;
-        Arena.GRID_WIDTH = GRID_WIDTH;
-        Arena.GRID_HEIGHT = GRID_HEIGHT;
-        Arena.UPDATE_INTERVAL = UPDATE_INTERVAL;
+    public Arena() {
         resource = new Resource(INITIAL_RESOURCE_NUM);
-        towerBuilt = new String[GRID_HEIGHT][GRID_WIDTH];
+        towerBuilt = new String[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+        towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
         for (String[] row: towerBuilt) {
             Arrays.fill(row,"");
         }
+        monsters = new LinkedList<Monster>();
+        towers = new LinkedList<Tower>();
         // initialize grid index for monster generation
         Random rand = new Random();
+
         MonsterStartXGrid = rand.nextInt(4);
         MonsterStartYGrid = rand.nextInt(4);
     }
@@ -97,8 +88,8 @@ public class Arena {
      * @param y The y coordinate of the target cell
      * @return true iff a tower can be built in the target cell
      */
-    private boolean buildTowerPathValid(int x, int y) {
-        boolean[][] reachable = new boolean[GRID_HEIGHT][GRID_WIDTH];
+    private static boolean buildTowerPathValid(int x, int y) {
+        boolean[][] reachable = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
         class Cell {
             int _x; int _y;
             Cell(int _x, int _y) {this._x = _x; this._y = _y;}
@@ -179,21 +170,46 @@ public class Arena {
      * Returns the tower type of the tower in cell (x,y)
      * @param x The x coordinate of the target cell
      * @param y The y coordinate of the target cell
-     * @return String tower typ eo ftower in cell (x,y)
+     * @return String tower type of tower in cell (x,y)
      */
     public static String towerBuiltType(int x, int y) {
         return towerBuilt[y][x];
     }
 
     /**
-     * Sets the
+     * Returns the shot status of tower in cell (x,y)
      * @param x The x coordinate of the target cell
      * @param y The y coordinate of the target cell
+     * @return boolean shot status of tower in cell (x,y)
+     */
+    public static boolean towerShot(int x, int y) {
+        return towerShot[y][x];
+    }
+
+    /**
+     * Set the shot status of tower in cell (x,y)
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     */
+    public static void setTowerShot(int x, int y) {
+        towerShot[y][x] = true;
+    }
+
+    public static void resetShot() {
+        towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+    }
+
+    /**
+     * Sets the tower type of the tower built in cell (x,y)
+     * @param x The x coordinate of the target cell
+     * @param y The y coordinate of the target cell
+     * @param tower The Tower type of tower in cell (x,y)
      */
     public static void setTowerBuilt(int x, int y, String tower) {
         towerBuilt[y][x] = tower;
     }
-    public boolean buildTower(int x, int y, String towerType) {
+    public static boolean buildTower(int x, int y, String towerType) {
+        if (x<0 || y < 0) return false;
         Tower tower;
         switch (towerType) {
             case "Basic":
@@ -228,7 +244,7 @@ public class Arena {
         return true;
     }
 
-    private int monsterNumInCell(int x, int y) {
+    private static int monsterNumInCell(int x, int y) {
         int xLow = x*GRID_WIDTH-MONSTER_WIDTH/2;
         int xHigh = (x+1)*GRID_WIDTH+MONSTER_WIDTH/2;
         int yLow = y*GRID_HEIGHT-MONSTER_HEIGHT/2;
@@ -269,20 +285,30 @@ public class Arena {
     }
     
     /**
-     * Helper function for getting the current stage of difficulty
-     * @return The number of stage represent the difficulty
+     * Function for getting the current stage of difficulty.
+     * There would be five stages in this game.
+     * @return The number of stage represent the difficulty.
      */
     public static int getStage() { 
     	int index = FrameCount / EachStageCount;
     	switch (index) {
     		case 0:
     		case 1:
+    		case 2:
+    		case 3:
     			return index+1;
     		default:
-    			return 3;
+    			return 5;
     	}
     }
 
+    /**
+     * Function for adding Monster to the game.
+     * @param x The x-coordinate (in pixels) that we want the Monster to be at.
+     * @param y The y-coordinate (in pixels) that we want the Monster to be at.
+     * @param monster The type of the Monster.
+     * @return A boolean value represent whether we can add the monster successfully.
+     */
     public static boolean addMonster(int x, int y, String monster) {
     	if (Arena.getTower(x/GRID_WIDTH,y/GRID_HEIGHT) != null) {
     		return false;
@@ -347,6 +373,8 @@ public class Arena {
         		addMonster(MonsterStartXGrid*GRID_WIDTH+(int)(0.5*GRID_WIDTH)-1,MonsterStartYGrid*GRID_HEIGHT+(int)(0.5*GRID_HEIGHT)-1, names[rand.nextInt(names.length)]);
         		//addMonster(60,60,"Fox");
         }
+        resetShot();
+        monsters.forEach(Monster::resetHit);
         towers.forEach(Tower::shoot);
         monsters.removeIf(m->m.getType()=="Death"); // remove all the currently dead monsters
         monsters.forEach(m-> {
@@ -357,9 +385,8 @@ public class Arena {
         });
         Monster.updateGrids();
         monsters.forEach(Monster::move);
-        //TODO: Check endgame
-        /*if (Monster.gameEnds())
-        	System.out.println("Game over!");*/
+        if (Monster.gameEnds())
+        	System.out.println("Game over!");
     }
 
     public static void startGame() {
@@ -368,5 +395,9 @@ public class Arena {
 
     public static int getFrameCount() {
         return FrameCount;
+    }
+
+    public static boolean isGameStarted() {
+        return gameStarted;
     }
 }
