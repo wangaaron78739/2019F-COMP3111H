@@ -73,8 +73,8 @@ public class MonsterTest {
      */
 	@Test
 	public void createdMonster_whenSetAttributes_assertAttributesAllSettedValue() {
-		monster.setXPx(40);
-		monster.setYPx(40);
+		monster.setxPx(40);
+		monster.setyPx(40);
 		monster.setSpeed(1);
 		monster.setHP(2000);
 		monster.setTypeDeath();
@@ -141,13 +141,13 @@ public class MonsterTest {
 		assertFalse(Monster.gameEnds());
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
 		// case 2: only y_coord is not the same as end zone
-		monster.setXPx(460);
+		monster.setxPx(460);
 		Arena.getMonsters().add(monster);
 		assertFalse(Monster.gameEnds());
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
 		// case 2: only x_coord is not the same as end zone
-		monster.setXPx(0);
-		monster.setYPx(460);
+		monster.setxPx(0);
+		monster.setyPx(460);
 		Arena.getMonsters().add(monster);
 		assertFalse(Monster.gameEnds());
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
@@ -159,8 +159,8 @@ public class MonsterTest {
      */
 	@Test
 	public void givenMonsterInEndZone_whenCheckGameEnds_assertFalse() {
-		monster.setXPx(460);
-		monster.setYPx(460);
+		monster.setxPx(460);
+		monster.setyPx(460);
 		Arena.getMonsters().add(monster);
 		assertTrue(Monster.gameEnds());
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
@@ -237,8 +237,8 @@ public class MonsterTest {
      */
 	@Test
 	public void givenMonsterCoordCanNotGoLeftOrDownWithEmptyArena_whenDetermineDirection_assertNotGoLeftOrDown() {
-		monster.setXPx(0);
-		monster.setYPx(479);
+		monster.setxPx(0);
+		monster.setyPx(479);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		String direction = monster.determineWhichDirectionAtCenter(monster.getXGrid(), monster.getYGrid());
@@ -254,8 +254,8 @@ public class MonsterTest {
      */
 	@Test
 	public void givenMonsterCoordCanNotGoUpOrRightWithEmptyArena_whenDetermineDirection_assertNotGoUpOrRight() {
-		monster.setXPx(479);
-		monster.setYPx(0);
+		monster.setxPx(479);
+		monster.setyPx(0);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		String direction = monster.determineWhichDirectionAtCenter(monster.getXGrid(), monster.getYGrid());
@@ -276,8 +276,8 @@ public class MonsterTest {
 	@Test
 	public void givenMonsterCoordCanMoveAnyDirectionWithLeftIsNotMinimumAndNonEmptyArena_whenDetermineDirection_assertNotGoLeft() {
 		Arena.buildTower(3, 3, "Basic");
-		monster.setXPx(60);
-		monster.setYPx(60);
+		monster.setxPx(60);
+		monster.setyPx(60);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		String direction = monster.determineWhichDirectionAtCenter(monster.getXGrid(), monster.getYGrid());
@@ -297,8 +297,8 @@ public class MonsterTest {
 	@Test
 	public void givenMonsterCoordCanMoveAnyDirectionWithUpIsNotMinimumAndNonEmptyArena_whenDetermineDirection_assertNotGoUp() {
 		Arena.buildTower(3, 3, "Basic");
-		monster.setXPx(60);
-		monster.setYPx(60);
+		monster.setxPx(60);
+		monster.setyPx(60);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		String direction = monster.determineWhichDirectionAtCenter(monster.getXGrid(), monster.getYGrid());
@@ -320,8 +320,8 @@ public class MonsterTest {
 		Arena.buildTower(1, 2, "Basic");
 		Arena.buildTower(2, 3, "Basic");
 		Arena.buildTower(3, 2, "Basic");
-		monster.setXPx(60);
-		monster.setYPx(100);
+		monster.setxPx(60);
+		monster.setyPx(100);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		String direction = monster.determineWhichDirectionAtCenter(monster.getXGrid(), monster.getYGrid());
@@ -343,8 +343,8 @@ public class MonsterTest {
 		Arena.buildTower(2, 1, "Basic");
 		Arena.buildTower(3, 2, "Basic");
 		Arena.buildTower(2, 3, "Basic");
-		monster.setXPx(100);
-		monster.setYPx(60);
+		monster.setxPx(100);
+		monster.setyPx(60);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		String direction = monster.determineWhichDirectionAtCenter(monster.getXGrid(), monster.getYGrid());
@@ -361,8 +361,8 @@ public class MonsterTest {
      */
 	@Test
 	public void givenMonsterInEndedGame_whenMove_assertNoMove() {
-		monster.setXPx(460);
-		monster.setYPx(460);
+		monster.setxPx(460);
+		monster.setyPx(460);
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		monster.move();
@@ -379,8 +379,8 @@ public class MonsterTest {
      */
 	@Test
 	public void givenDeadMonsterNotInEndZone_whenMove_assertNoMove() {
-		monster.setXPx(0);
-		monster.setYPx(0);
+		monster.setxPx(0);
+		monster.setyPx(0);
 		monster.setTypeDeath();
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
@@ -400,13 +400,13 @@ public class MonsterTest {
      */
 	@Test
 	public void givenMonsterInMiddelOfCell_whenMove_assertCanDetermineDirection() {
-		monster.setXPx(19);
-		monster.setYPx(19); // middle of the cell (0,0)
+		monster.setxPx(19);
+		monster.setyPx(19); // middle of the cell (0,0)
 		Arena.getMonsters().add(monster);
 		Monster.updateGrids();
 		monster.move();
-		if (Math.abs(monster.getXPx()-19)<0.01) assertEquals(21, monster.getYPx(), 0.01);
-		else assertEquals(21, monster.getXPx(), 0.01);
+		if (Math.abs(monster.getxPx()-19)<0.01) assertEquals(21, monster.getyPx(), 0.01);
+		else assertEquals(21, monster.getxPx(), 0.01);
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
 	}
 	

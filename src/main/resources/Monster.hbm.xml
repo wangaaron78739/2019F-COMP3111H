@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "monster.Monster" table = "Monster">
+
+        <meta attribute = "class-description">
+            This class contains the monster data.
+        </meta>
+
+        <id name = "id" type = "int" column = "id">
+            <generator class="native"/>
+        </id>
+
+        <property name = "xPx" column = "xpx" type = "float"/>
+        <property name = "yPx" column = "ypx" type = "float"/>
+        <property name = "HP" column = "hp" type = "int"/>
+        <property name = "speed" column = "speed" type = "int"/>
+        <property name = "type" column = "type" type = "string"/>
+        <property name = "direction" column = "direction" type = "string"/>
+
+    </class>
+</hibernate-mapping>

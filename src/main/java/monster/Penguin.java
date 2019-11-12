@@ -1,5 +1,7 @@
 package monster;
 
+import arena.logic.Arena;
+
 /**
  * 
  * Class implement one type of Monster, Penguin.
@@ -26,7 +28,16 @@ public class Penguin extends Monster {
         super(x, y, defaultSpeed, defaultHP*stage, "Penguin");
         restoreHP = defaultRestoreHP * stage; // stronger as more restore HP
     }
-    
+
+    /**
+     * Penguin Constructor.
+     * @param m The monster data to be copied
+     */
+    public Penguin(Monster m) {
+        super(m);
+        restoreHP = defaultRestoreHP * Arena.getStage(); // stronger as more restore HP
+    }
+
     /**
 	 * <p>
      * Getter function for the parameter restoreHP.

@@ -47,7 +47,23 @@ public class Fox extends Monster {
         	}
         }
     }
-    
+
+	/**
+	 * Fox Constructor.
+	 * @param m The monster data to be copied
+	 */
+    public Fox(Monster m) {
+    	super(m);
+		// initialize the array gridsInArenaFox
+		if (gridsInArenaFox == null) {
+			gridsInArenaFox = new Cell[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+			for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+				for (int j=0; j<MAX_V_NUM_GRID; ++j) {
+					gridsInArenaFox[i][j] = new Cell(i, j);
+				}
+			}
+		}
+	}
     /**
 	 * <p>
      * Method for the updating an array for representing grids in the arena, based on the current grids in the game.

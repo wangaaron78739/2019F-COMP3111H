@@ -1,0 +1,22 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "arena.logic.GameData" table = "GameData">
+
+        <meta attribute = "class-description">
+            This class contains the game data.
+        </meta>
+
+        <id name = "id" type = "int" column = "id">
+            <generator class="native"/>
+        </id>
+
+        <property name = "frameCount" column = "frame_count" type = "int"/>
+        <property name = "resourceAmt" column = "resource_amt" type = "int"/>
+        <property name = "gameState" column = "game_state" type = "string"/>
+
+    </class>
+</hibernate-mapping>

@@ -1,6 +1,5 @@
 package arena.logic;
 
-import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Random;
@@ -10,6 +9,7 @@ import javafx.scene.control.ButtonType;
 import monster.*;
 import tower.*;
 
+
 import static arena.logic.ArenaConstants.*;
 
 /**
@@ -17,11 +17,12 @@ import static arena.logic.ArenaConstants.*;
  */
 public class Arena {
 
-    private static String towerBuilt[][];
-    private static boolean towerShot[][];
+    private static String[][] towerBuilt;
+    private static boolean[][] towerShot;
 //    private static LinkedList<LaserProjectile> projectiles = new LinkedList<LaserProjectile>();
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
+
     private static Resource resource;
     
     /**
@@ -66,7 +67,7 @@ public class Arena {
 
     public static void logAttack(Tower tower, Monster mon) {
         if (mon.getType().equals("Death")) return;
-        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower.getType(),tower.getX()*GRID_WIDTH+GRID_WIDTH/2,tower.getY()*GRID_HEIGHT+GRID_HEIGHT/2,mon.getType(),(int)mon.getYPx(),(int)mon.getYPx());
+        System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower.getType(),tower.getX()*GRID_WIDTH+GRID_WIDTH/2,tower.getY()*GRID_HEIGHT+GRID_HEIGHT/2,mon.getType(),(int)mon.getyPx(),(int)mon.getyPx());
     }
 
     public static void logMonsterCreated(Monster mon) {
@@ -252,16 +253,12 @@ public class Arena {
         int yHigh = (y+1)*GRID_HEIGHT+MONSTER_HEIGHT/2;
         int total = 0;
         for (Monster m : monsters) {
-            if (m.getXPx()>xLow && m.getXPx()<xHigh && m.getYPx()>yLow && m.getYPx()<yHigh) {
+            if (m.getxPx()>xLow && m.getxPx()<xHigh && m.getyPx()>yLow && m.getyPx()<yHigh) {
                 total++;
             }
         }
         return total;
     }
-
-//    public static LinkedList<LaserProjectile> getProjectiles() {
-//        return projectiles;
-//    }
 
     public static LinkedList<Monster> getMonsters() {
         return monsters;
@@ -274,11 +271,6 @@ public class Arena {
     public static LinkedList<Tower> getTowers() {
         return towers;
     }
-
-//    public static int getProjectileNum() {
-//        if (projectiles == null) return 0;
-//        return projectiles.size();
-//    }
 
     public static int getMonsterNum() {
         if (monsters == null) return 0;
@@ -400,5 +392,9 @@ public class Arena {
 
     public static boolean isGameStarted() {
         return gameStarted;
+    }
+
+    public static void setFrameCount(int frameCount) {
+        FrameCount = frameCount;
     }
 }

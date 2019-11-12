@@ -77,7 +77,7 @@ public class Catapult extends Tower {
     	LinkedList<Monster> getMonsterList(){
     		LinkedList<Monster> monstersAttacked = new LinkedList<Monster>();
     		for(Monster m : Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - CoordX, m.getYPx() - CoordY);
+    			double distance = Math.hypot(m.getxPx() - CoordX, m.getyPx() - CoordY);
     			if(distance <= 25) {
     					monstersAttacked.add(m);
     			}
@@ -115,8 +115,8 @@ public class Catapult extends Tower {
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - this.getX() * GRID_WIDTH - GRID_WIDTH/2, m.getYPx() - this.getY() * GRID_HEIGHT - GRID_HEIGHT/2);
-    			double distanceToEndZone = Math.hypot(m.getYPx() - (MAX_H_NUM_GRID + 0.5) * GRID_HEIGHT, m.getXPx() - (MAX_V_NUM_GRID + 0.5) * ARENA_WIDTH);
+    			double distance = Math.hypot(m.getxPx() - this.getX() * GRID_WIDTH - GRID_WIDTH/2, m.getyPx() - this.getY() * GRID_HEIGHT - GRID_HEIGHT/2);
+    			double distanceToEndZone = Math.hypot(m.getyPx() - (MAX_H_NUM_GRID + 0.5) * GRID_HEIGHT, m.getxPx() - (MAX_V_NUM_GRID + 0.5) * ARENA_WIDTH);
     			if(distance <= upperShootingRange && distance >= lowerShootingRange){
     				if(!map.isEmpty() && distanceToEndZone < map.entrySet().iterator().next().getValue()){
     					map.remove(map.entrySet().iterator().next());
@@ -149,7 +149,7 @@ public class Catapult extends Tower {
     				if(distance <= upperShootingRange && distance >= lowerShootingRange && distanceToNearestMonster <= 25){
     					int num = 0;
     					for(Monster m : Arena.getMonsters()){
-    						double distanceToMonster = Math.hypot(m.getXPx() - x, m.getYPx() - y);
+    						double distanceToMonster = Math.hypot(m.getxPx() - x, m.getyPx() - y);
     						if(distanceToMonster <= 25) {
     							num = num + 1;
     							//System.out.printf("A:%d",num);
