@@ -1,6 +1,12 @@
 package tower;
 
 import java.util.HashMap;
+
+import static arena.logic.ArenaConstants.GRID_HEIGHT;
+import static arena.logic.ArenaConstants.GRID_WIDTH;
+import static arena.logic.ArenaConstants.MAX_H_NUM_GRID;
+import static arena.logic.ArenaConstants.MAX_V_NUM_GRID;
+
 import java.util.ArrayList;
 import arena.logic.Arena;
 import arena.logic.Resource;
@@ -18,7 +24,7 @@ public class LaserTower extends Tower {
     
     
     public LaserTower(int x, int y) {
-        super(baseAttackPower, baseBuildingCost, baseShootingRange, baseAttackCooldown, x, y, typeName);
+        super(baseAttackPower, baseBuildingCost, baseShootingRange, x, y, typeName);
     }
     
     public Line getAttackTrace(){
@@ -42,7 +48,9 @@ public class LaserTower extends Tower {
 		if(Arena.getMonsterNum() > 0 && Resource.canDeductAmount(10)){
 			HashMap<Monster, Double> map = new HashMap<Monster, Double>();
 			for(Monster m: Arena.getMonsters()){
-				double distanceToEndZone = Math.hypot(m.getYPx() - (ArenaConstants.MAX_H_NUM_GRID + 0.5) * ArenaConstants.GRID_HEIGHT, m.getXPx() - (ArenaConstants.MAX_V_NUM_GRID + 0.5) * ArenaConstants.ARENA_WIDTH);
+				double distanceToEndZone = Math.hypot(	
+    					m.getXPx() - (MAX_V_NUM_GRID + 0.5) * GRID_WIDTH,
+    					m.getYPx() - (MAX_H_NUM_GRID + 0.5) * GRID_HEIGHT);
 //				if(!map.isEmpty() && distanceToEndZone < map.entrySet().iterator().next().getValue()){
 //					map.remove(map.entrySet().iterator().next());
 //					map.put(m, distanceToEndZone);

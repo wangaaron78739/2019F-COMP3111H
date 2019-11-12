@@ -1,26 +1,37 @@
 package tower;
 
 import arena.logic.Arena;
-import monster.*;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.lang.Math;
 import static arena.logic.ArenaConstants.*;
+import monster.*;
+import java.util.HashMap;
+import java.lang.Math;
 
+/**
+ * <p>
+ * Class for general towers. 
+ * @author REN Jiming
+ *
+ */
 
 public class Tower {
     private int attackPower;
     private int buildingCost;
     private int shootingRange;
-    private final String type;
     private final int x;
     private final int y;
+    private final String type;
     private int upgradeCost;
-
-    public Tower(int attackPower, int buildingCost, int shootingRange, int cooldown, int x, int y, String type) {
+    
+    /**
+     * Tower Constructor
+     * @param attackPower The attack power of the tower
+     * @param buildingCost The building cost of the tower
+     * @param shootingRange The shooting range of the tower
+     * @param x The x-coordinate of the cell where the tower locates
+     * @param y The y-coordinate of the cell where the tower locates
+     * @param type The type of the tower, i.e. Basic, Catapult, Ice, Laser
+     */
+    public Tower(int attackPower, int buildingCost, int shootingRange, int x, int y, String type) {
         this.attackPower = attackPower;
         this.buildingCost = buildingCost;
         this.shootingRange = shootingRange;
@@ -29,54 +40,97 @@ public class Tower {
         this.type = type;
         this.upgradeCost = buildingCost;
     }
-
+    
+    /**
+     * Getter function for the attack power of the tower
+     * @return attackPower The attack power of the tower
+     */
     public int getAttackPower() {
         return attackPower;
     }
-
+    
+    /**
+     * Setter function for the attack power of the tower
+     * @param attackPower The attack power of the tower
+     */
     public void setAttackPower(int attackPower) {
         this.attackPower = attackPower;
     }
-
+    
+    /**
+     * Getter function for the building cost of the tower
+     * @return buildingCost The building cost of the tower
+     */
     public int getBuildingCost() {
         return buildingCost;
     }
-
+    
+    /**
+     * Setter function for the building cost of the tower
+     * @param buildingCost The building cost of the tower
+     */
     public void setBuildingCost(int buildingCost) {
         this.buildingCost = buildingCost;
     }
-
+    
+    /**
+     * Getter function for the shooting range of the tower
+     * @return shootingRange The shooting range of the tower
+     */
     public int getShootingRange() {
         return shootingRange;
     }
-
+    
+    /**
+     * Setter function for the shooting range of the tower
+     * @param shootingRange The shooting range of the tower
+     */
     public void setShootingRange(int shootingRange) {
         this.shootingRange = shootingRange;
     }
-
+    
+    /**
+     * Getter function for the x-coordinate of the cell where the tower locates 
+     * @return x The x-coordinate of the cell
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Getter function for the y-coordinate of the cell where the tower locates 
+     * @return y The y-coordinate of the cell
+     */
     public int getY() {
         return y;
     }
     
+    /**
+     * Getter function for the type of the tower, i.e. Basic, Catapult, Ice, Laser
+     * @return type The type of the tower
+     */
     public String getType() {
         return type;
     }
 
-    public void upgrade() {
-        
-    }
-
+    /**
+     * Getter function of the upgrade cost of the tower
+     * @return upgradeCost The upgrade cost of the tower
+     */
     public int getUpgradeCost() {
         return upgradeCost;
     }
     
-    public void implement(Monster target){
-    	
-    }
+    /**
+     * Overrided Method to decrease the HP of the monster
+     * @param target The monster whose HP to be decreased
+     */
+    public void implement(Monster target) {}
+    
+    /**
+     * Overrided Mehod for the tower upgrading
+     */
+    public void upgrade() {}
 
     /**
      * Method for determining whether the Tower can attack a given pixel,
@@ -89,45 +143,64 @@ public class Tower {
     public boolean canAttack(int xPx, int yPx) {
     	return true;
     }
-
+    
+    /**
+     * Method for the tower to target the monster
+     * <p>
+     * Always target the nearest monster to the up-left corner of the end-zone 
+     */
     public void shoot() {
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - (this.x*GRID_WIDTH+GRID_WIDTH/2), m.getYPx() - (this.y*GRID_HEIGHT+GRID_HEIGHT/2));
-    			if(distance <= shootingRange)
-    				map.put(m, distance);
+    			double distanceToTower = Math.hypot(
+    					m.getXPx() - (this.x * GRID_WIDTH + GRID_WIDTH/2), 
+    					m.getYPx() - (this.y * GRID_HEIGHT + GRID_HEIGHT/2));
+    			double distanceToEndZone = Math.hypot(	
+    					m.getXPx() - (MAX_V_NUM_GRID + 0.5) * GRID_WIDTH,
+    					m.getYPx() - (MAX_H_NUM_GRID + 0.5) * GRID_HEIGHT );
+    			if(distanceToTower <= shootingRange){
+    				if(!map.isEmpty()){
+    					HashMap.Entry<Monster, Double> set =  map.entrySet().iterator().next();
+    					if(distanceToEndZone < set.getValue()){
+    						map.remove(set);
+    						map.put(m, distanceToEndZone);
+    					}
+    				}
+    				else map.put(m,distanceToEndZone);
+    			}
     		}
     		if(map.isEmpty()) return;
-    		//rank the distance to monsters
-    		List<Map.Entry<Monster, Double>> list = new ArrayList<Map.Entry<Monster,Double>>(map.entrySet());
-    		list.sort(Map.Entry.comparingByValue());
-    		HashMap<Monster,Double> sorted = new HashMap<>();
-    		for (Map.Entry<Monster, Double> entry : list) {
-    			sorted.put(entry.getKey(), entry.getValue());
-    		}
-    		//find the up-left monster among the nearest monsters
-    		Iterator<Map.Entry<Monster,Double>> iter = sorted.entrySet().iterator();
-    		Map.Entry<Monster, Double> element = iter.next();
-    		Monster target = element.getKey();
-    		double distance = element.getValue();
-    		//fixed: Stuck in this while loop
-    		do{
-    			if(iter.hasNext()){
-    				element = iter.next();
-    				if(element.getValue() == distance)
-    					if(element.getKey().getYPx()<target.getYPx())
-    						target=element.getKey();
-    			}
-    			else break;
-    		}while(element.getValue() == distance);
-    		//Attack
+    		Monster target = map.entrySet().iterator().next().getKey();
+    		
+//    		//rank the distance to monsters
+//    		List<Map.Entry<Monster, Double>> list = new ArrayList<Map.Entry<Monster,Double>>(map.entrySet());
+//    		list.sort(Map.Entry.comparingByValue());
+//    		HashMap<Monster,Double> sorted = new HashMap<>();
+//    		for (Map.Entry<Monster, Double> entry : list) {
+//    			sorted.put(entry.getKey(), entry.getValue());
+//    		}
+//    		Iterator<Map.Entry<Monster,Double>> iter = sorted.entrySet().iterator();
+//    		Map.Entry<Monster, Double> element = iter.next();
+//    		Monster target = element.getKey();
+    		
+//    		double distance = element.getValue();
+//    		//fixed: Stuck in this while loop
+//    		do{
+//    			if(iter.hasNext()){
+//    				element = iter.next();
+//    				if(element.getValue() == distance)
+//    					if(element.getKey().getYPx()<target.getYPx())
+//    						target=element.getKey();
+//    			}
+//    			else break;
+//    		}while(element.getValue() == distance);
+    		
     		Arena.logAttack(this,target);
     		target.setHit(true);
     		Arena.setTowerShot(x,y);
     		implement(target);
     	}
     }
-
 }
 

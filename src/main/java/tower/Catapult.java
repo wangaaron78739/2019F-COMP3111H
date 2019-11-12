@@ -25,7 +25,7 @@ public class Catapult extends Tower {
     private static final String typeName = "Catapult";
 
     public Catapult(int x, int y) {
-        super(baseAttackPower, baseBuildingCost, baseShootingRange, baseAttackCooldown, x, y, typeName);
+        super(baseAttackPower, baseBuildingCost, baseShootingRange, x, y, typeName);
     }
     
     public int getUpperShootingRange() {
@@ -107,7 +107,10 @@ public class Catapult extends Tower {
     
     @Override    
     public void shoot() {
+    	
+    	//Check whether catapult is still in cooldown period
     	if(Arena.getFrameCount() - prevShot < this.cooldown) return;
+    	
     	//find the monster closest to the end zone
     	if(Arena.getMonsterNum() > 0){
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
@@ -163,6 +166,8 @@ public class Catapult extends Tower {
     		System.out.printf("The monsterList is empty:%b\n",bestTarget.getMonsterList().isEmpty());
     		for(Monster m: bestTarget.getMonsterList()){
     			Arena.logAttack(this,m);
+    			m.setHit(true);
+        		Arena.setTowerShot(getX(),getY());
     			this.implement(m);
     		}
     		prevShot = Arena.getFrameCount();
