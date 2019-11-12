@@ -21,7 +21,7 @@ public class UnicornTest {
 	 * <p>
      * Setup before any testing.
      * <p>
-     * Initialize unicorn with both x-coordinate and y-coordinate (in grids) 0, and stage 1.
+     * Initialize unicorn with both x-coordinate and y-coordinate (in pixels) 0, and stage 1.
      */
 	@Before
 	public void setUp() {
