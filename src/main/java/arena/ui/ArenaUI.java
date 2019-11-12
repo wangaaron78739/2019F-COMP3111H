@@ -20,10 +20,11 @@ import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.util.Duration;
 import monster.Monster;
 import static arena.logic.ArenaConstants.*;
-import tower.Tower;
+import tower.*;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -88,6 +89,9 @@ public class ArenaUI {
     @FXML
     private static Circle activeRangeUI = new Circle(0, new Color(1,0.5,0,0.5));
 
+    @FXML
+    public ArrayList<Line> LaserAttackTraceUI = new ArrayList<Line>();
+    
     private static Arena arena = null;
     private static Label grids[][] = new Label[MAX_V_NUM_GRID][MAX_H_NUM_GRID]; //the grids on arena
     static int activeCellX = -1;
@@ -204,6 +208,19 @@ public class ArenaUI {
             }
         }
         //PROJECTILE TODO:
+        for(Line pLine : LaserAttackTraceUI){
+        	paneArena.getChildren().remove(pLine);
+        }
+        for(Tower t : Arena.getTowers()){
+        	if(t.getType() == "Laser"){
+        		LaserTower lt = (LaserTower) t;
+        		if(Arena.getMonsterNum() > 0){
+        			LaserAttackTraceUI.add(lt.getAttackTrace());
+        			paneArena.getChildren().add(lt.getAttackTrace());
+        		}
+        	}
+        }
+
         //MONSTER
         if (Arena.getMonsterNum() < labelMonsters.size()) {
             while (Arena.getMonsterNum() < labelMonsters.size()) {
