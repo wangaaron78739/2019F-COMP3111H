@@ -101,6 +101,7 @@ public class ArenaUI {
 
     static boolean enableBuildTowers = true;
 	boolean gameOverShown = false;
+    Tooltip tooltip = new Tooltip();
     /**
      * A function that create the Arena
      */
@@ -243,10 +244,11 @@ public class ArenaUI {
             Label l = labelMonsters.get(i);
             l.setLayoutX(m.getXPx()-MONSTER_WIDTH/2);
             l.setLayoutY(m.getYPx()-MONSTER_HEIGHT/2);
-            /*Tooltip tooltip = new Tooltip(Integer.toString(m.getHP()));
+
             l.setOnMouseEntered(new EventHandler<MouseEvent>(){
         		@Override  
         		public void handle(MouseEvent event) {
+                    tooltip.setText(Integer.toString(m.getHP()));
         			tooltip.setAnchorX(event.getScreenX());
         			tooltip.setAnchorY(event.getScreenY() + 15);
         			tooltip.setShowDuration(Duration.millis(1));
@@ -258,7 +260,7 @@ public class ArenaUI {
         		public void handle(MouseEvent event){
         			tooltip.hide();
         		}
-        	});*/
+        	});
             String hit = "";
             if (m.getHit()) hit = "Hit";
             switch (m.getType()) {
