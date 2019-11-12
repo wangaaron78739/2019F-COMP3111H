@@ -1,14 +1,12 @@
 package arena.ui;
 
 import arena.logic.Arena;
+import arena.logic.GameData;
 import arena.logic.Resource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.*;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -18,15 +16,25 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
+import monster.Fox;
 import monster.Monster;
 import static arena.logic.ArenaConstants.*;
+
+import monster.Penguin;
+import monster.Unicorn;
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import tower.*;
 
+import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,6 +110,17 @@ public class ArenaUI {
     static boolean enableBuildTowers = true;
 	boolean gameOverShown = false;
     Tooltip tooltip = new Tooltip();
+
+    private static final SessionFactory factory;
+    static {
+        try {
+            factory = new Configuration().configure().buildSessionFactory();
+        } catch (Throwable ex) {
+            System.err.println("Failed to create sessionFactory object." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+
     /**
      * A function that create the Arena
      */
@@ -110,6 +129,84 @@ public class ArenaUI {
         if (arena != null)
             return;
         arena = new Arena();
+        final Session session = factory.openSession();
+        List monsters = new LinkedList<Monster>();
+        List towers = new LinkedList<Tower>();
+        List gamedata;
+
+        try {
+//            System.out.println("querying all the managed entities...");
+            monsters = session.createQuery("from Monster").list();
+            towers = session.createQuery("from Tower").list();
+            gamedata = session.createQuery("from GameData").list();
+        } finally {
+            session.close();
+        }
+        GameData data = gamedata.size()>0?(GameData) gamedata.get(0):null;
+        if (data != null && !data.getGameState().equals("ended")) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Load From Previous Game");
+            alert.setHeaderText("Previous Game Data Detected");
+            alert.setContentText("Load from Previous Game or Start New?");
+
+            ButtonType NewGame = new ButtonType("New Game");
+            ButtonType Continue = new ButtonType("Continue");
+
+            alert.getButtonTypes().setAll(NewGame, Continue);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == Continue) {
+                Arena.setFrameCount(data.getFrameCount());
+                Resource.setResourceAmount(data.getResourceAmt());
+//                if (data.getGameState().equals("simulate")) {
+//                    Arena.startGame();
+//                    enableBuildTowers = false;
+//                }else if (data.getGameState().equals("play")) {
+//                    Arena.startGame();
+//                }
+                for (Object obj: towers) {
+                    Tower t = (Tower) obj;
+                    Tower newTower;
+                    switch (t.getType()) {
+                        case "Basic":
+                            newTower = new BasicTower(t.getX(),t.getY());
+                            break;
+                        case "Catapult":
+                            newTower = new Catapult(t.getX(),t.getY());
+                            break;
+                        case "Ice":
+                            newTower = new IceTower(t.getX(),t.getY());
+                            break;
+                        case "Laser":
+                            newTower = new LaserTower(t.getX(),t.getY());
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + t.getType());
+                    }
+                    Arena.getTowers().add(newTower);
+                    Arena.setTowerBuilt(t.getX(),t.getY(),t.getType());
+                }
+                for (Object obj: monsters) {
+                    Monster m = (Monster) obj;
+                    Monster newMonster;
+                    switch (m.getType()) {
+                        case "Fox":
+                            newMonster = new Fox(m);
+                            break;
+                        case "Penguin":
+                            newMonster = new Penguin(m);
+                            break;
+                        case "Unicorn":
+                            newMonster = new Unicorn(m);
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + m.getType());
+                    }
+                    Arena.getMonsters().add(newMonster);
+                }
+            }
+        }
+
         for (int j = 0; j < MAX_V_NUM_GRID; j++)
             for (int i = 0; i < MAX_H_NUM_GRID; i++) {
                 Label newLabel = new Label();
@@ -147,6 +244,7 @@ public class ArenaUI {
         paneArena.getChildren().addAll(activeRangeUI);
         setDragAndDrop();
         startUpdateUILoop();
+        startUpdateArenaData();
     }
 
     public static Arena getArena() {
@@ -159,6 +257,59 @@ public class ArenaUI {
 
     public static void setEnableBuildTowers(boolean enableBuildTowers) {
         ArenaUI.enableBuildTowers = enableBuildTowers;
+    }
+
+    private void startUpdateArenaData() {
+
+        Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                updateArenaData();
+            }
+        }));
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.play();
+    }
+
+    private void updateArenaData() {
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.createQuery("delete from Tower").executeUpdate();
+            session.createQuery("delete from Monster").executeUpdate();
+            session.createQuery("delete from GameData").executeUpdate();
+            String state = "";
+            if (!Arena.isGameStarted()) {
+                state = "not_started";
+            } else if (gameOverShown) {
+                state = "ended";
+            } else if (enableBuildTowers) {
+                state = "play";
+            } else {
+                state = "simulate";
+            }
+            GameData data = new GameData(Arena.getFrameCount(),Resource.getResourceAmount(),state);
+            session.save(data);
+            for(Tower t: Arena.getTowers()) {
+                Tower temp = new Tower(t);
+                session.save(temp);
+            }
+            for(Monster m: Arena.getMonsters()) {
+                if (m.getType().equals("Death")) continue;
+                Monster temp = new Monster(m);
+                if (temp.getxPx()<0) temp.setxPx(-temp.getxPx());
+                if (temp.getyPx()<0) temp.setyPx(-temp.getyPx());
+                session.save(temp);
+            }
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     private void startUpdateUILoop() {
@@ -242,8 +393,8 @@ public class ArenaUI {
         for (int i=0;i<labelMonsters.size();i++) {
             Monster m = Arena.getMonsters().get(i);
             Label l = labelMonsters.get(i);
-            l.setLayoutX(m.getXPx()-MONSTER_WIDTH/2);
-            l.setLayoutY(m.getYPx()-MONSTER_HEIGHT/2);
+            l.setLayoutX(m.getxPx()-MONSTER_WIDTH/2);
+            l.setLayoutY(m.getyPx()-MONSTER_HEIGHT/2);
 
             l.setOnMouseEntered(new EventHandler<MouseEvent>(){
         		@Override  
@@ -321,7 +472,7 @@ public class ArenaUI {
 
     @FXML
     private void deleteActiveTower() {
-        if (activeCellX != -1 && activeCellY != -1) {
+        if (activeCellX != -1 && activeCellY != -1 && enableBuildTowers) {
             Arena.deleteTowerAt(activeCellX,activeCellY);
             setActiveCell(-1,-1);
         }
@@ -329,7 +480,7 @@ public class ArenaUI {
 
     @FXML
     private void upgradeActiveTower() {
-        if (activeCellX != -1 && activeCellY != -1) {
+        if (activeCellX != -1 && activeCellY != -1 && enableBuildTowers) {
             Arena.upgradeTowerAt(activeCellX,activeCellY);
         }
     }

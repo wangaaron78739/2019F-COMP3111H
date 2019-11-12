@@ -1,5 +1,14 @@
 # COMP3111 Project - Tower Defense
-Created by: Dr. Kevin Wang (kevinw@cse.ust.hk)
+
+## How to Start Database Server to Save Game Data
+1. Install MySql (ver. 8.0.18)
+    * Default Usename: root
+    * Default Password: root123!
+    * Change in `src/main/resources/hibernate.cfg.xml` if different
+2. Run `mysql -u root -p < ArenaDataInit.sql` in the project dir (change username/password accordingly)
+
+## To Test
+* Before running the unit test, run `mysql -u root -p < ArenaDataClean.sql` to clear the database
 
 ## Project Problem Statement and Activities
 
@@ -38,16 +47,16 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
  * [x] A monster is always moving from a grid to an adjacent grid either horizontally or vertically.
  * [x] The game must not allow a player to build a tower if the player does not have enough resource to build it.
  * [x] When a monster is killed it must be removed from the arena, a certain amount of resource will be given to the player.
- * [ ] Each grid can contain at most one tower. When it contains a tower, it cannot contain any monster.
+ * [x] Each grid can contain at most one tower. When it contains a tower, it cannot contain any monster.
  * [x] No tower shall be able to move. 
  * [x] All distance used in the game should be referred as Euclidean distance, in pixels (px). 
  * [x] The width and height of the Arena is 480 px-by-480 px. 
  * [x] All operations by the player must be done by mouse.
  * [x] A tower must have at least the following information: attack power, building cost, shooting range. 
- * [ ] A tower cannot attack a monster that is outside its shooting range. When we judge a monster is inside a tower's shooting range, the following distance will be used: the Euclidean distance between the center of the grid of where the tower is built and the center of the monster.
+ * [x] A tower cannot attack a monster that is outside its shooting range. When we judge a monster is inside a tower's shooting range, the following distance will be used: the Euclidean distance between the center of the grid of where the tower is built and the center of the monster.
  * [x] The health point (HP) of a monster will be deducted by the attack power of the tower attacking it. When HP is less than or equal to zero a monster is killed. 
  * [ ] When there are multiple possible monster a tower can shoot (in range), it should always choose a monster that is nearest to up-left corner of the end-zone ((440, 0) in our demo).
- * [ ] It is allowed that multiple towers shoot at a monster at the same time even through only one tower is needed to kill it. This is likely to happen. 
+ * [x] It is allowed that multiple towers shoot at a monster at the same time even through only one tower is needed to kill it. This is likely to happen. 
 
 #### Rules applies to COMP3111-H groups only. 
  * [x] <u>A monster will never move toward a grid with a tower</u> <u>(Finished)</u>. If a monster is already on its way to a new grid and a part of the monster body is already insider the grid, no tower will be allowed to be built on this new grid. 
@@ -77,10 +86,10 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
             1. [x] Furthermore, when `upgrade` is selected, and in case there is enough resource (you can determine the resources needed) to upgrade, it will invoke the function that corresponding to 
             upgrading the tower and a line `XXX tower is being upgraded` is printed on the console. (1)
                 1. [x] Furthermore, in case there isn't enough resource to upgrade the tower, the upgrade will be aborted and a line `not enough resource to upgrade XXX tower` is printed on the console. (1)
-    1. [ ] Logging the following information using `System.out.println`:
+    1. [x] Logging the following information using `System.out.println`:
         1. [x] When a monster is generated. Log its type and HP in the format `<type>:<HP> generated` (1)
         1. [x] When a monster is attacked. Log the type and position tower attacks it and the position of the monster in the format `<tower_type>@(<x>.<y>) -> <monster_type>@(<x>, <y>)` (1)
-            1. [ ] Furthermore, represent the attack in the GUI so that the monster and the tower involved can be visually identified without reading the log. (1)
+            1. [x] Furthermore, represent the attack in the GUI so that the monster and the tower involved can be visually identified without reading the log. (1)
 1. [ ] Towers (15)
     1. [x] All towers built in the arena will shoot a monster automatically which is inside its range (unless all towers are impossible to attack, e.g. out of range, in cool down etc). (1)      
     1. [x] Implement Basic Tower that has a shooting range [0,65] pixels. You can decide the attack power and other parameters of the tower. (1)
@@ -117,8 +126,8 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
 #### H Individual-Task - applies to 3111H students only - (5%)
 1. [ ] Arena
     1. [x] Allow player to build towers in all grids unless it violates the rules stipulated in the Game Physics - Rules for H task. (1)
-    1. [ ] Implement the button `Simulate` according to the game physics. (2)
-        1. [ ] Furthermore, implement the button `Play` according to the game physics. (2)
+    1. [x] Implement the button `Simulate` according to the game physics. (2)
+        1. [x] Furthermore, implement the button `Play` according to the game physics. (2)
 1. [ ] Tower
     1. [x] Catapult attacks algorithm. Instead of throwing a stone to a particular monster, the Catapult will throw a stone
     to a coordinate such that 

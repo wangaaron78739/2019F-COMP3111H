@@ -20,10 +20,10 @@ import static arena.logic.ArenaConstants.*;
  */
 public class Monster {
     private float xPx;
-    private float yPx;
+	private float yPx;
     private int HP;
     private int speed;
-    private final int maxHP;
+    private int maxHP;
     private String type;
 	private boolean hit;
     /**
@@ -58,8 +58,22 @@ public class Monster {
     private static final List<Cell> frontierNodes = new ArrayList<Cell>();
     
     private int cooldown = 0; // number of cool downs left
-    
-    /**
+
+	private int id;
+
+	public Monster() {
+
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
      * <p>
      * Monster Constructor.
      * <p>
@@ -85,13 +99,29 @@ public class Monster {
         	}
     	}
     }
-    
+
+    public Monster(Monster m) {
+		this.xPx = m.xPx;
+		this.yPx = m.yPx;
+		this.HP = m.HP;
+		this.maxHP = m.maxHP;
+		this.speed = m.speed;
+		this.type = m.type;
+		this.direction = m.direction;
+		// initialize the array gridsInArena
+		gridsInArena = new Cell[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+		for (int i=0; i<MAX_H_NUM_GRID; ++i) {
+			for (int j=0; j<MAX_V_NUM_GRID; ++j) {
+				gridsInArena[i][j] = new Cell(i, j);
+			}
+		}
+	}
     /**
 	 * <p>
      * Getter function for the parameter xPx.
      * @return Integer representing the x-coordinate (in pixels) of the Monster.
      */
-    public float getXPx() {
+    public float getxPx() {
         return xPx;
     }
 
@@ -100,11 +130,15 @@ public class Monster {
      * Getter function for the parameter yPx.
      * @return Integer representing the y-coordinate (in pixels) of the Monster.
      */
-    public float getYPx() {
+    public float getyPx() {
         return yPx;
     }
 
-    /**
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	/**
 	 * <p>
      * Getter function for the x-coordinate (in grids) of the Monster.
      * @return Integer representing the x-coordinate (in grids) of the Monster.
@@ -177,8 +211,18 @@ public class Monster {
     public String getDirection() {
     	return direction;
     }
-    
-    /**
+
+	/**
+	 * <p>
+	 * Setter function for the moving direction of the Monster.
+	 * <p>
+	 * A monster can have four directions to move, "Up", "Down", "Left" and "Right".
+	 */
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	/**
 	 * <p>
      * Getter function for the current number of towers in the Game.
      * <p>
@@ -214,7 +258,7 @@ public class Monster {
      * Setter function for the x-coordinate (in pixels) of the Monster.
      * @param xPx The x-coordinate (in pixels) that we want the Monster to have.
      */
-    public void setXPx(int xPx) {
+    public void setxPx(float xPx) {
         this.xPx = xPx;
     }
 
@@ -223,7 +267,7 @@ public class Monster {
      * Setter function for the y-coordinate (in pixels) of the Monster.
      * @param yPx The y-coordinate (in pixels) that we want the Monster to have.
      */
-    public void setYPx(int yPx) {
+    public void setyPx(float yPx) {
         this.yPx = yPx;
     }
     
@@ -284,7 +328,7 @@ public class Monster {
         	}
     	}
     }
-    
+
     /**
 	 * <p>
      * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
@@ -422,8 +466,8 @@ public class Monster {
      */
     public void move() {
     	for (int i=0; i<getSpeed(); ++i) {
-	    	int xPx = (int)getXPx();
-	    	int yPx = (int)getYPx();
+	    	int xPx = (int) getxPx();
+	    	int yPx = (int) getyPx();
 
     		int xGrid = getXGrid();
     		int yGrid = getYGrid();
@@ -451,16 +495,16 @@ public class Monster {
 	    	// move according to the direction
 	    	switch (direction) {
 				case "Left":
-					setXPx(xPx-1);
+					setxPx(xPx-1);
 					break;
 				case "Right":
-					setXPx(xPx+1);
+					setxPx(xPx+1);
 					break;
 				case "Up":
-					setYPx(yPx-1);
+					setyPx(yPx-1);
 					break;
 				case "Down":
-					setYPx(yPx+1);
+					setyPx(yPx+1);
 					break;
 				default: break;
 			}

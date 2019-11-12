@@ -1,0 +1,26 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "tower.Tower" table = "Tower">
+
+        <meta attribute = "class-description">
+            This class contains the tower data.
+        </meta>
+
+        <id name = "id" type = "int" column = "id">
+            <generator class="native"/>
+        </id>
+
+        <property name = "attackPower" column = "attack_power" type = "int"/>
+        <property name = "buildingCost" column = "building_cost" type = "int"/>
+        <property name = "shootingRange" column = "shooting_range" type = "int"/>
+        <property name = "x" column = "x" type = "int"/>
+        <property name = "y" column = "y" type = "int"/>
+        <property name = "type" column = "type" type = "string"/>
+        <property name = "upgradeCost" column = "upgrade_cost" type = "int"/>
+
+    </class>
+</hibernate-mapping>

@@ -49,8 +49,8 @@ public class LaserTower extends Tower {
 			HashMap<Monster, Double> map = new HashMap<Monster, Double>();
 			for(Monster m: Arena.getMonsters()){
 				double distanceToEndZone = Math.hypot(	
-    					m.getXPx() - (MAX_V_NUM_GRID + 0.5) * GRID_WIDTH,
-    					m.getYPx() - (MAX_H_NUM_GRID + 0.5) * GRID_HEIGHT);
+    					m.getxPx() - (MAX_V_NUM_GRID + 0.5) * GRID_WIDTH,
+    					m.getyPx() - (MAX_H_NUM_GRID + 0.5) * GRID_HEIGHT);
 //				if(!map.isEmpty() && distanceToEndZone < map.entrySet().iterator().next().getValue()){
 //					map.remove(map.entrySet().iterator().next());
 //					map.put(m, distanceToEndZone);
@@ -84,8 +84,8 @@ public class LaserTower extends Tower {
 			double deltaY = 3 * Math.hypot(1 , slope);
 			ArrayList<Monster> targetMonList = new ArrayList<Monster>();
 			for(Monster m : Arena.getMonsters()){
-				if(m.getYPx() > slope * (m.getXPx() - towerX) - deltaY &&
-				   m.getYPx() < slope * (m.getXPx() - towerX) + deltaY){
+				if(m.getyPx() > slope * (m.getxPx() - towerX) - deltaY &&
+				   m.getyPx() < slope * (m.getxPx() - towerX) + deltaY){
 					System.out.printf("$$$In attack range$$$\n");
 					targetMonList.add(m);
 					//if(targetMonY > towerY && m.getYPx() > towerY) targetMonList.add(m);
