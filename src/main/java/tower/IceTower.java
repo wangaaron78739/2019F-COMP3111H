@@ -13,7 +13,7 @@ public class IceTower extends Tower {
     private static final String typeName = "Ice";
 
     public IceTower(int x, int y) {
-        super(baseAttackPower, baseBuildingCost, baseShootingRange, baseAttackCooldown, x, y, typeName);
+        super(baseAttackPower, baseBuildingCost, baseShootingRange, x, y, typeName);
     }
     
     /**
