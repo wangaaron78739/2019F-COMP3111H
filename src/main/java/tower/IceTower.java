@@ -6,7 +6,7 @@ import monster.Monster;
 
 
 public class IceTower extends Tower {
-    private static int baseAttackPower = 100;
+    private static final int baseAttackPower = 100;
     private static final int baseBuildingCost = 100;
     private static final int baseShootingRange = 100;
     private static final int baseAttackCooldown = 100;
@@ -30,7 +30,7 @@ public class IceTower extends Tower {
     
     @Override
     public void upgrade(){
-    	 baseAttackPower += 60;
+        setAttackPower(this.getAttackPower() + 60);
     	 Resource.deductAmount(this.getUpgradeCost()); 
     }
     

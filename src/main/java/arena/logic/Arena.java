@@ -65,6 +65,7 @@ public class Arena {
     }
 
     public static void logAttack(Tower tower, Monster mon) {
+        if (mon.getType().equals("Death")) return;
         System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower.getType(),tower.getX()*GRID_WIDTH+GRID_WIDTH/2,tower.getY()*GRID_HEIGHT+GRID_HEIGHT/2,mon.getType(),(int)mon.getYPx(),(int)mon.getYPx());
     }
 
