@@ -24,7 +24,7 @@ public class PenguinTest {
 	 * <p>
      * Setup before any testing.
      * <p>
-     * Initialize penguin with both x-coordinate and y-coordinate (in grids) 0, and stage 1.
+     * Initialize penguin with both x-coordinate and y-coordinate (in pixels) 0, and stage 1.
      * <p>
      * Also Initializa arena with the same attributes as the arena in the game.
      */

@@ -12,7 +12,7 @@ import static arena.logic.ArenaConstants.*;
 
 /**
  * 
- * Class implement testing for Monster
+ * Class implement testing for Monster.
  * @author CHIU Ka Ho
  * 
  */
@@ -25,7 +25,7 @@ public class MonsterTest {
 	 * <p>
      * Setup before any testing.
      * <p>
-     * Initialize monster with both x-coordinate and y-coordinate (in grids) 0, speed 2, maxHP 1000, and type Unicorn.
+     * Initialize Fox with both x-coordinate and y-coordinate (in pixels) 0, speed 2, maxHP 1000, and type Unicorn.
      * <p>
      * We are using Unicorn as it's the only one that doesn't have move() overrided.
      * <p>
@@ -388,5 +388,34 @@ public class MonsterTest {
 		assertEquals(0, monster.getXGrid());
 		assertEquals(0, monster.getYGrid());
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's move() function can successfully determine where the direction should be,
+     * given monster is at the center of a cell.
+     * <p>
+     * As we have tested the function determineWhichDirectionAtCenter() before, we just need to check one cell,
+     * e.g. the one with both x-coordinate and y-coordinate (in grids) 0.
+     */
+	@Test
+	public void givenMonsterInMiddelOfCell_whenMove_assertCanDetermineDirection() {
+		monster.setXPx(19);
+		monster.setYPx(19); // middle of the cell (0,0)
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		if (Math.abs(monster.getXPx()-19)<0.01) assertEquals(21, monster.getYPx(), 0.01);
+		else assertEquals(21, monster.getXPx(), 0.01);
+		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	@Test
+	public void givenNotCoolDOwnMonster_whenMove_assertNoChangeInCoolDown() {
+		monster.setCoolDown(0);
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		assertEquals(0, monster.getCoolDown());
 	}
 }
