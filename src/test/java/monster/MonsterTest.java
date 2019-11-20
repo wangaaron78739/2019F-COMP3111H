@@ -48,6 +48,22 @@ public class MonsterTest {
 		monster = null;
 		arena = null;
 	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether a Monster can be generated correctly when no parameters are. 
+     */
+	@Test
+	public void NotGivenParametes_whenCreateMonster_assertAttributesAllDefaultValue() {
+		assertEquals(0, monster.getXGrid());
+		assertEquals(0, monster.getYGrid());
+		assertEquals(2, monster.getSpeed());
+		assertEquals(1000, monster.getHP());
+		assertEquals("Unicorn", monster.getType());
+		assertEquals(1000, monster.getMaxHP());
+		assertEquals("Left", monster.getDirection());
+		assertEquals(0, monster.getCoolDown());
+	}
 
 	/**
 	 * <p>
@@ -63,6 +79,24 @@ public class MonsterTest {
 		assertEquals(1000, monster.getMaxHP());
 		assertEquals("Left", monster.getDirection());
 		assertEquals(0, monster.getCoolDown());
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether a Monster can be generated correctly given another monster. 
+     */
+	@Test
+	public void givenAnotherMonster_whenCreateMonster_assertAttributesAllDefaultValue() {
+		Monster another = new Monster(monster);
+		assertEquals(0, another.getXGrid());
+		assertEquals(0, another.getYGrid());
+		assertEquals(2, another.getSpeed());
+		assertEquals(1000, another.getHP());
+		assertEquals("Unicorn", another.getType());
+		assertEquals(1000, another.getMaxHP());
+		assertEquals("Left", another.getDirection());
+		assertEquals(0, another.getCoolDown());
+		another = null;
 	}
 	
 	/**
@@ -410,6 +444,124 @@ public class MonsterTest {
 		Arena.getMonsters().pop(); // since we would not this Monster in other tests
 	}
 	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's move() function can successfully determine where the direction should be,
+     * given monster is at the center of a cell, and there's tower in below and on the right
+     * <p>
+     * As we have tested the function determineWhichDirectionAtCenter() before, we just need to check one cell,
+     * e.g. the one with both x-coordinate and y-coordinate (in grids) 1.
+     */
+	@Test
+	public void givenMonsterInMiddleOfCellwithTowerCase1_whenMove_assertCanDetermineDirection() {
+		monster.setxPx(59);
+		monster.setyPx(59); // middle of the cell (1,1)
+		Arena.buildTower(1, 2, "Basic");
+		Arena.buildTower(2, 1, "Basic");
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		if (Math.abs(monster.getxPx()-59)<0.01) assertEquals(57, monster.getyPx(), 0.01);
+		else assertEquals(57, monster.getxPx(), 0.01);
+		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's move() function can successfully determine to move right,
+     * given monster is slightly on the left of the middle of a given cell, facing left, 
+     * but there's also a tower built in the left cell.
+     * <p>
+     * As we have tested the function determineWhichDirectionAtCenter() before, we just need to check one cell,
+     * e.g. the one with both x-coordinate and y-coordinate (in grids) 1.
+     */
+	@Test
+	public void givenMonsterNotInMiddleOfCellAndFacingLeft_whenMove_assertCanMoveRight() {
+		monster.setxPx(57);
+		monster.setyPx(59); // slightly left of the middle of cell (1,1)
+		monster.setDirection("Left"); // facing left
+		Arena.buildTower(0, 1, "Basic"); // tower on the left cell
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		assertEquals(59, monster.getxPx(), 0.01); // since by condition it should change direction to "Right"
+		assertEquals(59, monster.getyPx(), 0.01); // no change would be made here
+		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's move() function can successfully to move left,
+     * given monster is slightly on the right of the middle of a given cell, facing right, 
+     * but there's also a tower built in the right cell.
+     * <p>
+     * As we have tested the function determineWhichDirectionAtCenter() before, we just need to check one cell,
+     * e.g. the one with both x-coordinate and y-coordinate (in grids) 1.
+     */
+	@Test
+	public void givenMonsterNotInMiddleOfCellAndFacingRight_whenMove_assertCanMoveLeft() {
+		monster.setxPx(61);
+		monster.setyPx(59); // slightly right of the middle of cell (1,1)
+		monster.setDirection("Right"); // facing right
+		Arena.buildTower(2, 1, "Basic"); // tower on the right cell
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		assertEquals(59, monster.getxPx(), 0.01); // since by condition it should change direction to "Left"
+		assertEquals(59, monster.getyPx(), 0.01); // no change would be made here
+		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's move() function can successfully to move down,
+     * given monster is slightly above the middle of a given cell, facing upwards, 
+     * but there's also a tower built in the above cell.
+     * <p>
+     * As we have tested the function determineWhichDirectionAtCenter() before, we just need to check one cell,
+     * e.g. the one with both x-coordinate and y-coordinate (in grids) 1.
+     */
+	@Test
+	public void givenMonsterNotInMiddleOfCellAndFacingUp_whenMove_assertCanMoveDown() {
+		monster.setxPx(59);
+		monster.setyPx(57); // slightly above the middle of cell (1,1)
+		monster.setDirection("Up"); // facing up
+		Arena.buildTower(1, 0, "Basic"); // tower on the up cell
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		assertEquals(59, monster.getxPx(), 0.01); // no change would be made here
+		assertEquals(59, monster.getyPx(), 0.01); // since by condition it should change direction to "Up"
+		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's move() function can successfully to move up,
+     * given monster is slightly below the middle of a given cell, facing downwards, 
+     * but there's also a tower built in the below cell.
+     * <p>
+     * As we have tested the function determineWhichDirectionAtCenter() before, we just need to check one cell,
+     * e.g. the one with both x-coordinate and y-coordinate (in grids) 1.
+     */
+	@Test
+	public void givenMonsterNotInMiddleOfCellAndFacingDown_whenMove_assertCanMoveUp() {
+		monster.setxPx(59);
+		monster.setyPx(61); // slightly below the middle of cell (1,1)
+		monster.setDirection("Down"); // facing down
+		Arena.buildTower(1, 2, "Basic"); // tower on the down cell
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		assertEquals(59, monster.getxPx(), 0.01); // no change would be made here
+		assertEquals(59, monster.getyPx(), 0.01); // since by condition it should change direction to "Down"
+		Arena.getMonsters().pop(); // since we would not this Monster in other tests
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's coolDown would be correctly the same if it has coolDown 0 before move().
+     */
 	@Test
 	public void givenNotCoolDOwnMonster_whenMove_assertNoChangeInCoolDown() {
 		monster.setCoolDown(0);
@@ -417,5 +569,18 @@ public class MonsterTest {
 		Monster.updateGrids();
 		monster.move();
 		assertEquals(0, monster.getCoolDown());
+	}
+	
+	/**
+	 * <p>
+     * Method for tesing whether Monster's coolDown would be correctly decreased if it has coolDown >0 before move().
+     */
+	@Test
+	public void givenCoolDOwnMonster_whenMove_assertChangeInCoolDown() {
+		monster.setCoolDown(2);
+		Arena.getMonsters().add(monster);
+		Monster.updateGrids();
+		monster.move();
+		assertEquals(1, monster.getCoolDown());
 	}
 }
