@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arena.logic.Arena;
+import monster.Monster.Cell;
 import tower.Tower;
 import static arena.logic.ArenaConstants.*;
 
@@ -64,6 +65,18 @@ public class Fox extends Monster {
 			}
 		}
 	}
+    
+    /**
+	 * <p>
+     * Getter function for the grids in the Game.
+     * <p>
+     * Don't use static as this method is only used for testing.
+     * @return 2D Array representing the current grids (which is used only for fox) in the Game.
+     */
+    public Cell[][] getGridInArenaFox() {
+    	return gridsInArenaFox;
+    }
+    
     /**
 	 * <p>
      * Method for the updating an array for representing grids in the arena, based on the current grids in the game.
@@ -87,6 +100,13 @@ public class Fox extends Monster {
     	int xPx = 0;
     	int yPx = 0;
         numStepsEachCell = GRID_HEIGHT/getSpeed();
+        
+        // update the end zone by adding it to the list
+        cellCount = 0;
+    	currentCellFox = gridsInArenaFox[MAX_H_NUM_GRID-1][MAX_V_NUM_GRID-1];
+    	currentCellFox.setValue(cellCount);
+    	currentCellFox.setFromCell("Left"); // since the cell is above the end zone, it needs to go down to reach the end zone
+    	checkedNodesFox.add(currentCellFox); // no need to add to frontier!
     	
     	// update the cell above the end zone
     	cellCount = 0;
@@ -166,31 +186,33 @@ public class Fox extends Monster {
     			// Right, also need to check it's not the end zone!
     			if (node.getXGrid()!=MAX_H_NUM_GRID-1) { // can move right
     				currentCellFox = gridsInArenaFox[node.getXGrid()+1][node.getYGrid()]; // get the right node
-    				if (Arena.getTower(currentCellFox.getXGrid(),currentCellFox.getYGrid()) == null) { // not tower cell
-    					cellCount = node.getValue();
-    					for (int i=0; i<numStepsEachCell; ++i) {
-    			    		// the coordinates of the pixels the fox would go through
-    			    		xPx = currentCellFox.getXGrid()*GRID_WIDTH + (int)(0.5*GRID_WIDTH) - 1 - i*defaultSpeed;
-    			        	yPx = currentCellFox.getYGrid()*GRID_HEIGHT + (int)(0.5*GRID_HEIGHT) - 1;
-    			    		// iterate through all the towers
-    			    		for (Tower tower: Arena.getTowers()) {
-    			    			if (tower.canAttack(xPx, yPx)) {
-    			    				++cellCount;
-    			    			}
-    			    		}
-    			    	}
-	    				if (!checkedNodesFox.contains(currentCellFox) && !NodesFoxThisStep.contains(currentCellFox)) { // unfilled stuff before
-	    					currentCellFox.setValue(cellCount);
-	    					currentCellFox.setFromCell("Left");
-	    					NodesFoxThisStep.add(currentCellFox);
-	    				}
-	    				else { // already filled
-	    					if (cellCount < currentCellFox.getValue()) {
-	    						currentCellFox.setValue(cellCount); // only update when we find a path receiving smaller attack
-	    						currentCellFox.setFromCell("Left");
-	    					}
-	    				}
-	    			}
+    				if (currentCellFox.getXGrid()!=MAX_H_NUM_GRID-1 || currentCellFox.getYGrid()!=MAX_V_NUM_GRID-1) { // not end zone
+	    				if (Arena.getTower(currentCellFox.getXGrid(),currentCellFox.getYGrid()) == null) { // not tower cell
+	    					cellCount = node.getValue();
+	    					for (int i=0; i<numStepsEachCell; ++i) {
+	    			    		// the coordinates of the pixels the fox would go through
+	    			    		xPx = currentCellFox.getXGrid()*GRID_WIDTH + (int)(0.5*GRID_WIDTH) - 1 - i*defaultSpeed;
+	    			        	yPx = currentCellFox.getYGrid()*GRID_HEIGHT + (int)(0.5*GRID_HEIGHT) - 1;
+	    			    		// iterate through all the towers
+	    			    		for (Tower tower: Arena.getTowers()) {
+	    			    			if (tower.canAttack(xPx, yPx)) {
+	    			    				++cellCount;
+	    			    			}
+	    			    		}
+	    			    	}
+		    				if (!checkedNodesFox.contains(currentCellFox) && !NodesFoxThisStep.contains(currentCellFox)) { // unfilled stuff before
+		    					currentCellFox.setValue(cellCount);
+		    					currentCellFox.setFromCell("Left");
+		    					NodesFoxThisStep.add(currentCellFox);
+		    				}
+		    				else { // already filled
+		    					if (cellCount < currentCellFox.getValue()) {
+		    						currentCellFox.setValue(cellCount); // only update when we find a path receiving smaller attack
+		    						currentCellFox.setFromCell("Left");
+		    					}
+		    				}
+		    			}
+    				}
     			}
     			// Up
     			if (node.getYGrid()!=0) { // can move up
@@ -224,32 +246,34 @@ public class Fox extends Monster {
     			// Down, also need to check it's not the end zone!
     			if (node.getYGrid()!=MAX_V_NUM_GRID-1) { // can move right
     				currentCellFox = gridsInArenaFox[node.getXGrid()][node.getYGrid()+1]; // get the down node
-    				if (Arena.getTower(currentCellFox.getXGrid(),currentCellFox.getYGrid()) == null) { // not tower cell
-    					cellCount = node.getValue();
-    					for (int i=0; i<numStepsEachCell; ++i) {
-    			    		// the coordinates of the pixels the fox would go through
-    			    		xPx = currentCellFox.getXGrid()*GRID_WIDTH + (int)(0.5*GRID_WIDTH) - 1;
-    			        	yPx = currentCellFox.getYGrid()*GRID_HEIGHT + (int)(0.5*GRID_HEIGHT) - 1 - i*defaultSpeed;
-    			    		// iterate through all the towers
-    			    		for (Tower tower: Arena.getTowers()) {
-    			    			if (tower.canAttack(xPx, yPx)) {
-    			    				++cellCount;
-    			    			}
-    			    		}
-    			    	}
-	    				if (!checkedNodesFox.contains(currentCellFox) && !NodesFoxThisStep.contains(currentCellFox)) { // unfilled stuff before
-	    					currentCellFox.setValue(cellCount);
-	    					currentCellFox.setFromCell("Up");
-	    					NodesFoxThisStep.add(currentCellFox);
-	    				}
-	    				else { // already filled
-	    					if (cellCount < currentCellFox.getValue()) {
-	    						currentCellFox.setValue(cellCount); // only update when we find a path receiving smaller attack
-	    						currentCellFox.setFromCell("Up");
-	    					}
+    				if (currentCellFox.getXGrid()!=MAX_H_NUM_GRID-1 || currentCellFox.getYGrid()!=MAX_V_NUM_GRID-1) { // not end zone
+	    				if (Arena.getTower(currentCellFox.getXGrid(),currentCellFox.getYGrid()) == null) { // not tower cell
+	    					cellCount = node.getValue();
+	    					for (int i=0; i<numStepsEachCell; ++i) {
+	    			    		// the coordinates of the pixels the fox would go through
+	    			    		xPx = currentCellFox.getXGrid()*GRID_WIDTH + (int)(0.5*GRID_WIDTH) - 1;
+	    			        	yPx = currentCellFox.getYGrid()*GRID_HEIGHT + (int)(0.5*GRID_HEIGHT) - 1 - i*defaultSpeed;
+	    			    		// iterate through all the towers
+	    			    		for (Tower tower: Arena.getTowers()) {
+	    			    			if (tower.canAttack(xPx, yPx)) {
+	    			    				++cellCount;
+	    			    			}
+	    			    		}
+	    			    	}
+		    				if (!checkedNodesFox.contains(currentCellFox) && !NodesFoxThisStep.contains(currentCellFox)) { // unfilled stuff before
+		    					currentCellFox.setValue(cellCount);
+		    					currentCellFox.setFromCell("Up");
+		    					NodesFoxThisStep.add(currentCellFox);
+		    				}
+		    				else { // already filled
+		    					if (cellCount < currentCellFox.getValue()) {
+		    						currentCellFox.setValue(cellCount); // only update when we find a path receiving smaller attack
+		    						currentCellFox.setFromCell("Up");
+		    					}
+		    				}
 	    				}
     				}
-    			}
+	    		}
     		}
     		frontierNodesFox.clear();
     		for (Cell node : NodesFoxThisStep) {
