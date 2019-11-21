@@ -109,7 +109,7 @@ public class Catapult extends Tower {
     	LinkedList<Monster> getMonsterList(){
     		LinkedList<Monster> monstersAttacked = new LinkedList<Monster>();
     		for(Monster m : Arena.getMonsters()){
-    			double distance = Math.hypot(m.getXPx() - CoordX, m.getYPx() - CoordY);
+    			double distance = Math.hypot(m.getxPx() - CoordX, m.getyPx() - CoordY);
     			if(distance <= 25) {
     				monstersAttacked.add(m);
     			}
@@ -215,7 +215,7 @@ public class Catapult extends Tower {
     				   distanceToNearestMonster <= 25){
     					int num = 0;
     					for(Monster m : Arena.getMonsters()){
-    						double distanceToMonster = Math.hypot(m.getXPx() - x, m.getYPx() - y);
+    						double distanceToMonster = Math.hypot(m.getxPx() - x, m.getyPx() - y);
     						if(distanceToMonster <= 25) {
     							num = num + 1;
     							//System.out.printf("A:%d",num);

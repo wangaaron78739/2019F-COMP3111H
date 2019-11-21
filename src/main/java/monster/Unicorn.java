@@ -23,5 +23,11 @@ public class Unicorn extends Monster {
     public Unicorn(int x, int y, int stage) {
         super(x, y, defaultSpeed, defaultHP*stage, "Unicorn"); // stronger as more HP
     }
-
+    /**
+     * Unicorn Constructor.
+     * @param m The monster data to be copied
+     */
+    public Unicorn(Monster m) {
+        super(m);
+    }
 }

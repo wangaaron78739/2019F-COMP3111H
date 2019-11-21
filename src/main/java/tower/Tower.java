@@ -3,6 +3,8 @@ package tower;
 import arena.logic.Arena;
 import static arena.logic.ArenaConstants.*;
 import monster.*;
+
+
 import java.util.HashMap;
 import java.lang.Math;
 
@@ -12,16 +14,27 @@ import java.lang.Math;
  * @author REN Jiming
  *
  */
-
 public class Tower {
+    private int id = 0;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private int attackPower;
     private int buildingCost;
     private int shootingRange;
-    private final int x;
-    private final int y;
-    private final String type;
+    private int x;
+    private int y;
+    private String type;
     private int upgradeCost;
-    
+
+    public Tower() {}
+
     /**
      * Tower Constructor
      * @param attackPower The attack power of the tower
@@ -39,6 +52,16 @@ public class Tower {
         this.y = y;
         this.type = type;
         this.upgradeCost = buildingCost;
+    }
+
+    public Tower(Tower t) {
+        this.attackPower = t.attackPower;
+        this.buildingCost = t.buildingCost;
+        this.shootingRange = t.shootingRange;
+        this.x = t.x;
+        this.y = t.y;
+        this.type = t.type;
+        this.upgradeCost = t.buildingCost;
     }
     
     /**
@@ -104,7 +127,23 @@ public class Tower {
     public int getY() {
         return y;
     }
-    
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setUpgradeCost(int upgradeCost) {
+        this.upgradeCost = upgradeCost;
+    }
+
     /**
      * Getter function for the type of the tower, i.e. Basic, Catapult, Ice, Laser
      * @return type The type of the tower
@@ -154,8 +193,8 @@ public class Tower {
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
     			double distanceToTower = Math.hypot(
-    					m.getXPx() - (this.x * GRID_WIDTH + GRID_WIDTH/2), 
-    					m.getYPx() - (this.y * GRID_HEIGHT + GRID_HEIGHT/2));
+    					m.getxPx() - (this.x * GRID_WIDTH + GRID_WIDTH/2),
+    					m.getyPx() - (this.y * GRID_HEIGHT + GRID_HEIGHT/2));
     			double distanceToEndZone = Math.hypot(	
     					m.getXPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH,
     					m.getYPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT );
