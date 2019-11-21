@@ -161,4 +161,3 @@ public class LaserTower extends Tower {
 		}
 	}
 } 
-

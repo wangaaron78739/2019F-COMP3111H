@@ -174,11 +174,11 @@ public class Catapult extends Tower {
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
     			double distance = Math.hypot(
-    					m.getXPx() - this.getX() * GRID_WIDTH - GRID_WIDTH/2, 
-    					m.getYPx() - this.getY() * GRID_HEIGHT - GRID_HEIGHT/2);
+    					m.getxPx() - this.getX() * GRID_WIDTH - GRID_WIDTH/2, 
+    					m.getyPx() - this.getY() * GRID_HEIGHT - GRID_HEIGHT/2);
     			double distanceToEndZone = Math.hypot(
-    					m.getYPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT, 
-    					m.getXPx() - (MAX_V_NUM_GRID - 0.5) * ARENA_WIDTH);
+    					m.getyPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT, 
+    					m.getxPx() - (MAX_V_NUM_GRID - 0.5) * ARENA_WIDTH);
     			if(distance <= (upperShootingRange + baseAttackRadius) && distance >= (lowerShootingRange - baseAttackRadius)){
     				if(!map.isEmpty() && distanceToEndZone < map.entrySet().iterator().next().getValue()){
     					map.remove(map.entrySet().iterator().next());
@@ -196,8 +196,8 @@ public class Catapult extends Tower {
 //    		for (Map.Entry<Monster, Double> entry : list) {
 //    			sorted.put(entry.getKey(), entry.getValue());
 //    		}
-    		int targetMonX = (int)(map.entrySet().iterator().next().getKey().getXPx());
-    		int targetMonY = (int)(map.entrySet().iterator().next().getKey().getYPx());
+    		int targetMonX = (int)(map.entrySet().iterator().next().getKey().getxPx());
+    		int targetMonY = (int)(map.entrySet().iterator().next().getKey().getyPx());
     		
     		//find the best pixel target
     		Pixel bestTarget = new Pixel (0,0);
