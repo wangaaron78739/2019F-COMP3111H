@@ -363,16 +363,19 @@ public class ArenaUI {
         for(Line pLine : LaserAttackTraceUI){
         	paneArena.getChildren().remove(pLine);
         }
+        LaserAttackTraceUI.clear();
         for(Tower t : Arena.getTowers()){
         	if(t.getType() == "Laser"){
         		LaserTower lt = (LaserTower) t;
         		if(Arena.getMonsterNum() > 0){
-        			LaserAttackTraceUI.add(lt.getAttackTrace());
-        			paneArena.getChildren().add(lt.getAttackTrace());
+        			if(lt.getAttackTrace()!= null){
+        				LaserAttackTraceUI.add(lt.getAttackTrace());
+        				paneArena.getChildren().add(lt.getAttackTrace());
+        			}
         		}
         	}
         }
-
+        
         //MONSTER
         if (Arena.getMonsterNum() < labelMonsters.size()) {
             while (Arena.getMonsterNum() < labelMonsters.size()) {
