@@ -46,6 +46,14 @@ public class LaserTower extends Tower {
 	} 
     
     /**
+     * Getter function for the attack power to be upgraded
+     * @return upgradeAttackPower The attack power to be upgraded
+     */
+    public int getUpgradeAttackPower(){
+    	return upgradeAttackPower;
+    }
+    
+    /**
      * Overriding method to decrease HP of the monster
      * @param target The monster whose HP to be decreased
      */

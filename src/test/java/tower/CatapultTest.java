@@ -120,8 +120,14 @@ public class CatapultTest {
 	public void testUpgrade(){
 		int resourceAmount = Resource.getResourceAmount();
 		Resource.addResourceAmount(tower.getUpgradeCost());
+		int ct = tower.getCooldown();
 		tower.upgrade();
 		assertEquals(resourceAmount, Resource.getResourceAmount());
-		assertEquals(tower.getCooldown(), tower.getCooldown() - tower.getUpgradeCooldownTime());
+		assertEquals(tower.getCooldown(), ct - tower.getUpgradeCooldownTime());
+	}
+	
+	@Test
+	public void testCanAttack(){
+		assertEquals(tower.canAttack(310, 310), true);
 	}
 }

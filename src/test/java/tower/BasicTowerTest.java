@@ -105,4 +105,9 @@ public class BasicTowerTest {
 		tower.implement(m1);
 		assertEquals(m1.getHP(), (1000 - tower.getAttackPower()));
 	}
+	
+	@Test
+	public void testCanAttack(){
+		assertEquals(tower.canAttack(270,270), true);
+	}
 }
