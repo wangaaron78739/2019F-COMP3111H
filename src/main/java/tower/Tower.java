@@ -193,16 +193,17 @@ public class Tower {
     		HashMap<Monster, Double> map = new HashMap<Monster, Double>();
     		for(Monster m: Arena.getMonsters()){
     			double distanceToTower = Math.hypot(
-    					m.getxPx() - (this.x * GRID_WIDTH + GRID_WIDTH/2),
-    					m.getyPx() - (this.y * GRID_HEIGHT + GRID_HEIGHT/2));
+    					(m.getxPx() - (this.x * GRID_WIDTH + GRID_WIDTH/2)),
+    					(m.getyPx() - (this.y * GRID_HEIGHT + GRID_HEIGHT/2)));
     			double distanceToEndZone = Math.hypot(	
-    					m.getxPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH,
-    					m.getyPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT );
+    					(m.getxPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH),
+    					(m.getyPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT));
     			if(distanceToTower <= shootingRange){
     				if(!map.isEmpty()){
     					HashMap.Entry<Monster, Double> set =  map.entrySet().iterator().next();
     					if(distanceToEndZone < set.getValue()){
-    						map.remove(set);
+    						map.remove(set.getKey());
+    						//map.clear();
     						map.put(m, distanceToEndZone);
     					}
     				}
