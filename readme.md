@@ -101,11 +101,11 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
         1. [x] All monsters placed at the radius of 25px of where the stone drop receive damage. (2)
         1. [x] After a stone is thrown, the Catapult take some times to reload the stone (cold down). During that period of time the Catapult will not be able to throw a stone again. (1)
             1. [x] Furthermore, implement the upgrade function of Catapult that the reload time/cold down time is shorten. (1)
-    1. [ ] Implement Laser Tower that:
-        1. [ ] it consumes some resources to attack a monster. (1)
-        1. [ ] draw a line from the center to the tower to the monster and extend beyond until it reach the edge of the Arena. (2)
-            1. [ ] Furthermore, all monsters on the line or within 3px away from the line will receive damage. (1)
-        1. [ ] Implement the upgrade function of Laser Tower that increase attack power of the tower. (1)   
+    1. [x] Implement Laser Tower that:
+        1. [x] it consumes some resources to attack a monster. (1)
+        1. [x] draw a line from the center to the tower to the monster and extend beyond until it reach the edge of the Arena. (2)
+            1. [x] Furthermore, all monsters on the line or within 3px away from the line will receive damage. (1)
+        1. [x] Implement the upgrade function of Laser Tower that increase attack power of the tower. (1)   
     1. *noted: you are allowed to determine the parameters and cost of your towers when it is not specified. For instance, we did not say if an Ice tower will give damage or not and you can decide that.*
 1. [ ] Monsters (15)
     1. [x] In every fixed period of time, one or more monsters will be generated in the arena from a fixed grid that the monster shows up. (2)
@@ -133,15 +133,13 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
     to a coordinate such that 
       
      1. [x] among all monsters falls into the attack range plus 25px (the stone radius), the one monster which
-   
        is nearest to the end-zone will be attacked; and (1)
         1. [x] the stone should thrown to the coordinate that hits most monsters; (2)
         1. [x] Rule for tie-breaking: If there are two monsters that are both considered nearest 
-          
           to the end-zone, the stone will be thrown towards the one that hits more monsters. If the same number of monsters
           are hit by the stone, choose any monster you wish. (1)
             1. [ ] Create a test case in JUnit to show your algorithm. (1)
-        1. [ ] *Note: a stone can be thrown to a grid that contains a tower if it make sense. The tower will not be destroy because of that.*
+        1. [x] *Note: a stone can be thrown to a grid that contains a tower if it make sense. The tower will not be destroy because of that.*
 1. [ ] Monster
     1. [x] All monster are able to walk towards the end-zone with a shortest path (choose any path if there are two shortest paths). (1)
         1. [x] Furthermore, Fox is a very wise monster that will not simply walk a shortest path. Fox will try to 
