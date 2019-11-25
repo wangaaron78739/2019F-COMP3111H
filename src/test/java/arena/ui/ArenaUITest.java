@@ -43,32 +43,32 @@ public class ArenaUITest extends ApplicationTest {
         release(new MouseButton[]{});
     }
 
-    @Test
-    public void isEnableBuildTowers_and_setEnableBuildTowers() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        arenaUI.getArena().buildTower(1,1,"Catapult");
-        Method setActiveCellMethod = ArenaUI.class.getDeclaredMethod("setActiveCell",int.class,int.class);
-        Method setHoveredCellMethod = ArenaUI.class.getDeclaredMethod("setHoveredCell",int.class,int.class);
-        Method upgradeActiveTowerMethod = ArenaUI.class.getDeclaredMethod("upgradeActiveTower");
-        Method deleteActiveTowerMethod = ArenaUI.class.getDeclaredMethod("deleteActiveTower");
-        setActiveCellMethod.setAccessible(true);
-        setHoveredCellMethod.setAccessible(true);
-        upgradeActiveTowerMethod.setAccessible(true);
-        deleteActiveTowerMethod.setAccessible(true);
-
-        setActiveCellMethod.invoke(arenaUI,1,1);
-        setActiveCellMethod.invoke(arenaUI,-1,-1);
-        setActiveCellMethod.invoke(arenaUI,1,1);
-        setHoveredCellMethod.invoke(arenaUI,1,1);
-        setHoveredCellMethod.invoke(arenaUI,-1,-1);
-        setHoveredCellMethod.invoke(arenaUI,1,1);
-        upgradeActiveTowerMethod.invoke(arenaUI);
-        deleteActiveTowerMethod.invoke(arenaUI);
-        setActiveCellMethod.invoke(arenaUI,1,1);
-        setHoveredCellMethod.invoke(arenaUI,1,1);
-
-
-        assert(ArenaUI.isEnableBuildTowers());
-        ArenaUI.setEnableBuildTowers(false);
-        assert(!ArenaUI.isEnableBuildTowers());
-    }
+//    @Test
+//    public void isEnableBuildTowers_and_setEnableBuildTowers() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+//        arenaUI.getArena().buildTower(1,1,"Catapult");
+//        Method setActiveCellMethod = ArenaUI.class.getDeclaredMethod("setActiveCell",int.class,int.class);
+//        Method setHoveredCellMethod = ArenaUI.class.getDeclaredMethod("setHoveredCell",int.class,int.class);
+//        Method upgradeActiveTowerMethod = ArenaUI.class.getDeclaredMethod("upgradeActiveTower");
+//        Method deleteActiveTowerMethod = ArenaUI.class.getDeclaredMethod("deleteActiveTower");
+//        setActiveCellMethod.setAccessible(true);
+//        setHoveredCellMethod.setAccessible(true);
+//        upgradeActiveTowerMethod.setAccessible(true);
+//        deleteActiveTowerMethod.setAccessible(true);
+//
+//        setActiveCellMethod.invoke(arenaUI,1,1);
+//        setActiveCellMethod.invoke(arenaUI,-1,-1);
+//        setActiveCellMethod.invoke(arenaUI,1,1);
+//        setHoveredCellMethod.invoke(arenaUI,1,1);
+//        setHoveredCellMethod.invoke(arenaUI,-1,-1);
+//        setHoveredCellMethod.invoke(arenaUI,1,1);
+//        upgradeActiveTowerMethod.invoke(arenaUI);
+//        deleteActiveTowerMethod.invoke(arenaUI);
+//        setActiveCellMethod.invoke(arenaUI,1,1);
+//        setHoveredCellMethod.invoke(arenaUI,1,1);
+//
+//
+//        assert(ArenaUI.isEnableBuildTowers());
+//        ArenaUI.setEnableBuildTowers(false);
+//        assert(!ArenaUI.isEnableBuildTowers());
+//    }
 }

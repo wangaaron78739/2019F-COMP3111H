@@ -88,8 +88,8 @@ public class LaserTower extends Tower {
 			HashMap<Monster, Double> map = new HashMap<Monster, Double>();
 			for(Monster m: Arena.getMonsters()){
 				double distanceToEndZone = Math.hypot(	
-    					m.getXPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH,
-    					m.getYPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT);
+    					m.getxPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH,
+    					m.getyPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT);
 				if(!map.isEmpty()){
 					HashMap.Entry<Monster, Double> set =  map.entrySet().iterator().next();
 					if(distanceToEndZone < set.getValue()){
@@ -101,8 +101,8 @@ public class LaserTower extends Tower {
 			}
 			if(map.isEmpty()) return;
 			
-			double targetMonX = map.entrySet().iterator().next().getKey().getXPx();
-    		double targetMonY = map.entrySet().iterator().next().getKey().getYPx();
+			double targetMonX = map.entrySet().iterator().next().getKey().getxPx();
+    		double targetMonY = map.entrySet().iterator().next().getKey().getyPx();
 			int towerX = getX() * GRID_WIDTH + GRID_WIDTH/2;
 			int towerY = getY() * GRID_HEIGHT + GRID_HEIGHT/2;
 			ArrayList<Monster> targetMonList = new ArrayList<Monster>();
@@ -131,19 +131,19 @@ public class LaserTower extends Tower {
 				double slope = (targetMonY - towerY)/(targetMonX - towerX);
 				double deltaY = 3 * Math.hypot(1 , slope);
 				for(Monster m : Arena.getMonsters()){
-					if(m.getYPx() > slope * (m.getXPx() - towerX) + towerY - deltaY &&
-							m.getYPx() < slope * (m.getXPx() - towerX) + towerY + deltaY){
+					if(m.getyPx() > slope * (m.getxPx() - towerX) + towerY - deltaY &&
+							m.getyPx() < slope * (m.getxPx() - towerX) + towerY + deltaY){
 						//System.out.printf("$$$In attack range$$$\n");
-						if(targetMonY > towerY && m.getYPx() > towerY) targetMonList.add(m);
-						if(targetMonY < towerY && m.getYPx() < towerY) targetMonList.add(m);
+						if(targetMonY > towerY && m.getyPx() > towerY) targetMonList.add(m);
+						if(targetMonY < towerY && m.getyPx() < towerY) targetMonList.add(m);
 					}
 				}
 			}
 			else{
 				for(Monster m : Arena.getMonsters()){
-					if(m.getXPx() < towerX + 3 && m.getXPx() > towerX - 3){
-						if(targetMonY > towerY && m.getYPx() > towerY) targetMonList.add(m);
-						if(targetMonY < towerY && m.getYPx() < towerY) targetMonList.add(m);
+					if(m.getxPx() < towerX + 3 && m.getxPx() > towerX - 3){
+						if(targetMonY > towerY && m.getyPx() > towerY) targetMonList.add(m);
+						if(targetMonY < towerY && m.getyPx() < towerY) targetMonList.add(m);
 					}
 				}
 			}
