@@ -1,64 +1,64 @@
 package arena.logic;
 
+import monster.Fox;
+import monster.Monster;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import tower.BasicTower;
+import tower.Tower;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
 
 public class ArenaTest {
     public Arena arena = null;
+    OutputStream os = null;
 
     @Before
     public void setUp() throws Exception {
         arena = new Arena();
+        os = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(os);
+        System.setOut(ps);
     }
 
     @After
     public void tearDown() throws Exception {
         arena = null;
-    }
-
-    @Test
-    public void loggingCoverage() {
-
+        PrintStream originalOut = System.out;
+        System.setOut(originalOut);
     }
 
     @Test
     public void logMonsterCreated() {
+        Arena.addMonster(100,100,"Penguin");
+        Monster mon = Arena.getMonsters().get(0);
+        assertEquals(String.format("%s:%d generated\n",mon.getType(),mon.getMaxHP()), os.toString());
     }
 
     @Test
     public void logTowerUpgrade() {
+        Tower tower = new BasicTower(1,1);
+        Arena.logTowerUpgrade(tower);
+        assertEquals(String.format("%s tower is being upgraded\n",tower.getType()),os.toString());
     }
 
     @Test
     public void logTowerUpgradeFailed() {
-    }
-
-    @Test
-    public void getTower() {
-    }
-
-    @Test
-    public void towerBuilt() {
-    }
-
-    @Test
-    public void towerBuiltType() {
-    }
-
-    @Test
-    public void setTowerBuilt() {
+        Tower tower = new BasicTower(1,1);
+        Arena.logTowerUpgradeFailed(tower);
+        assertEquals(String.format("not enough resource to upgrade %s tower\n",tower.getType()),os.toString());
     }
 
     @Test
     public void buildTower() {
         boolean success = Arena.buildTower(0,0,"Basic");
         assert(success);
-        System.out.println(Arena.getTower(0, 0).getType());
         assert(Arena.getTower(0, 0).getType().equals("Basic"));
         success = Arena.buildTower(0,0,"Catapult");
         assert(!success);
@@ -71,26 +71,6 @@ public class ArenaTest {
     @Test(expected = IllegalStateException.class)
     public void testBuildIllegalTower() {
         Arena.buildTower(0,0,"");
-    }
-    @Test
-    public void getMonsters() {
-    }
-
-    @Test
-    public void getResource() {
-    }
-
-    @Test
-    public void getTowers() {
-    }
-
-    @Test
-    public void getMonsterNum() {
-    }
-
-    @Test
-    public void getStage() {
-
     }
 
     @Test
@@ -127,10 +107,6 @@ public class ArenaTest {
         Arena.startGame();
         assert(Arena.isGameStarted());
         assert(Arena.getFrameCount()==-1);
-//        for(int i=0;i<50;i++) {
-//            Arena.nextFrame();
-//            assert(Arena.getFrameCount()==i);
-//        }
     }
 
 
