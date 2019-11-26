@@ -5,10 +5,10 @@
     * Default Usename: root
     * Default Password: root123!
     * Change in `src/main/resources/hibernate.cfg.xml` if different
-2. Run `mysql -u root -p < ArenaDataInit.sql` in the project dir (change username/password accordingly)
+2. Run `mysql -u root -p -e "source ArenaDataClean.sql"` in the project dir (change username/password accordingly)
 
 ## To Test
-* Before running the unit test, run `mysql -u root -p < ArenaDataClean.sql` to clear the database
+* Before running the unit test, run `mysql -u root -p -e "source ArenaDataClean.sql"` to clear the database
 
 ## Project Problem Statement and Activities
 

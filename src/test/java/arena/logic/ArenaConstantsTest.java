@@ -25,8 +25,4 @@ public class ArenaConstantsTest {
          assert(ArenaConstants.MONSTER_WIDTH == 15);
     }
 
-    @Test
-    public void assert_ArenaConstantsConstructor_ThrowsException() {
-
-    }
 }
