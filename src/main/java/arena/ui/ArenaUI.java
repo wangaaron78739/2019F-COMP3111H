@@ -85,6 +85,7 @@ public class ArenaUI {
     @FXML
     private Label labelEndZone;
 
+
     @FXML
     private static ArrayList<Label> labelProjectiles = new ArrayList<Label>();
 
@@ -158,12 +159,12 @@ public class ArenaUI {
             if (result.get() == Continue) {
                 Arena.setFrameCount(data.getFrameCount());
                 Resource.setResourceAmount(data.getResourceAmt());
-//                if (data.getGameState().equals("simulate")) {
-//                    Arena.startGame();
-//                    enableBuildTowers = false;
-//                }else if (data.getGameState().equals("play")) {
-//                    Arena.startGame();
-//                }
+                if (data.getGameState().equals("simulate")) {
+                    Arena.startGame();
+                    enableBuildTowers = false;
+                }else if (data.getGameState().equals("play")) {
+                    Arena.startGame();
+                }
                 for (Object obj: towers) {
                     Tower t = (Tower) obj;
                     Tower newTower;
@@ -216,11 +217,6 @@ public class ArenaUI {
                 newLabel.setMaxWidth(GRID_WIDTH);
                 newLabel.setMinHeight(GRID_HEIGHT);
                 newLabel.setMaxHeight(GRID_HEIGHT);
-//                if (i == MAX_H_NUM_GRID-1 && j == MAX_V_NUM_GRID-1) {
-//                    newLabel.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-////                    newLabel.setStyle("-fx-border-color: red;-fx-alignment: center;-fx-text-fill: red;");
-////                    newLabel.setText("End\nZone");
-//                }
                 newLabel.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
                 newLabel.setStyle("-fx-border-color: black;");
                 newLabel.setId(String.format("label x:%d,y:%d", j, i));
@@ -333,7 +329,7 @@ public class ArenaUI {
     }
 
     @FXML
-    private void updateUI() {
+    void updateUI() {
         //TODO:
         labelFrameCount.setText(String.format("FrameCount: %d",Arena.getFrameCount()));
         //TOWER
@@ -493,6 +489,8 @@ public class ArenaUI {
             setActiveRangeUI(0,0,0);
             if (activeCellX != -1 && activeCellY != -1)
                 grids[activeCellY][activeCellX].setStyle("-fx-border-color: black;");
+            activeCellX = x;
+            activeCellY = y;
             return;
         }
         if (activeCellX != -1 && activeCellY != -1) {
@@ -514,6 +512,8 @@ public class ArenaUI {
             setHoveredRangeUI(0,0,0);
             if (hoveredCellX != -1 && hoveredCellY != -1)
                 grids[hoveredCellY][hoveredCellX].setStyle("-fx-border-color: black;");
+            hoveredCellX = x;
+            hoveredCellY = y;
             return;
         }
         if (hoveredCellX != -1 && hoveredCellY != -1) {
