@@ -101,7 +101,7 @@ public class LaserTower extends Tower {
 				if(!map.isEmpty()){
 					HashMap.Entry<Monster, Double> set =  map.entrySet().iterator().next();
 					if(distanceToEndZone < set.getValue()){
-						map.remove(set);
+						map.clear();
 						map.put(m, distanceToEndZone);
 					}
 				}
@@ -139,17 +139,17 @@ public class LaserTower extends Tower {
 				double slope = (targetMonY - towerY)/(targetMonX - towerX);
 				double deltaY = 3 * Math.hypot(1 , slope);
 				for(Monster m : Arena.getMonsters()){
-					if(m.getyPx() > slope * (m.getxPx() - towerX) + towerY - deltaY &&
-							m.getyPx() < slope * (m.getxPx() - towerX) + towerY + deltaY){
+					if(m.getyPx() >= slope * (m.getxPx() - towerX) + towerY - deltaY &&
+							m.getyPx() <= slope * (m.getxPx() - towerX) + towerY + deltaY){
 						//System.out.printf("$$$In attack range$$$\n");
-						if(targetMonY > towerY && m.getyPx() > towerY) targetMonList.add(m);
-						if(targetMonY < towerY && m.getyPx() < towerY) targetMonList.add(m);
+						if(targetMonX > towerX && m.getxPx() > towerX) targetMonList.add(m);
+						if(targetMonX < towerX && m.getxPx() < towerX) targetMonList.add(m);
 					}
 				}
 			}
 			else{
 				for(Monster m : Arena.getMonsters()){
-					if(m.getxPx() < towerX + 3 && m.getxPx() > towerX - 3){
+					if(m.getxPx() <= towerX + 3 && m.getxPx() >= towerX - 3){
 						if(targetMonY > towerY && m.getyPx() > towerY) targetMonList.add(m);
 						if(targetMonY < towerY && m.getyPx() < towerY) targetMonList.add(m);
 					}
