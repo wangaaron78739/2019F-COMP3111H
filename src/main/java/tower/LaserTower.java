@@ -1,15 +1,5 @@
 package tower;
 
-/**
- * <p>
- * Class for LaserTower, which consumes some resources to attack a monster.
- * <p>
- * The LaserTower draws a line from the center to the tower to the monster and extends beyond until it reaches the edge of the Arena. 
- * <p>
- * Furthermore, it brings damage to all monsters on the line or within 3px away from the line.
- * @author REN Jiming
- */
-
 import java.util.HashMap;
 import java.util.ArrayList;
 import arena.logic.Arena;
@@ -19,6 +9,16 @@ import monster.Monster;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.shape.Line;
+
+/**
+ * <p>
+ * Class for LaserTower, which consumes some resources to attack a monster.
+ * <p>
+ * The LaserTower draws a line from the center to the tower to the monster and extends beyond until it reaches the edge of the Arena. 
+ * <p>
+ * Furthermore, it brings damage to all monsters on the line or within 3px away from the line.
+ * @author REN Jiming
+ */
 
 public class LaserTower extends Tower {
     private static final int baseAttackPower = 20;
