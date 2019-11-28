@@ -11,19 +11,18 @@ import monster.*;
 
 public class CatapultTest {
 
-	private Arena arena = null;
 	private Catapult tower = null;
 	//private LinkedList<Monster> monsterList = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		arena = new Arena();
+		Arena.initArena();
 		tower = new Catapult(6,6);
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		arena = null;
+		Arena.initArena();
 		tower = null;
 	}
 

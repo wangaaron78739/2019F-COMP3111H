@@ -17,7 +17,6 @@ import static org.junit.Assert.*;
  */
 
 public class FoxTest {
-	public Arena arena = null;
 	public Fox fox = null;
 
 	/**
@@ -30,7 +29,7 @@ public class FoxTest {
      */
 	@Before
 	public void setUp() {
-		arena = new Arena(); // create the arena with the same attributes as the one in the real game
+		Arena.initArena(); // create the arena with the same attributes as the one in the real game
 		fox = new Fox(0, 0, 1);
 	}
 	
@@ -43,7 +42,7 @@ public class FoxTest {
 	@After
 	public void tearDown() {
 		fox = null;
-		arena = null;
+		Arena.initArena();
 	}
 	
 	/**

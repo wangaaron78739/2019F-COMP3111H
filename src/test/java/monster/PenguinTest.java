@@ -17,7 +17,6 @@ import static org.junit.Assert.*;
  */
 
 public class PenguinTest {
-	public Arena arena = null;
 	public Penguin penguin = null;
 	
 	/**
@@ -30,7 +29,7 @@ public class PenguinTest {
      */
 	@Before
 	public void setUp() {
-		arena = new Arena(); // create the arena with the same attributes as the one in the real game
+		Arena.initArena(); // create the arena with the same attributes as the one in the real game
 		penguin = new Penguin(0,0,1);
 	}
 	
@@ -43,7 +42,7 @@ public class PenguinTest {
 	@After
 	public void tearDown() {
 		penguin = null;
-		arena = null;
+		Arena.initArena();
 	}
 	
 	/**

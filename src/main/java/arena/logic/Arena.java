@@ -18,8 +18,8 @@ import static arena.logic.ArenaConstants.*;
  */
 public class Arena {
 
-    private static String[][] towerBuilt;
-    private static boolean[][] towerShot;
+    private static String[][] towerBuilt = new String[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
+    private static boolean[][] towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Random rand = new Random();
@@ -45,11 +45,12 @@ public class Arena {
 
     private static final int monsterKillResource = 100;
 
+    private Arena() {}
 
     /**
-     * Arena Constructor
+     * Initialize Arena
      */
-    public Arena() {
+    public static void initArena() {
         Resource.setResourceAmount(INITIAL_RESOURCE_NUM);
         towerBuilt = new String[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
         towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
@@ -212,7 +213,7 @@ public class Arena {
     /**
      * Reset all tower shot to false (to display regular image of towers)
      */
-    public static void resetShot() {
+    private static void resetShot() {
         towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
     }
 
