@@ -3,7 +3,7 @@ package arena.logic;
 import static arena.logic.ArenaConstants.INITIAL_RESOURCE_NUM;
 
 /**
- * Class to store the Resources uses Singlton Design Pattern
+ * Class to store the Resources uses Singleton Design Pattern
  * @author Aaron WANG
  */
 public final class Resource {

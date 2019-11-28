@@ -18,7 +18,6 @@ import static arena.logic.ArenaConstants.*;
  */
 
 public class MonsterTest {
-	public Arena arena = null;
 	public Monster monster = null;
 	
 	/**
@@ -33,7 +32,7 @@ public class MonsterTest {
      */
 	@Before
 	public void setUp() {
-		arena = new Arena(); // create the arena with the same attributes as the one in the real game
+		Arena.initArena(); // create the arena with the same attributes as the one in the real game
 		monster = new Monster(0,0,2,1000,"Unicorn"); // we are using Unicorn as it's the only one that doesn't have move() overrided.
 	}
 	
@@ -46,7 +45,7 @@ public class MonsterTest {
 	@After
 	public void tearDown() {
 		monster = null;
-		arena = null;
+		Arena.initArena();
 	}
 	
 	/**

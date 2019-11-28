@@ -13,19 +13,18 @@ import org.junit.Test;
 
 public class LaserTowerTest {
 
-	private Arena arena = null;
 	private LaserTower tower = null;
 	//private LinkedList<Monster> monsterList = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		arena = new Arena();
+		Arena.initArena();
 		tower = new LaserTower(6,6);
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		arena = null;
+		Arena.initArena();
 		tower = null;
 	}
 

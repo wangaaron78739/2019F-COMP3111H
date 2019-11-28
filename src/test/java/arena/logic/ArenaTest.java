@@ -16,12 +16,11 @@ import java.util.Objects;
 import static org.junit.Assert.*;
 
 public class ArenaTest {
-    public Arena arena = null;
     OutputStream os = null;
 
     @Before
     public void setUp() throws Exception {
-        arena = new Arena();
+        Arena.initArena();
         os = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(os);
         System.setOut(ps);
@@ -29,7 +28,7 @@ public class ArenaTest {
 
     @After
     public void tearDown() throws Exception {
-        arena = null;
+        Arena.initArena();
         PrintStream originalOut = System.out;
         System.setOut(originalOut);
     }

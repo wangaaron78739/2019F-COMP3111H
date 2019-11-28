@@ -112,8 +112,7 @@ public class ArenaUI {
 
     @FXML
     private ArrayList<Line> LaserAttackTraceUI = new ArrayList<Line>();
-    
-    private static Arena arena = null;
+
     private static Label grids[][] = new Label[MAX_V_NUM_GRID][MAX_H_NUM_GRID]; //the grids on arena
     private static int activeCellX = -1;
     private static int activeCellY = -1;
@@ -146,9 +145,7 @@ public class ArenaUI {
      */
     @FXML
     public void createArena() {
-        if (arena != null)
-            return;
-        arena = new Arena();
+        Arena.initArena();
         final Session session = factory.openSession();
         List monsters = new LinkedList<Monster>();
         List towers = new LinkedList<Tower>();
@@ -273,14 +270,6 @@ public class ArenaUI {
         setDragAndDrop();
         startUpdateUILoop();
         startUpdateArenaData();
-    }
-
-    /**
-     * Get the Arena object
-     * @return arena object
-     */
-    public static Arena getArena() {
-        return arena;
     }
 
     /**
@@ -778,7 +767,7 @@ class DragDroppedEventHandler implements EventHandler<DragEvent> {
         m.find();
         int x = Integer.parseInt(m.group(1));
         int y = Integer.parseInt(m.group(2));
-        if (ArenaUI.getArena().buildTower(x, y, db.getString())) {
+        if (Arena.buildTower(x, y, db.getString())) {
 //            System.out.println(db.getString());
             success = true;
         }

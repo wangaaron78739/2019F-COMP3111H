@@ -9,20 +9,19 @@ import arena.logic.*;
 import monster.*;
 
 public class BasicTowerTest {
-	
-	private Arena arena = null;
+
 	private BasicTower tower = null;
 	//private LinkedList<Monster> monsterList = null;
 	
 	@Before
 	public void setUp() throws Exception {
-		arena = new Arena();
+		Arena.initArena();
 		tower = new BasicTower(6,6);
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		arena = null;
+		Arena.initArena();
 		tower = null;
 	}
 	
