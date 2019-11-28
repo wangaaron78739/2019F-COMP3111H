@@ -10,6 +10,9 @@
 ## To Test
 * Before running the unit test, run `mysql -u root -p -e "source ArenaDataClean.sql"` to clear the database
 
+## How to Start Spring Server
+* Run  `./gradlew bootRun` inside SpringServer file
+
 ## Project Problem Statement and Activities
 
  > **Activity 1 Due (2%): 14-10-2019 (Wk 7 Mon) 20:00**
