@@ -1,16 +1,5 @@
 package tower;
 
-/**
- * <p>
- * Class for Catapult, which takes sometime to reload after each attack.
- * <p>
- * Catapult throws a stone (attacks) to a coordinate less than 150 px
- * but more than 50 px away from the center of the it.
- * <p>
- * All monsters placed at the radius of 25px of where the stone drop receive damage.
- * 
- * @author REN Jiming
- */
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,6 +12,17 @@ import javafx.scene.control.ButtonType;
 import monster.Monster;
 import static arena.logic.ArenaConstants.*;
 
+/**
+ * <p>
+ * Class for Catapult, which takes sometime to reload after each attack.
+ * <p>
+ * Catapult throws a stone (attacks) to a coordinate less than 150 px
+ * but more than 50 px away from the center of the it.
+ * <p>
+ * All monsters placed at the radius of 25px of where the stone drop receive damage.
+ * 
+ * @author REN Jiming
+ */
 
 public class Catapult extends Tower {
     private static final int baseAttackPower = 50;
