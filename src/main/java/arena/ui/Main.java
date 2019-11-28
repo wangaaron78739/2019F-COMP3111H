@@ -6,8 +6,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main class to start application
+ * @author Aaron WANG
+ */
 public class Main extends Application {
 
+    /**
+     * start the arena with FXML
+     * @param primaryStage primary FXML window
+     * @throws Exception errors
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/arena.fxml"));
@@ -20,7 +29,17 @@ public class Main extends Application {
     }
 
 
+    /**
+     * main function
+     * @param args arguments to be passed to main
+     */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    /**
+     * Default Constructor
+     */
+    public Main() {
     }
 }

@@ -181,7 +181,7 @@ public class Catapult extends Tower {
      * Find the pixel whose range (+-25 pixels) include the input (x, y) as well as the largest number of monsters
      * @param tm x
      * @param tn y
-     * @return
+     * @return returns the pixel with largest number of monsters
      */
     public Pixel findBestPixel(int tm, int tn){
     	Pixel bestTarget = new Pixel (0,0);
