@@ -7,16 +7,15 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ResourceTest {
-    private Resource resource = null;
 
     @Before
     public void setUp() throws Exception {
-        resource = new Resource(1000);
+        Resource.setResourceAmount(1000);
     }
 
     @After
     public void tearDown() throws Exception {
-        resource = null;
+        Resource.setResourceAmount(1000);
     }
 
     @Test

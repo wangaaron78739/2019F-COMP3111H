@@ -20,11 +20,9 @@ public class Arena {
 
     private static String[][] towerBuilt;
     private static boolean[][] towerShot;
-//    private static LinkedList<LaserProjectile> projectiles = new LinkedList<LaserProjectile>();
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
     private static Random rand = new Random();
-    private static Resource resource;
     
     /**
      * <p>
@@ -32,14 +30,14 @@ public class Arena {
      * <p>
      * Monster would always be generated from that zone.
      */
-    public static int MonsterStartXGrid = 2;
+    private static int MonsterStartXGrid = 2;
     /**
      * <p>
      * An integer representing the y-coordinate (in grids) of the Monster's start zone.
      * <p>
      * Monster would always be generated from that zone.
      */
-    public static int MonsterStartYGrid = 0;
+    private static int MonsterStartYGrid = 0;
 
     private static int FrameCount = -1; // changed to -1, so it can generate monster from the starting time
     private static int EachStageCount = 500; // larger stage, stronger monster
@@ -52,7 +50,7 @@ public class Arena {
      * Arena Constructor
      */
     public Arena() {
-        resource = new Resource(INITIAL_RESOURCE_NUM);
+        Resource.setResourceAmount(INITIAL_RESOURCE_NUM);
         towerBuilt = new String[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
         towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
         for (String[] row: towerBuilt) {
@@ -292,14 +290,6 @@ public class Arena {
      */
     public static LinkedList<Monster> getMonsters() {
         return monsters;
-    }
-
-    /**
-     * Gets the Resource object of the arena
-     * @return The Resource object of the arena
-     */
-    public static Resource getResource() {
-        return resource;
     }
 
     /**

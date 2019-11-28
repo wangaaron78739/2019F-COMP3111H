@@ -1,26 +1,23 @@
 package arena.logic;
 
+import static arena.logic.ArenaConstants.INITIAL_RESOURCE_NUM;
+
 /**
- * Class to store the Resources
+ * Class to store the Resources uses Singlton Design Pattern
  * @author Aaron WANG
  */
-public class Resource {
-    private static int resourceAmount;
+public final class Resource {
+    private int resourceAmount = INITIAL_RESOURCE_NUM;
+    private static final Resource INSTANCE = new Resource();
+    private Resource() {}
 
-    /**
-     * Constructor for Resource Object
-     * @param initAmount initial resource amount
-     */
-    public Resource(int initAmount) {
-        resourceAmount = initAmount;
-    }
 
     /**
      * Getter method for resourceAmount
      * @return current resource amount
      */
     public static int getResourceAmount() {
-        return resourceAmount;
+        return INSTANCE.resourceAmount;
     }
 
     /**
@@ -30,7 +27,7 @@ public class Resource {
      */
     public static boolean deductAmount(int amount) {
         if (canDeductAmount(amount)) {
-            resourceAmount -= amount;
+            INSTANCE.resourceAmount -= amount;
             return true;
         }
         return false;
@@ -42,7 +39,7 @@ public class Resource {
      * @return boolean of whether it can be deducted (true if yes)
      */
     public static boolean canDeductAmount(int am) {
-        return resourceAmount >= am && am >=0;
+        return INSTANCE.resourceAmount >= am && am >=0;
     }
 
     /**
@@ -50,7 +47,7 @@ public class Resource {
      * @param resourceAmount new value for resourceAmount
      */
     public static void setResourceAmount(int resourceAmount) {
-        Resource.resourceAmount = resourceAmount;
+        INSTANCE.resourceAmount = resourceAmount;
     }
 
     /**
@@ -58,6 +55,6 @@ public class Resource {
      * @param resourceAmount amount to be added
      */
     public static void addResourceAmount(int resourceAmount) {
-        Resource.resourceAmount += resourceAmount;
+        INSTANCE.resourceAmount += resourceAmount;
     }
 }
