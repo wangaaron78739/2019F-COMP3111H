@@ -31,7 +31,7 @@ public class CatapultTest {
 	public void assert_CatapultConstants_AssertPropertiesCorrect(){
 		assertEquals(tower.getAttackPower(),50);
 		assertEquals(tower.getBuildingCost(),100);
-		assertEquals(tower.getShootingRange(),100);
+		assertEquals(tower.getShootingRange(),150);
 		assertEquals(tower.getX(),6);
 		assertEquals(tower.getY(),6);
 		assertEquals(tower.getType(),"Catapult");

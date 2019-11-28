@@ -55,13 +55,13 @@ public class Tower {
     }
 
     public Tower(Tower t) {
-        this.attackPower = t.attackPower;
-        this.buildingCost = t.buildingCost;
-        this.shootingRange = t.shootingRange;
-        this.x = t.x;
-        this.y = t.y;
-        this.type = t.type;
-        this.upgradeCost = t.buildingCost;
+        this.attackPower = t.getAttackPower();
+        this.buildingCost = t.getBuildingCost();
+        this.shootingRange = t.getShootingRange();
+        this.x = t.getX();
+        this.y = t.getY();
+        this.type = t.getType();
+        this.upgradeCost = t.getBuildingCost();
     }
     
     /**

@@ -46,6 +46,10 @@ public class Arena {
 
     private static final int monsterKillResource = 100;
 
+
+
+    private static int monsterKillCount = 0;
+
     /**
      * Arena Constructor
      */
@@ -374,6 +378,7 @@ public class Arena {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
                 m.setTypeDeath(); // image of monster replaced by collision.png
+                incrementMonsterKillCount();
             }
         });
         Monster.updateGrids();
@@ -396,5 +401,13 @@ public class Arena {
 
     public static void setFrameCount(int frameCount) {
         FrameCount = frameCount;
+    }
+
+    public static int getMonsterKillCount() {
+        return monsterKillCount;
+    }
+
+    private static void incrementMonsterKillCount() {
+        Arena.monsterKillCount += 1;
     }
 }
