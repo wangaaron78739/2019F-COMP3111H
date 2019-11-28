@@ -31,7 +31,7 @@ public class Arena {
      * <p>
      * Monster would always be generated from that zone.
      */
-    public static int MonsterStartXGrid = 0;
+    public static int MonsterStartXGrid = 2;
     /**
      * <p>
      * An integer representing the y-coordinate (in grids) of the Monster's start zone.
@@ -62,11 +62,6 @@ public class Arena {
         }
         monsters = new LinkedList<Monster>();
         towers = new LinkedList<Tower>();
-        // initialize grid index for monster generation
-        Random rand = new Random();
-
-        MonsterStartXGrid = rand.nextInt(4);
-        MonsterStartYGrid = rand.nextInt(4);
     }
 
     public static void logAttack(Tower tower, Monster mon) {
@@ -244,6 +239,7 @@ public class Arena {
         if (monsterNumInCell(x, y) != 0) return false;
         if (!buildTowerPathValid(x, y)) return false;
         if (x == MAX_H_NUM_GRID-1 && y == MAX_V_NUM_GRID-1) return false;
+        if (x == 2 && y == 0) return false;
         towers.add(tower);
         setTowerBuilt(x,y,towerType);
         Resource.deductAmount(tower.getBuildingCost());

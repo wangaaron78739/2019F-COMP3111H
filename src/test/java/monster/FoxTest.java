@@ -143,7 +143,7 @@ public class FoxTest {
      */
 	@Test
 	public void givenArenaWithOneTowerCase3_whenUpdateGridFox_assertCellBesideEndZoneCanBeUpdated() {
-		Arena.buildTower(2, 0, "Basic");
+		Arena.buildTower(3, 0, "Basic");
 		Arena.getMonsters().add(fox);
 		Fox.updateTowerCount();
 		assertEquals(1, fox.getTowerCount());
