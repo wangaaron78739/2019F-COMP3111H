@@ -90,6 +90,8 @@ public class ArenaUI {
     @FXML
     private Label labelEndZone;
 
+    @FXML
+    private Label labelStartZone;
 
     @FXML
     private static ArrayList<Label> labelProjectiles = new ArrayList<Label>();
@@ -232,6 +234,15 @@ public class ArenaUI {
                 grids[i][j] = newLabel;
                 paneArena.getChildren().addAll(newLabel);
             }
+        labelStartZone = new Label();
+        labelStartZone.setLayoutX(GRID_WIDTH*2);
+        labelStartZone.setLayoutY(0);
+        labelStartZone.setMinWidth(GRID_WIDTH);
+        labelStartZone.setMaxWidth(GRID_WIDTH);
+        labelStartZone.setMinHeight(GRID_HEIGHT);
+        labelStartZone.setMaxHeight(GRID_HEIGHT);
+        labelStartZone.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/startGrid.png")));
+        paneArena.getChildren().addAll(labelStartZone);
         labelEndZone = new Label();
         labelEndZone.setLayoutX((MAX_V_NUM_GRID-1) * GRID_WIDTH);
         labelEndZone.setLayoutY((MAX_H_NUM_GRID-1) * GRID_HEIGHT);

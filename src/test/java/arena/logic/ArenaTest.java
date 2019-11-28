@@ -97,6 +97,8 @@ public class ArenaTest {
         Arena.upgradeTowerAt(0,0);
         Arena.buildTower(0,0,"Basic");
         Arena.upgradeTowerAt(0,0);
+        assert(Arena.getTower(0,0)!=null);
+        assert(Arena.getTower(0,0).getAttackPower()==45);
     }
 
     @Test
