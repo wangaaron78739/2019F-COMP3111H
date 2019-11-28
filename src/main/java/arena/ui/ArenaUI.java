@@ -31,6 +31,11 @@ import org.hibernate.query.Query;
 import tower.*;
 
 import javax.persistence.metamodel.EntityType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -184,6 +189,10 @@ public class ArenaUI {
                         default:
                             throw new IllegalStateException("Unexpected value: " + t.getType());
                     }
+                    newTower.setAttackPower(t.getAttackPower());
+                    newTower.setBuildingCost(t.getBuildingCost());
+                    newTower.setShootingRange(t.getShootingRange());
+                    newTower.setUpgradeCost(t.getUpgradeCost());
                     Arena.getTowers().add(newTower);
                     Arena.setTowerBuilt(t.getX(),t.getY(),t.getType());
                 }
@@ -232,10 +241,10 @@ public class ArenaUI {
         labelEndZone.setMaxHeight(GRID_HEIGHT);
         labelEndZone.setGraphic(ArenaUIUtils.setIcon(ArenaUIUtils.getImage("/endZone.png")));
         paneArena.getChildren().addAll(labelEndZone);
-        setHoveredRangeUI(0,0,0);
+        setHoveredRangeUI(0,0,0,"");
         hoveredRangeUI.setMouseTransparent(true);
         paneArena.getChildren().addAll(hoveredRangeUI);
-        setActiveRangeUI(0,0,0);
+        setActiveRangeUI(0,0,0,"");
         activeRangeUI.setMouseTransparent(true);
         paneArena.getChildren().addAll(activeRangeUI);
         setDragAndDrop();
@@ -308,18 +317,58 @@ public class ArenaUI {
         }
     }
 
+    private String getHighScoreRequest(int newScore) throws IOException {
+        String url = "http://localhost:8080/highscores?newScore="+ newScore;
+        URL urlForGetRequest = new URL(url);
+        String readLine = null;
+        HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
+        conection.setRequestMethod("GET");
+        int responseCode = conection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(conection.getInputStream()));
+            StringBuffer response = new StringBuffer();
+            while ((readLine = in .readLine()) != null) {
+                response.append(readLine);
+            } in.close();
+            // print result
+            String result = response.toString();
+            System.out.println("JSON String Result " + result);
+            return response.toString().substring(1,result.length()-1);
+            //GetAndPost.POSTRequest(response.toString());
+        } else {
+            System.out.println("GET NOT WORKED");
+        }
+        return "";
+    }
+
     private void startUpdateUILoop() {
+
     	Alert alert = new Alert(AlertType.WARNING);
     	alert.setTitle("Game Over!");
     	alert.setHeaderText(null);
-    	alert.setContentText("No Monster movement or Tower attack from now on!");
         Timeline timer = new Timeline(new KeyFrame(Duration.millis(UPDATE_INTERVAL), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 updateUI();
                 if (!Monster.gameEnds()) Arena.nextFrame();
                 else if (!gameOverShown) {
-                	alert.show();
+                    int score = (Arena.getMonsterKillCount()*100);
+                    StringBuilder topScores = new StringBuilder("Leaderboard:\n");
+                    try {
+                        String[] rawInput = getHighScoreRequest(score).split(",");
+                        for(int i=0;i<rawInput.length;i++) {
+                            topScores.append(String.format("%d: %s\n", i+1, rawInput[i]));
+                        }
+                        if(rawInput.length != 10) {
+                            topScores = new StringBuilder("Cannot Reach Leaderboard Server");
+                        }
+                    } catch (IOException e) {
+                        topScores = new StringBuilder("Cannot Reach Leaderboard Server");
+                        e.printStackTrace();
+                    }
+                    alert.setContentText(String.format("Your Score: %d \n%s",score,topScores.toString()));
+                    alert.show();
                 	gameOverShown = true;
                 }
             }
@@ -329,7 +378,7 @@ public class ArenaUI {
     }
 
     @FXML
-    void updateUI() {
+    private void updateUI() {
         //TODO:
         labelFrameCount.setText(String.format("FrameCount: %d",Arena.getFrameCount()));
         //TOWER
@@ -455,16 +504,15 @@ public class ArenaUI {
 
     @FXML
     private void playStart() {
-        //TODO:
-        System.out.println("Play button clicked");
+//        System.out.println("Play button clicked");
+        if (Arena.isGameStarted()) return;
         Arena.startGame();
-
-//        Arena.addMonster(x+= 10,y+= 10, "Fox");
     }
 
     @FXML
     private void simulateStart() {
         //TODO:
+        if (Arena.isGameStarted()) return;
         Arena.startGame();
         setEnableBuildTowers(false);
     }
@@ -486,7 +534,7 @@ public class ArenaUI {
 
     private void setActiveCell(int x,int y) {
         if (x == -1 && y == -1) {
-            setActiveRangeUI(0,0,0);
+            setActiveRangeUI(0,0,0,"");
             if (activeCellX != -1 && activeCellY != -1)
                 grids[activeCellY][activeCellX].setStyle("-fx-border-color: black;");
             activeCellX = x;
@@ -498,9 +546,9 @@ public class ArenaUI {
         }
         Tower t = Arena.getTower(x, y);
         if (t != null) {
-            setActiveRangeUI(x,y,t.getShootingRange());
+            setActiveRangeUI(x,y,t.getShootingRange(),t.getType());
         } else {
-            setActiveRangeUI(0,0,0);
+            setActiveRangeUI(0,0,0,"");
         }
         activeCellX = x;
         activeCellY = y;
@@ -509,7 +557,7 @@ public class ArenaUI {
 
     private void setHoveredCell(int x,int y) {
         if (x == -1 && y == -1) {
-            setHoveredRangeUI(0,0,0);
+            setHoveredRangeUI(0,0,0,"");
             if (hoveredCellX != -1 && hoveredCellY != -1)
                 grids[hoveredCellY][hoveredCellX].setStyle("-fx-border-color: black;");
             hoveredCellX = x;
@@ -522,9 +570,9 @@ public class ArenaUI {
         }
         Tower t = Arena.getTower(x, y);
         if (t != null) {
-            setHoveredRangeUI(x,y,t.getShootingRange());
+            setHoveredRangeUI(x,y,t.getShootingRange(),t.getType());
         } else {
-            setHoveredRangeUI(0,0,0);
+            setHoveredRangeUI(0,0,0,"");
         }
         hoveredCellX = x;
         hoveredCellY = y;
@@ -533,16 +581,52 @@ public class ArenaUI {
         }
     }
 
-    private void setHoveredRangeUI(int x, int y, int r) {
+    private void setHoveredRangeUI(int x, int y, int r, String towerType) {
+        if (towerType.equals("Laser")) {
+            hoveredRangeUI.setCenterX(0);
+            hoveredRangeUI.setCenterY(0);
+            hoveredRangeUI.setRadius(0);
+            hoveredRangeUI.setStrokeWidth(0);
+            return;
+        }
+        if (towerType.equals("Catapult")) {
+            hoveredRangeUI.setCenterX(x * GRID_WIDTH + GRID_WIDTH/2);
+            hoveredRangeUI.setCenterY(y * GRID_HEIGHT + GRID_HEIGHT/2);
+            hoveredRangeUI.setRadius(r-50);
+            hoveredRangeUI.setStroke(new Color(0.5,0.7,1,0.5));
+            hoveredRangeUI.setStrokeWidth(100);
+            hoveredRangeUI.setFill(null);
+            return;
+        }
+        hoveredRangeUI.setFill(new Color(0.5,0.7,1,0.5));
         hoveredRangeUI.setCenterX(x * GRID_WIDTH + GRID_WIDTH/2);
         hoveredRangeUI.setCenterY(y * GRID_HEIGHT + GRID_HEIGHT/2);
         hoveredRangeUI.setRadius(r);
+        hoveredRangeUI.setStrokeWidth(0);
     }
 
-    private void setActiveRangeUI(int x, int y, int r) {
+    private void setActiveRangeUI(int x, int y, int r, String towerType) {
+        if (towerType.equals("Laser")) {
+            activeRangeUI.setCenterX(0);
+            activeRangeUI.setCenterY(0);
+            activeRangeUI.setRadius(0);
+            activeRangeUI.setStrokeWidth(0);
+            return;
+        }
+        if (towerType.equals("Catapult")) {
+            activeRangeUI.setCenterX(x * GRID_WIDTH + GRID_WIDTH/2);
+            activeRangeUI.setCenterY(y * GRID_HEIGHT + GRID_HEIGHT/2);
+            activeRangeUI.setRadius(r-50);
+            activeRangeUI.setStroke(new Color(1,0.5,0,0.5));
+            activeRangeUI.setStrokeWidth(100);
+            activeRangeUI.setFill(null);
+            return;
+        }
+        activeRangeUI.setFill(new Color(1,0.5,0,0.5));
         activeRangeUI.setCenterX(x * GRID_WIDTH + GRID_WIDTH/2);
         activeRangeUI.setCenterY(y * GRID_HEIGHT + GRID_HEIGHT/2);
         activeRangeUI.setRadius(r);
+        activeRangeUI.setStrokeWidth(0);
     }
 
     private void setDragAndDrop() {

@@ -27,7 +27,7 @@ import static arena.logic.ArenaConstants.*;
 public class Catapult extends Tower {
     private static final int baseAttackPower = 50;
     private static final int baseBuildingCost = 100;
-    private static final int baseShootingRange = 100;
+    private static final int baseShootingRange = 150;
     private static final int upperShootingRange = 150;
     private static final int lowerShootingRange = 50;
     private static final int baseAttackRadius = 25;
