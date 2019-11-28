@@ -61,14 +61,25 @@ public class Monster {
 
 	private int id;
 
+	/**
+	 * Default Monster Constructor
+	 */
 	public Monster() {
 
 	}
 
+	/**
+	 * Get id of monster (for hibernate)
+	 * @return id of monster
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Set id of monster (for hibernate)
+	 * @param id new id of monster
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -100,7 +111,11 @@ public class Monster {
     	}
     }
 
-    public Monster(Monster m) {
+	/**
+	 * Monster copy constructor
+	 * @param m monster object to be copied
+	 */
+	public Monster(Monster m) {
 		this.xPx = m.xPx;
 		this.yPx = m.yPx;
 		this.HP = m.HP;
@@ -134,6 +149,10 @@ public class Monster {
         return yPx;
     }
 
+	/**
+	 * Setter function for the type of monster
+	 * @param type Type of monster
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -217,6 +236,7 @@ public class Monster {
 	 * Setter function for the moving direction of the Monster.
 	 * <p>
 	 * A monster can have four directions to move, "Up", "Down", "Left" and "Right".
+	 * @param direction new value of direction
 	 */
 	public void setDirection(String direction) {
 		this.direction = direction;

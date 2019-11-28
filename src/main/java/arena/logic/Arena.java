@@ -14,6 +14,7 @@ import static arena.logic.ArenaConstants.*;
 
 /**
  * Handles the logic of the arena.
+ * @author Aaron WANG
  */
 public class Arena {
 
@@ -22,7 +23,7 @@ public class Arena {
 //    private static LinkedList<LaserProjectile> projectiles = new LinkedList<LaserProjectile>();
     private static LinkedList<Monster> monsters = new LinkedList<Monster>();
     private static LinkedList<Tower> towers = new LinkedList<Tower>();
-
+    private static Random rand = new Random();
     private static Resource resource;
     
     /**
@@ -47,9 +48,6 @@ public class Arena {
     private static final int monsterKillResource = 100;
 
 
-
-    private static int monsterKillCount = 0;
-
     /**
      * Arena Constructor
      */
@@ -64,19 +62,36 @@ public class Arena {
         towers = new LinkedList<Tower>();
     }
 
+    /**
+     * Log attack from tower to monster
+     * @param tower the tower attacking
+     * @param mon the monster being attacked
+     */
     public static void logAttack(Tower tower, Monster mon) {
         if (mon.getType().equals("Death")) return;
         System.out.printf("%s@(%d.%d) -> %s@(%d, %d)\n",tower.getType(),tower.getX()*GRID_WIDTH+GRID_WIDTH/2,tower.getY()*GRID_HEIGHT+GRID_HEIGHT/2,mon.getType(),(int)mon.getyPx(),(int)mon.getyPx());
     }
 
+    /**
+     * Log monster created
+     * @param mon the monster being created
+     */
     public static void logMonsterCreated(Monster mon) {
         System.out.printf("%s:%d generated\n",mon.getType(),mon.getMaxHP());
     }
 
+    /**
+     * Log tower upgrade
+     * @param tower the tower bring upgraded
+     */
     public static void logTowerUpgrade(Tower tower) {
         System.out.printf("%s tower is being upgraded\n",tower.getType());
     }
 
+    /**
+     * Log tower upgrade failed message
+     * @param tower the tower that failed to be upgraded
+     */
     public static void logTowerUpgradeFailed(Tower tower) {
         System.out.printf("not enough resource to upgrade %s tower\n",tower.getType());
     }
@@ -196,6 +211,9 @@ public class Arena {
         towerShot[y][x] = true;
     }
 
+    /**
+     * Reset all tower shot to false (to display regular image of towers)
+     */
     public static void resetShot() {
         towerShot = new boolean[MAX_H_NUM_GRID][MAX_V_NUM_GRID];
     }
@@ -209,6 +227,14 @@ public class Arena {
     public static void setTowerBuilt(int x, int y, String tower) {
         towerBuilt[y][x] = tower;
     }
+
+    /**
+     * Method to build tower in cell (x,y) of type towerType
+     * @param x x coordinate of the target cell
+     * @param y y coordinate of the target cell
+     * @param towerType towerType of the desired tower
+     * @return boolean of whether successful (true if successfully built)
+     */
     public static boolean buildTower(int x, int y, String towerType) {
         if (x<0 || y < 0) return false;
         Tower tower;
@@ -260,18 +286,34 @@ public class Arena {
         return total;
     }
 
+    /**
+     * Gets the list of monsters in the Arena
+     * @return List of monsters in the arena
+     */
     public static LinkedList<Monster> getMonsters() {
         return monsters;
     }
 
+    /**
+     * Gets the Resource object of the arena
+     * @return The Resource object of the arena
+     */
     public static Resource getResource() {
         return resource;
     }
 
+    /**
+     * Gets the list of towers in the arena
+     * @return List of towers in the arena
+     */
     public static LinkedList<Tower> getTowers() {
         return towers;
     }
 
+    /**
+     * Gets the number of monsters in the arena
+     * @return The number of monsters in the arena
+     */
     public static int getMonsterNum() {
         if (monsters == null) return 0;
         return monsters.size();
@@ -325,10 +367,15 @@ public class Arena {
         return true;
     }
 
-    static boolean towerIsAt(int x, int y, Tower t) {
+    private static boolean towerIsAt(int x, int y, Tower t) {
         return t.getX() == x && t.getY() == y;
     }
 
+    /**
+     * Delete tower at cell (x,y)
+     * @param x X coordinate of tower to be deleted
+     * @param y Y coordinate of tower to be deleted
+     */
     public static void deleteTowerAt(int x, int y) {
         if (towerBuilt(x,y)) {
             for (Tower t: towers) {
@@ -340,6 +387,12 @@ public class Arena {
             }
         }
     }
+
+    /**
+     * Upgrade tower at cell (x,y)
+     * @param x X coordinate of tower to be deleted
+     * @param y Y coordinate of tower to be deleted
+     */
     public static void upgradeTowerAt(int x, int y) {
         if (towerBuilt(x,y)) {
             for (Tower t: towers) {
@@ -354,8 +407,10 @@ public class Arena {
             }
         }
     }
-    static Random rand = new Random();
-    
+
+    /**
+     * Method to increment the frame count and resolve the actions in the frame
+     */
     public static void nextFrame() {
         if (!gameStarted) return;
         FrameCount++;
@@ -374,7 +429,6 @@ public class Arena {
             if (m.getHP() <= 0) {
                 Resource.addResourceAmount(monsterKillResource);
                 m.setTypeDeath(); // image of monster replaced by collision.png
-                incrementMonsterKillCount();
             }
         });
         Monster.updateGrids();
@@ -383,27 +437,35 @@ public class Arena {
         	System.out.println("Game over!");
     }
 
+    /**
+     * Method to start the game
+     */
     public static void startGame() {
         gameStarted = true;
     }
 
+    /**
+     * Get the current frame count
+     * @return Frame Count
+     */
     public static int getFrameCount() {
         return FrameCount;
     }
 
+    /**
+     * Check wheter the game has started
+     * @return bool of whether the game has started (true = started)
+     */
     public static boolean isGameStarted() {
         return gameStarted;
     }
 
+    /**
+     * Setter method for frame count
+     * @param frameCount FrameCount value to be set
+     */
     public static void setFrameCount(int frameCount) {
         FrameCount = frameCount;
     }
 
-    public static int getMonsterKillCount() {
-        return monsterKillCount;
-    }
-
-    private static void incrementMonsterKillCount() {
-        Arena.monsterKillCount += 1;
-    }
 }

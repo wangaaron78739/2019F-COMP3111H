@@ -43,6 +43,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class to handle the UI of the Arena
+ * @author Aaron WANG
+ */
 public class ArenaUI {
 
     @FXML
@@ -105,19 +109,20 @@ public class ArenaUI {
     @FXML
     private static Circle activeRangeUI = new Circle(0, new Color(1,0.5,0,0.5));
 
+
     @FXML
-    public ArrayList<Line> LaserAttackTraceUI = new ArrayList<Line>();
+    private ArrayList<Line> LaserAttackTraceUI = new ArrayList<Line>();
     
     private static Arena arena = null;
     private static Label grids[][] = new Label[MAX_V_NUM_GRID][MAX_H_NUM_GRID]; //the grids on arena
-    static int activeCellX = -1;
-    static int activeCellY = -1;
-    static int hoveredCellX = -1;
-    static int hoveredCellY = -1;
+    private static int activeCellX = -1;
+    private static int activeCellY = -1;
+    private static int hoveredCellX = -1;
+    private static int hoveredCellY = -1;
 
-    static boolean enableBuildTowers = true;
-	boolean gameOverShown = false;
-    Tooltip tooltip = new Tooltip();
+    private static boolean enableBuildTowers = true;
+	private boolean gameOverShown = false;
+    private Tooltip tooltip = new Tooltip();
 
     private static final SessionFactory factory;
     static {
@@ -127,6 +132,13 @@ public class ArenaUI {
             System.err.println("Failed to create sessionFactory object." + ex);
             throw new ExceptionInInitializerError(ex);
         }
+    }
+
+    /**
+     * Decfault constructor
+     */
+    public ArenaUI() {
+
     }
 
     /**
@@ -263,14 +275,26 @@ public class ArenaUI {
         startUpdateArenaData();
     }
 
+    /**
+     * Get the Arena object
+     * @return arena object
+     */
     public static Arena getArena() {
         return arena;
     }
 
+    /**
+     * Check if we are allowed to build towers
+     * @return true if allowed to build, false otherwise
+     */
     public static boolean isEnableBuildTowers() {
         return enableBuildTowers;
     }
 
+    /**
+     * Set whether we are allowed to build towers
+     * @param enableBuildTowers new value of enableBuildTowers
+     */
     public static void setEnableBuildTowers(boolean enableBuildTowers) {
         ArenaUI.enableBuildTowers = enableBuildTowers;
     }
@@ -364,7 +388,7 @@ public class ArenaUI {
                 updateUI();
                 if (!Monster.gameEnds()) Arena.nextFrame();
                 else if (!gameOverShown) {
-                    int score = (Arena.getMonsterKillCount()*100);
+                    int score = Math.max(Arena.getFrameCount(),0);
                     StringBuilder topScores = new StringBuilder("Leaderboard:\n");
                     try {
                         String[] rawInput = getHighScoreRequest(score).split(",");
@@ -681,14 +705,25 @@ public class ArenaUI {
     }
 }
 
-
+/**
+ * Class to handle the dragging events
+ * @author Aaron WANG
+ */
 class DragEventHandler implements EventHandler<MouseEvent> {
     private Label source;
 
+    /**
+     * Constructor class
+     * @param e source label for drag event
+     */
     public DragEventHandler(Label e) {
         source = e;
     }
 
+    /**
+     * Handles the dragging event
+     * @param event drag event trigger
+     */
     @Override
     public void handle(MouseEvent event) {
         if (ArenaUI.isEnableBuildTowers()) {
@@ -719,9 +754,20 @@ class DragEventHandler implements EventHandler<MouseEvent> {
     }
 }
 
+/**
+ * Class for handling dropping event
+ * @author Aaron WANG
+ */
 class DragDroppedEventHandler implements EventHandler<DragEvent> {
+    /**
+     * Regex to get match label for cells
+     */
     Pattern gridRegex = Pattern.compile("label x:(\\d+),y:(\\d+)");
 
+    /**
+     * Handler for the drag and drop
+     * @param event drag even to be handled
+     */
     @Override
     public void handle(DragEvent event) {
         Dragboard db = event.getDragboard();

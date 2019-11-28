@@ -11,51 +11,51 @@ import java.io.InputStream;
 
 import static arena.logic.ArenaConstants.*;
 
+/**
+ * Utility class for UI
+ * @author Aaron WANG
+ */
 public class ArenaUIUtils {
-    public static ClipboardContent copyToClipboardText(String s) {
-        final ClipboardContent content = new ClipboardContent();
 
-        content.putString(s);
-        return content;
-    }
-
-    public static ClipboardContent copyToClipboardImage(Label lbl) {
-        WritableImage snapshot = lbl.snapshot(new SnapshotParameters(), null);
-        final ClipboardContent content = new ClipboardContent();
-        content.putImage(snapshot);
-        return content;
-    }
-
-    public static ClipboardContent copyToClipboardImageFromFile(String path) {
-        final ClipboardContent content = new ClipboardContent();
-        content.putImage(ArenaUIUtils.getImage(path));
-        return content;
-    }
-
-    public static Image getImage(String path) {
+    /**
+     * Get image from resource
+     * @param path path of image
+     * @return Image object of desired image
+     */
+    static Image getImage(String path) {
         InputStream is = ArenaUIUtils.class.getResourceAsStream(path);
         return new Image(is);
     }
 
-    public static ImageView setIconFromPath(String path) {
-        InputStream is = ArenaUIUtils.class.getResourceAsStream(path);
-        ImageView iv = new ImageView(new Image(is));
-        iv.setFitHeight(GRID_HEIGHT);
-        iv.setFitWidth(GRID_WIDTH);
-        return iv;
-    }
-
-    public static ImageView setIcon(Image i) {
+    /**
+     * Get image view from image
+     * @param i Image object of desired image
+     * @return ImageView object of desired image
+     */
+    static ImageView setIcon(Image i) {
         ImageView iv = new ImageView(i);
         iv.setFitHeight(GRID_HEIGHT);
         iv.setFitWidth(GRID_WIDTH);
         return iv;
     }
 
-    public static ImageView setIcon(Image i, int height, int width) {
+    /**
+     * Get image view object of certain height
+     * @param i Image object of desired image
+     * @param height Desired height of ImageView object
+     * @param width Desired width of ImageView object
+     * @return ImageView object of desired image
+     */
+    static ImageView setIcon(Image i, int height, int width) {
         ImageView iv = new ImageView(i);
         iv.setFitHeight(height);
         iv.setFitWidth(width);
         return iv;
+    }
+
+    /**
+     * Default constructor for ArenaUIUtils
+     */
+    public ArenaUIUtils() {
     }
 }

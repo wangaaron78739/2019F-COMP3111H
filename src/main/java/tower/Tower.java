@@ -17,10 +17,18 @@ import java.lang.Math;
 public class Tower {
     private int id = 0;
 
+    /**
+     * Getter method for id (for hibernate)
+     * @return id of tower
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Setter method for id (for hibernate)
+     * @param id new id of tower
+     */
     public void setId(int id) {
         this.id = id;
     }
@@ -33,6 +41,9 @@ public class Tower {
     private String type;
     private int upgradeCost;
 
+    /**
+     * Default Tower Constructor
+     */
     public Tower() {}
 
     /**
@@ -54,6 +65,10 @@ public class Tower {
         this.upgradeCost = buildingCost;
     }
 
+    /**
+     * Tower copy constructor
+     * @param t Tower to be copied
+     */
     public Tower(Tower t) {
         this.attackPower = t.getAttackPower();
         this.buildingCost = t.getBuildingCost();
@@ -128,18 +143,34 @@ public class Tower {
         return y;
     }
 
+    /**
+     * Setter function for the x-coordinate of the cell where the tower locates
+     * @param x The new x-coordinate of the cell
+     */
     public void setX(int x) {
         this.x = x;
     }
 
+    /**
+     * Setter function for the y-coordinate of the cell where the tower locates
+     * @param y The new y-coordinate of the cell
+     */
     public void setY(int y) {
         this.y = y;
     }
 
+    /**
+     * Setter function for the type of the tower, i.e. Basic, Catapult, Ice, Laser
+     * @param type The type of the tower
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Setter function of the upgrade cost of the tower
+     * @param upgradeCost The upgrade cost of the tower
+     */
     public void setUpgradeCost(int upgradeCost) {
         this.upgradeCost = upgradeCost;
     }
