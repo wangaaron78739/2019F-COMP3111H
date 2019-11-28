@@ -1,4 +1,5 @@
 package arena.ui;
+import arena.logic.GameData;
 import arena.logic.Resource;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import arena.logic.Arena;
+import monster.Monster;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +62,15 @@ public class ArenaUITest extends ApplicationTest {
     private Field fieldHoveredTowerx = null;
     private Field fieldHoveredTowery = null;
     private CountDownLatch lock = new CountDownLatch(1);;
+    private static final SessionFactory factory;
+    static {
+        try {
+            factory = new Configuration().configure().buildSessionFactory();
+        } catch (Throwable ex) {
+            System.err.println("Failed to create sessionFactory object." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
     @Override
     public void start (Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/arena.fxml"));
@@ -63,6 +79,21 @@ public class ArenaUITest extends ApplicationTest {
         stage.setScene(new Scene(root, 680, 480));
         stage.show();
         arenaUI = loader.getController();
+        Session session = factory.openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            session.createQuery("delete from Tower").executeUpdate();
+            session.createQuery("delete from Monster").executeUpdate();
+            session.createQuery("delete from GameData").executeUpdate();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
         arenaUI.createArena();
 
         fieldResource = ArenaUI.class.getDeclaredField("labelResource");

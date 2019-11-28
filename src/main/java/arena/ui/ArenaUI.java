@@ -329,7 +329,7 @@ public class ArenaUI {
     }
 
     @FXML
-    void updateUI() {
+    private void updateUI() {
         //TODO:
         labelFrameCount.setText(String.format("FrameCount: %d",Arena.getFrameCount()));
         //TOWER
