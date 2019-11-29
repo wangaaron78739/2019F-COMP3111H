@@ -1,5 +1,7 @@
 # COMP3111 Project - Tower Defense
 
+**Authors**: Aaron Wang (Arena), Alex Chiu (Monster), Jimmy Ren (Tower), Kevin Wang
+
 ## How to Start Database Server to Save Game Data
 1. Install MySql (ver. 8.0.18)
     * Default Usename: root
