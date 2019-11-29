@@ -235,8 +235,8 @@ public class Catapult extends Tower {
     					m.getxPx() - this.getX() * GRID_WIDTH - GRID_WIDTH/2, 
     					m.getyPx() - this.getY() * GRID_HEIGHT - GRID_HEIGHT/2);
     			double distanceToEndZone = Math.hypot(
-    					m.getyPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT, 
-    					m.getxPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH);
+    					m.getyPx() - (MAX_H_NUM_GRID - 1) * GRID_HEIGHT, 
+    					m.getxPx() - (MAX_V_NUM_GRID - 1) * GRID_WIDTH);
     			if(distance <= (upperShootingRange + baseAttackRadius) && 
     			   distance >= (lowerShootingRange - baseAttackRadius)){
     				if(!map.isEmpty()){

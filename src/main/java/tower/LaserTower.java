@@ -2,6 +2,7 @@ package tower;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import arena.logic.Arena;
 import arena.logic.Resource;
 import static arena.logic.ArenaConstants.*;
@@ -96,8 +97,8 @@ public class LaserTower extends Tower {
 			HashMap<Monster, Double> map = new HashMap<Monster, Double>();
 			for(Monster m: Arena.getMonsters()){
 				double distanceToEndZone = Math.hypot(	
-    					m.getxPx() - (MAX_V_NUM_GRID - 0.5) * GRID_WIDTH,
-    					m.getyPx() - (MAX_H_NUM_GRID - 0.5) * GRID_HEIGHT);
+    					m.getxPx() - (MAX_V_NUM_GRID - 1) * GRID_WIDTH,
+    					m.getyPx() - (MAX_H_NUM_GRID - 1) * GRID_HEIGHT);
 				if(!map.isEmpty()){
 					HashMap.Entry<Monster, Double> set =  map.entrySet().iterator().next();
 					if(distanceToEndZone < set.getValue()){
