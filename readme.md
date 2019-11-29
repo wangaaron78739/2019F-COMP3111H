@@ -13,6 +13,12 @@
 ## How to Start Spring Server
 * Run  `./gradlew bootRun` inside SpringServer dir
 
+## Gantt Chart and Burn-down Chart
+<p align="center">
+  <img height="160" src="https://github.com/wangaaron78739/2019F-COMP3111H/blob/master/png/Burndown.jpg">
+  <img height="160" src="https://github.com/wangaaron78739/2019F-COMP3111H/blob/master/png/Gantt.png">
+</p>
+
 ## Project Problem Statement and Activities
 
  > **Activity 1 Due (2%): 14-10-2019 (Wk 7 Mon) 20:00**
