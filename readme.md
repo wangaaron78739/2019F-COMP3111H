@@ -1,6 +1,9 @@
 # COMP3111 Project - Tower Defense
 
-**Authors**: Aaron Wang (Arena), Alex Chiu (Monster), Jimmy Ren (Tower), Kevin Wang
+**Authors**: 
+- *Arena* : Aaron Wang
+- *Monster* : Alex Chiu  
+- *Tower* : Jimmy Ren
 
 ## How to Start Database Server to Save Game Data
 1. Install MySql (ver. 8.0.18)
@@ -101,7 +104,7 @@ Noted that the some tasks are in a hierarchy structure. No point will be awarded
         1. [x] When a monster is generated. Log its type and HP in the format `<type>:<HP> generated` (1)
         1. [x] When a monster is attacked. Log the type and position tower attacks it and the position of the monster in the format `<tower_type>@(<x>.<y>) -> <monster_type>@(<x>, <y>)` (1)
             1. [x] Furthermore, represent the attack in the GUI so that the monster and the tower involved can be visually identified without reading the log. (1)
-1. [ ] Towers (15)
+1. [] Towers (15)
     1. [x] All towers built in the arena will shoot a monster automatically which is inside its range (unless all towers are impossible to attack, e.g. out of range, in cool down etc). (1)      
     1. [x] Implement Basic Tower that has a shooting range [0,65] pixels. You can decide the attack power and other parameters of the tower. (1)
         1. [x] Implement the upgrade function of Basic Tower that increase the attack power of the basic Tower. (1)
